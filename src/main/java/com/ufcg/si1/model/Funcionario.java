@@ -17,6 +17,15 @@ public abstract class Funcionario extends Cidadao {
 		this.codigoDeServidor = codigo;
 	}
 	
+	/**
+	 * Esse método adiciona os dados do Funcionario. Estes dados são referente
+	 * @param nome
+	 * @param email
+	 * @param rua
+	 * @param uf
+	 * @param cidade
+	 * @param codigoDeServidor
+	 */
 	protected void setDadosFuncionario(String nome, String email, String rua, String uf,
 			String cidade, String codigoDeServidor) {
 		setNome(nome);
