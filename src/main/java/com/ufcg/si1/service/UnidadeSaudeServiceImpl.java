@@ -57,7 +57,9 @@ public class UnidadeSaudeServiceImpl implements UnidadeSaudeService {
         if (us == null) {throw new Rep("Erro!");
         } else{
         if (us instanceof UnidadeSaude){
-        ((UnidadeSaude) us).mudaCodigo(++geraCodigo);
+        /* esse codigo deve ser gerado automaticamente e é uma PK no BD
+         * ((UnidadeSaude) us).mudaCodigo(++geraCodigo);
+         */
         }else {
         ((Hospital) us).setCodigo(++geraCodigo);
         }}
@@ -84,7 +86,7 @@ public class UnidadeSaudeServiceImpl implements UnidadeSaudeService {
     }
 
     @Override
-    public boolean existe(int codigo) {
+    public boolean existe(long codigo) {
         int indiceAux = 0;
         boolean existe = false;
 

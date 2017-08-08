@@ -28,7 +28,7 @@ public class Cidadao {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="id_usuario")
+	@Column(name="id_cidadao")
 	private Long id;
 	
 	@Column(name = "ome")

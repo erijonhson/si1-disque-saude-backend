@@ -16,7 +16,7 @@ public interface UnidadeSaudeService {
     void insere(Object us)throws Rep,
             ObjetoJaExistenteException;
 
-    boolean existe(int codigo);
+    boolean existe(long codigo);
 
     Object findById(long id);
 

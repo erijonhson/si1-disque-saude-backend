@@ -1,32 +1,58 @@
 package com.ufcg.si1.model;
 
 import exceptions.ObjetoInvalidoException;
-import org.springframework.http.ResponseEntity;
 
+import java.util.Set;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+@Entity
+@Table(name = "tb_queixa")
 public class Queixa {
 
-	private long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
+	@Column(name = "descricao")
 	private String descricao;
 
+	@ManyToOne
+	@JoinColumn(name = "id_cidadao")
+	@JsonBackReference
 	private Cidadao solicitante;
-
-	public int situacao; // usa variaveis estaticas abaixo
+	
+	@OneToMany(mappedBy = "queixa")
+	@JsonManagedReference
+	private Set<Comentario> comentarios;
+	
+	public int situacao; 
+	
+	// usa variaveis estaticas abaixo
 	/* situacoes da queixa */
+	
 	public static final int ABERTA = 1;
 	public static final int EM_ANDAMENTO = 2;
 	public static final int FECHADA = 3;
 
 	private String comentario = ""; // usado na atualizacao da queixa
 
-	public Queixa(){
-		id=0;
-	}
+	public Queixa(){}
 
 	public Queixa(long id, String descricao, int situacao, String comentario,
                   String nome, String email,
 				  String rua, String uf, String cidade) {
-		this.id = id;
 		this.descricao = descricao;
 		this.situacao = situacao;
 		this.comentario = comentario;

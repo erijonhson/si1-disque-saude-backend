@@ -27,7 +27,7 @@ public class UnidadeSaude {
     
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int codigo;
+	private Long id_Unidade_Saude;
 
 	@Column(name = "descricao")
     private String descricao;
@@ -39,21 +39,11 @@ public class UnidadeSaude {
 	@Column(name = "num_queixas")
     private long [] numeroQueixas = new long[1000];
 
-	// deixar isso no banco?
-    private int contador = 0;
-
-    public UnidadeSaude(String descricao) {
-        this.codigo = 0; // gerado no repositorio
+    public UnidadeSaude(String descricao) {// gerado no repositorio
         this.descricao = descricao;
         this.especialidades = new HashSet<>();
     }
     public UnidadeSaude(){
-    }
-
-    public void addQueixaProxima(long id) {
-        if (this instanceof PostoSaude){
-            numeroQueixas[contador++] = id;
-        }
     }
 
     public String pegaDescricao() {
@@ -72,12 +62,7 @@ public class UnidadeSaude {
         this.especialidades.add(esp);
     }
 
-    public int pegaCodigo() {
-        return this.codigo;
+    public Long pegaCodigo() {
+        return this.id_Unidade_Saude;
     }
-
-    public void mudaCodigo(int cod) {
-        this.codigo = cod;
-    }
-
 }
