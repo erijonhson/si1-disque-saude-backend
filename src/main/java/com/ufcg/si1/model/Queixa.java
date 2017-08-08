@@ -9,7 +9,7 @@ public class Queixa {
 
 	private String descricao;
 
-	private Pessoa solicitante;
+	private Cidadao solicitante;
 
 	public int situacao; // usa variaveis estaticas abaixo
 	/* situacoes da queixa */
@@ -30,7 +30,7 @@ public class Queixa {
 		this.descricao = descricao;
 		this.situacao = situacao;
 		this.comentario = comentario;
-		this.solicitante = new Pessoa(nome, email, rua, uf, cidade);
+		this.solicitante = new Cidadao(nome, email, rua, uf, cidade);
 	}
 
 	public long getId() {
@@ -77,11 +77,11 @@ public class Queixa {
 		this.comentario = comentario;
 	}
 
-	public Pessoa getSolicitante() {
+	public Cidadao getSolicitante() {
 		return solicitante;
 	}
 
-	public void setSolicitante(Pessoa solicitante) {
+	public void setSolicitante(Cidadao solicitante) {
 		this.solicitante = solicitante;
 	}
 
