@@ -227,7 +227,7 @@ public class RestApiController {
         double c = 0.0;
         if (unidade instanceof PostoSaude)
             c = ((PostoSaude) unidade).getAtendentes()
-                    / ((PostoSaude) unidade).taxaDiaria();
+                    / ((PostoSaude) unidade).getTaxaDiariaAtendimentos();
         else if (unidade instanceof Hospital){
             c = ((Hospital) unidade).getNumeroMedicos()
                     / ((Hospital) unidade).getNumeroPacientesDia();

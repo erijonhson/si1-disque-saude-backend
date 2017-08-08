@@ -1,9 +1,11 @@
 package com.ufcg.si1.model;
 
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
 @Entity
+@DiscriminatorValue(value = "F")
 public abstract class Funcionario extends Cidadao {
 	
 	@Column(name = "Codigo_do_Servidor")

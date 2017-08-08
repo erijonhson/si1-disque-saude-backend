@@ -1,11 +1,15 @@
 package com.ufcg.si1.model;
 
 
+
 public class Especialidade {
 
+	
     private int codigo;
 
     private String descricao;
+    
+    
 
     public Especialidade(String descricao) {
         this.codigo = 0; // gerado no repositorio

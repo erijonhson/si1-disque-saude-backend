@@ -1,10 +1,18 @@
 package com.ufcg.si1.model;
 
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
 
-public class PostoSaude extends UnidadeSaude{
-    private int atendentes;
+@Entity
+@DiscriminatorValue(value = "P")
+public class PostoSaude extends UnidadeSaude {
+    
+	@Column(name = "atendentes")
+	private int atendentes;
 
-    private float taxaDiariaAtendimentos;
+	@Column(name = "taxa_Diaria_Atendimentos")
+    private int taxaDiariaAtendimentos;
 
     public PostoSaude(String descricao, int at, int taxa) {
         super(descricao);
@@ -21,19 +29,15 @@ public class PostoSaude extends UnidadeSaude{
         return atendentes;
     }
 
-    public float taxaDiaria() {
-        return taxaDiariaAtendimentos;
-    }
-
     public void setAtendentes(int atendentes) {
         this.atendentes = atendentes;
     }
 
-    public float getTaxaDiariaAtendimentos() {
+    public int getTaxaDiariaAtendimentos() {
         return taxaDiariaAtendimentos;
     }
 
-    public void setTaxaDiariaAtendimentos(float taxaDiariaAtendimentos) {
+    public void setTaxaDiariaAtendimentos(int taxaDiariaAtendimentos) {
         this.taxaDiariaAtendimentos = taxaDiariaAtendimentos;
     }
 }
