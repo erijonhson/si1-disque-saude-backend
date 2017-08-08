@@ -37,7 +37,7 @@ public class RestApiController {
     // -------------------Retrieve All Complaints---------------------------------------------
 
     @RequestMapping(value = "/queixa/", method = RequestMethod.GET)
-    public ResponseEntity<List<Queixa>> listAllUsers() {
+    public ResponseEntity<List<Queixa>> listAllQueixas() {
         List<Queixa> queixas = queixaService.findAllQueixas();
 
         if (queixas.isEmpty()) {
@@ -64,28 +64,25 @@ public class RestApiController {
             return new ResponseEntity<List>(HttpStatus.BAD_REQUEST);
         }
         queixaService.saveQueixa(queixa);
-
-       // HttpHeaders headers = new HttpHeaders();
-        //headers.setLocation(ucBuilder.path("/api/queixa/{id}").buildAndExpand(queixa.getId()).toUri());
-
+        
         return new ResponseEntity<Queixa>(queixa, HttpStatus.CREATED);
     }
 
 
     @RequestMapping(value = "/queixa/{id}", method = RequestMethod.GET)
-    public ResponseEntity<?> consultarQueixa(@PathVariable("id") long id) {
+    public ResponseEntity<Queixa> consultarQueixa(@PathVariable("id") long id) {
 
-        Queixa q = queixaService.findById(id);
-        if (q == null) {
+        Queixa queixa = queixaService.findById(id);
+        if (queixa == null) {
             return new ResponseEntity(new CustomErrorType("Queixa with id " + id
                     + " not found"), HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<Queixa>(q, HttpStatus.OK);
+        return new ResponseEntity<Queixa>(queixa, HttpStatus.OK);
     }
 
 
     @RequestMapping(value = "/queixa/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<?> updateQueixa(@PathVariable("id") long id, @RequestBody Queixa queixa) {
+    public ResponseEntity<Queixa> updateQueixa(@PathVariable("id") long id, @RequestBody Queixa queixa) {
 
         Queixa currentQueixa = queixaService.findById(id);
 
@@ -102,7 +99,7 @@ public class RestApiController {
     }
 
     @RequestMapping(value = "/queixa/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<?> deleteUser(@PathVariable("id") long id) {
+    public ResponseEntity<Queixa> deleteQueixa(@PathVariable("id") long id) {
 
         Queixa user = queixaService.findById(id);
         if (user == null) {
