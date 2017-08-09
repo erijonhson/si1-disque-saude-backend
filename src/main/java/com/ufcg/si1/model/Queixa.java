@@ -11,7 +11,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -39,18 +38,14 @@ public class Queixa {
 	@JsonManagedReference
 	private Set<Comentario> comentarios;
 
-	@Transient
-	public int situacao;
-
-	public static final int ABERTA = 1;
-	public static final int EM_ANDAMENTO = 2;
-	public static final int FECHADA = 3;
+	@Column(name = "situacao")
+	public SituacaoDeQueixa situacao;
 
 	public Queixa() {
-		this(0, "desconhecido", 0, new Cidadao());
+		this(0, "desconhecido", SituacaoDeQueixa.ABERTA, new Cidadao());
 	}
 
-	public Queixa(long id, String descricao, int situacao, Cidadao solicitante) {
+	public Queixa(long id, String descricao, SituacaoDeQueixa situacao, Cidadao solicitante) {
 		this.descricao = descricao;
 		this.situacao = situacao;
 		this.solicitante = solicitante;
@@ -64,20 +59,20 @@ public class Queixa {
 		this.descricao = descricao;
 	}
 
-	public int getSituacao() {
+	public SituacaoDeQueixa getSituacao() {
 		return situacao;
 	}
 
 	public void abrir() throws ObjetoInvalidoException {
-		if (this.situacao != Queixa.EM_ANDAMENTO)
-			this.situacao = Queixa.ABERTA;
+		if (this.situacao != SituacaoDeQueixa.EM_ANDAMENTO)
+			this.situacao = SituacaoDeQueixa.ABERTA;
 		else
 			throw new ObjetoInvalidoException("Status inválido");
 	}
 
 	public void fechar() throws ObjetoInvalidoException {
-		if (this.situacao == Queixa.EM_ANDAMENTO || this.situacao == Queixa.ABERTA) {
-			this.situacao = Queixa.FECHADA;
+		if (this.situacao == SituacaoDeQueixa.EM_ANDAMENTO || this.situacao == SituacaoDeQueixa.ABERTA) {
+			this.situacao = SituacaoDeQueixa.FECHADA;
 			// TODO: avaliar funcionamento dessa questão
 			// this.comentario = coment;
 		} else

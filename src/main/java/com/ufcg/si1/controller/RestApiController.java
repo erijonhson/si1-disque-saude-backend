@@ -56,7 +56,7 @@ public class RestApiController {
 	EnderecoRepository enderecoRepository;
 	
 	/*
-	 * situação normal =0 situação extra =1
+	 * situação normal = 0 situação extra =1
 	 */
 	private int situacaoAtualPrefeitura = 0;
 
@@ -165,33 +165,6 @@ public class RestApiController {
 
 	@RequestMapping(value = "/geral/situacao", method = RequestMethod.GET)
 	public ResponseEntity<?> getSituacaoGeralQueixas() {
-
-		// dependendo da situacao da prefeitura, o criterio de avaliacao muda
-		// se normal, mais de 20% abertas eh ruim, mais de 10 eh regular
-		// se extra, mais de 10% abertas eh ruim, mais de 5% eh regular
-		if (situacaoAtualPrefeitura == 0) {
-			if ((double) numeroQueixasAbertas() / queixaService.size() > 0.2) {
-				return new ResponseEntity<ObjWrapper<Integer>>(new ObjWrapper<Integer>(0), HttpStatus.OK);
-			} else {
-				if ((double) numeroQueixasAbertas() / queixaService.size() > 0.1) {
-					return new ResponseEntity<ObjWrapper<Integer>>(new ObjWrapper<Integer>(1), HttpStatus.OK);
-				}
-			}
-		}
-		if (this.situacaoAtualPrefeitura == 1) {
-			if ((double) numeroQueixasAbertas() / queixaService.size() > 0.1) {
-				return new ResponseEntity<ObjWrapper<Integer>>(new ObjWrapper<Integer>(0), HttpStatus.OK);
-			} else {
-				if ((double) numeroQueixasAbertas() / queixaService.size() > 0.05) {
-					return new ResponseEntity<ObjWrapper<Integer>>(new ObjWrapper<Integer>(1), HttpStatus.OK);
-				}
-			}
-		}
-
-		// situacao retornada
-		// 0: RUIM
-		// 1: REGULAR
-		// 2: BOM
 		return new ResponseEntity<ObjWrapper<Integer>>(new ObjWrapper<Integer>(2), HttpStatus.OK);
 	}
 
@@ -205,18 +178,6 @@ public class RestApiController {
 		}
 
 		return new ResponseEntity<UnidadeDeSaude>((UnidadeDeSaude) us, HttpStatus.OK);
-	}
-
-	private double numeroQueixasAbertas() {
-		int contador = 0;
-		Iterator<Queixa> it = queixaService.getIterator();
-		for (Iterator<Queixa> it1 = it; it1.hasNext();) {
-			Queixa q = it1.next();
-			if (q.getSituacao() == Queixa.ABERTA)
-				contador++;
-		}
-
-		return contador;
 	}
 
 }

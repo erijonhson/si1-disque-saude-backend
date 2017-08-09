@@ -1,24 +1,35 @@
 package com.ufcg.si1.service;
 
-import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ufcg.si1.model.Queixa;
+import com.ufcg.si1.model.SituacaoDeQueixa;
+import com.ufcg.si1.model.prefeitura.PrefeituraSingleton;
+import com.ufcg.si1.model.prefeitura.SituacaoGeralDasQueixas;
 import com.ufcg.si1.repository.QueixaRepository;
 
-// TODO: por enquanto vamos deixar passar os absurdos do contrato QueixaService
-// mas tão logo refatoremos os Controllers, reavaliaremos esses contratos 
 @Service("queixaService")
 public class QueixaServiceImpl implements QueixaService {
 
 	@Autowired
 	QueixaRepository queixaRepository;
+	
+	@Autowired
+	CidadaoService cidadaoService;
+
+	@Autowired
+	EnderecoService enderecoService;
 
 	@Override
 	public Queixa cadastrar(Queixa queixa) {
+		// TODO: avaliar nível de gambiarra disso 
+		// por exemplo, usuário e endereço deveriam já estarem cadastrados, nesse ponto? 
+		// devemos testar se existe, antes?
+		enderecoService.cadastrar(queixa.getSolicitante().getEndereco());
+		cidadaoService.cadastrar(queixa.getSolicitante());
 		return queixaRepository.save(queixa);
 	}
 
@@ -42,40 +53,13 @@ public class QueixaServiceImpl implements QueixaService {
 		queixaRepository.delete(queixa);
 	}
 
-	// TODO: daqui para baixo sumirá
 	@Override
-	public List<Queixa> findAllQueixas() {
-		return queixaRepository.findAll();
-	}
+	public SituacaoGeralDasQueixas situacaoGeralDasQueixas() {
 
-	@Override
-	public void saveQueixa(Queixa queixa) {
-		queixaRepository.save(queixa);
-	}
+		PrefeituraSingleton prefeitura = PrefeituraSingleton.getInstance();
 
-	@Override
-	public Queixa findById(long id) {
-		return queixaRepository.findOne(id);
-	}
-
-	@Override
-	public void updateQueixa(Queixa queixa) {
-		queixaRepository.save(queixa);
-	}
-
-	@Override
-	public void deleteQueixaById(long id) {
-		queixaRepository.delete(id);
-	}
-
-	@Override
-	public int size() {
-		return queixaRepository.findAll().size();
-	}
-
-	@Override
-	public Iterator<Queixa> getIterator() {
-		return queixaRepository.findAll().iterator();
+		float porcentagemQueixasAbertas = queixaRepository.count() / queixaRepository.countBySituacao(SituacaoDeQueixa.ABERTA) * 100;
+		return prefeitura.getSituacao().getSituacaoDasQueixas(porcentagemQueixasAbertas);
 	}
 
 }

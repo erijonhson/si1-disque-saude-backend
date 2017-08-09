@@ -18,6 +18,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.ufcg.si1.model.Queixa;
 import com.ufcg.si1.repository.CidadaoRepository;
 import com.ufcg.si1.repository.EnderecoRepository;
+import com.ufcg.si1.service.CidadaoService;
+import com.ufcg.si1.service.EnderecoService;
+import com.ufcg.si1.service.EnderecoServiceImpl;
 import com.ufcg.si1.service.QueixaService;
 import com.ufcg.si1.service.QueixaServiceImpl;
 import com.ufcg.si1.util.CustomErrorType;
@@ -30,46 +33,31 @@ import exceptions.ObjetoInvalidoException;
 public class QueixaController {
 
 	@Autowired
-	QueixaService queixaService = new QueixaServiceImpl();
+	QueixaService queixaService;
 
-	@Autowired
-	CidadaoRepository cidadaoRepository;
-
-	@Autowired
-	EnderecoRepository enderecoRepository;
-
-	@RequestMapping(value = "/queixa/", method = RequestMethod.GET)
+	@RequestMapping(
+			value = "/queixa/", 
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Collection<Queixa>> listAllQueixas() {
+		
 		Collection<Queixa> queixas = queixaService.findAllQueixas();
 
 		if (queixas.isEmpty()) {
 			return new ResponseEntity(HttpStatus.NO_CONTENT);
-			// You many decide to return HttpStatus.NOT_FOUND
 		}
+		
 		return new ResponseEntity<Collection<Queixa>>(queixas, HttpStatus.OK);
 	}
-
-	// -------------------Abrir uma
-	// Queixa-------------------------------------------
 
 	@RequestMapping(value = "/queixa/", method = RequestMethod.POST)
 	public ResponseEntity<?> abrirQueixa(@RequestBody Queixa queixa, UriComponentsBuilder ucBuilder) {
 
-		// este codigo estava aqui, mas nao precisa mais
-		/*
-		 * if (queixaService.doesQueixaExist(queixa)) { return new ResponseEntity(new
-		 * CustomErrorType("Esta queixa já existe+
-		 * queixa.pegaDescricao()),HttpStatus.CONFLICT); }
-		 */
-
 		try {
-			queixa.abrir();
+			queixaService.saveQueixa(queixa);
 		} catch (ObjetoInvalidoException e) {
-			return new ResponseEntity<List>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity(HttpStatus.BAD_REQUEST);
 		}
-		enderecoRepository.save(queixa.getSolicitante().getEndereco());
-		cidadaoRepository.save(queixa.getSolicitante());
-		queixaService.saveQueixa(queixa);
 
 		return new ResponseEntity<Queixa>(queixa, HttpStatus.CREATED);
 	}
