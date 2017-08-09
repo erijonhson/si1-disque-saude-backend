@@ -40,9 +40,15 @@ import exceptions.ObjetoInvalidoException;
 @CrossOrigin
 public class RestApiController {
 
+	@Autowired
 	QueixaService queixaService = new QueixaServiceImpl();
+	
+	@Autowired
 	EspecialidadeService especialidadeService = new EspecialidadeServiceImpl();
+	
+	@Autowired
 	UnidadeDeSaudeService unidadeSaudeService = new UnidadeDeSaudeServiceImpl();
+	
 	@Autowired
 	CidadaoRepository cidadaoRepository;
 	
@@ -53,93 +59,6 @@ public class RestApiController {
 	 * situação normal =0 situação extra =1
 	 */
 	private int situacaoAtualPrefeitura = 0;
-
-	// -------------------Retrieve All
-	// Complaints---------------------------------------------
-
-	@RequestMapping(value = "/queixa/", method = RequestMethod.GET)
-	public ResponseEntity<List<Queixa>> listAllQueixas() {
-		List<Queixa> queixas = queixaService.findAllQueixas();
-
-		if (queixas.isEmpty()) {
-			return new ResponseEntity(HttpStatus.NO_CONTENT);
-			// You many decide to return HttpStatus.NOT_FOUND
-		}
-		return new ResponseEntity<List<Queixa>>(queixas, HttpStatus.OK);
-	}
-
-	// -------------------Abrir uma
-	// Queixa-------------------------------------------
-
-	@RequestMapping(value = "/queixa/", method = RequestMethod.POST)
-	public ResponseEntity<?> abrirQueixa(@RequestBody Queixa queixa, UriComponentsBuilder ucBuilder) {
-
-		// este codigo estava aqui, mas nao precisa mais
-		/*
-		 * if (queixaService.doesQueixaExist(queixa)) { return new
-		 * ResponseEntity(new CustomErrorType("Esta queixa já existe+
-		 * queixa.pegaDescricao()),HttpStatus.CONFLICT); }
-		 */
-
-		try {
-			queixa.abrir();
-		} catch (ObjetoInvalidoException e) {
-			return new ResponseEntity<List>(HttpStatus.BAD_REQUEST);
-		}
-		enderecoRepository.save(queixa.getSolicitante().getEndereco());
-		cidadaoRepository.save(queixa.getSolicitante());
-		queixaService.saveQueixa(queixa);
-
-		return new ResponseEntity<Queixa>(queixa, HttpStatus.CREATED);
-	}
-
-	@RequestMapping(value = "/queixa/{id}", method = RequestMethod.GET)
-	public ResponseEntity<Queixa> consultarQueixa(@PathVariable("id") long id) {
-
-		Queixa queixa = queixaService.findById(id);
-		if (queixa == null) {
-			return new ResponseEntity(new CustomErrorType("Queixa with id " + id + " not found"), HttpStatus.NOT_FOUND);
-		}
-		return new ResponseEntity<Queixa>(queixa, HttpStatus.OK);
-	}
-
-	@RequestMapping(value = "/queixa/{id}", method = RequestMethod.PUT)
-	public ResponseEntity<Queixa> updateQueixa(@PathVariable("id") long id, @RequestBody Queixa queixa) {
-
-		Queixa currentQueixa = queixaService.findById(id);
-
-		if (currentQueixa == null) {
-			return new ResponseEntity(new CustomErrorType("Unable to upate. Queixa with id " + id + " not found."),
-					HttpStatus.NOT_FOUND);
-		}
-
-		currentQueixa.setDescricao(queixa.getDescricao());
-		// TODO: questão de feixar a queixa, como fica? Na minha percepção uma
-		// queixa pode ter vários comentários, não apenas um
-		// currentQueixa.setComentario(queixa.getComentario());
-
-		queixaService.updateQueixa(currentQueixa);
-		return new ResponseEntity<Queixa>(currentQueixa, HttpStatus.OK);
-	}
-
-	@RequestMapping(value = "/queixa/{id}", method = RequestMethod.DELETE)
-	public ResponseEntity<Queixa> deleteQueixa(@PathVariable("id") long id) {
-
-		Queixa user = queixaService.findById(id);
-		if (user == null) {
-			return new ResponseEntity(new CustomErrorType("Unable to delete. Queixa with id " + id + " not found."),
-					HttpStatus.NOT_FOUND);
-		}
-		queixaService.deleteQueixaById(id);
-		return new ResponseEntity<Queixa>(HttpStatus.NO_CONTENT);
-	}
-
-	@RequestMapping(value = "/queixa/fechamento", method = RequestMethod.POST)
-	public ResponseEntity<?> fecharQueixa(@RequestBody Queixa queixaAFechar) {
-		queixaAFechar.situacao = Queixa.FECHADA;
-		queixaService.updateQueixa(queixaAFechar);
-		return new ResponseEntity<Queixa>(queixaAFechar, HttpStatus.OK);
-	}
 
 	// Especialidade
 

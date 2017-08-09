@@ -76,8 +76,8 @@ public class Cidadao {
 		this.email = email;
 	}
 
-	public void setEndereço(String rua, String uf, String cidade) {
-		endereco = new Endereco(rua, uf, cidade);
+	public void setEndereco(Endereco endereco) {
+		this.endereco = endereco;
 	}
 
 	public Endereco getEndereco() {

@@ -28,11 +28,11 @@ public abstract class Servidor extends Cidadao {
 	 * @param cidade
 	 * @param codigoDeServidor
 	 */
-	protected void setDadosFuncionario(String nome, String email, String rua, String uf,
+	protected void setDadosFuncionario(String nome, String email, String rua, String bairro, String uf,
 			String cidade, String codigoDeServidor) {
 		setNome(nome);
 		setEmail(email);
-		setEndereço(rua, uf, cidade);
+		setEndereco(new Endereco(rua, bairro, uf, cidade));
 		setCodigoDeServidor(codigoDeServidor);
 	}
 }

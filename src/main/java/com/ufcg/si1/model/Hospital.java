@@ -51,6 +51,7 @@ public class Hospital extends UnidadeDeSaude {
 	}
 
 	// TODO: teremos que persistir isso?
+	// observe a especificação do padrão adapter e aprecie a resposta
 	public int getNumeroMedicos() {
 		return hospital.getNumeroMedicos();
 	}

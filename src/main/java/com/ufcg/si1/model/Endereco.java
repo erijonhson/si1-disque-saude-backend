@@ -43,11 +43,12 @@ public class Endereco {
 	private Set<UnidadeDeSaude> unidadesDeSaude;
 
 	public Endereco() {
-		this("desconhecido", "desconhecido", "desconhecido");
+		this("desconhecido", "desconhecido", "desconhecido", "desconhecido");
 	}
 
-	public Endereco(String rua, String uf, String cidade) {
+	public Endereco(String rua, String bairro, String uf, String cidade) {
 		this.rua = rua;
+		this.bairro = bairro;
 		this.uf = uf;
 		this.cidade = cidade;
 	}

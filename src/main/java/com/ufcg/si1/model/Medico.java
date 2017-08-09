@@ -7,8 +7,8 @@ import javax.persistence.Entity;
 @DiscriminatorValue(value = "medico_servidor")
 public class Medico extends Servidor {
 
-	public Medico (String nome, String email, String rua, String uf,
+	public Medico (String nome, String email, String rua, String bairro, String uf,
 			String cidade, String codigoDeServidor) {
-		setDadosFuncionario(nome, email, rua, uf, cidade, codigoDeServidor);
+		setDadosFuncionario(nome, email, rua, bairro, uf, cidade, codigoDeServidor);
 	}
 }

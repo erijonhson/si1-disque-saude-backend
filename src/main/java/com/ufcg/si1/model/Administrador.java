@@ -12,13 +12,13 @@ public class Administrador extends Servidor {
 	private String senha;
 	
 	public Administrador() {
-		this("desconhecido", "desconhecido", "desconhecido", "desconhecido",
+		this("desconhecido", "desconhecido", "desconhecido", "desconhecido", "desconhecido",
 				"desconhecido", "desconhecido", "desconhecido");
 	}
 	
-	public Administrador(String nome, String email, String rua, String uf,
+	public Administrador(String nome, String email, String rua, String bairro, String uf,
 			String cidade, String codigoDeServidor, String senha) {
-		setDadosFuncionario(nome, email, rua, uf, cidade, codigoDeServidor);
+		setDadosFuncionario(nome, email, rua, bairro, uf, cidade, codigoDeServidor);
 		this.senha = senha;
 	}
 	
