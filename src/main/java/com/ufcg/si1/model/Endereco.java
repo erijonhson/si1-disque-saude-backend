@@ -25,15 +25,22 @@ public class Endereco {
 	@Column(name = "rua")
 	private String rua;
 
-	@Column(name = "uf")
-	private String uf;
+	@Column(name = "bairro")
+	private String bairro;
 
 	@Column(name = "cidade")
 	private String cidade;
 
+	@Column(name = "uf")
+	private String uf;
+
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "endereco")
 	@JsonManagedReference
 	private Set<Cidadao> moradores;
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "local")
+	@JsonManagedReference
+	private Set<UnidadeDeSaude> unidadesDeSaude;
 
 	public Endereco() {
 		this("desconhecido", "desconhecido", "desconhecido");

@@ -18,6 +18,32 @@ public class QueixaServiceImpl implements QueixaService {
 	QueixaRepository queixaRepository;
 
 	@Override
+	public Queixa cadastrar(Queixa queixa) {
+		return queixaRepository.save(queixa);
+	}
+
+	@Override
+	public Queixa atualizar(Queixa queixa) {
+		return queixaRepository.save(queixa);
+	}
+
+	@Override
+	public List<Queixa> buscarTodos() {
+		return queixaRepository.findAll();
+	}
+
+	@Override
+	public Queixa buscarPorId(Long id) {
+		return queixaRepository.getOne(id);
+	}
+
+	@Override
+	public void deletar(Queixa queixa) {
+		queixaRepository.delete(queixa);
+	}
+
+	// TODO: daqui para baixo sumirá
+	@Override
 	public List<Queixa> findAllQueixas() {
 		return queixaRepository.findAll();
 	}
@@ -51,4 +77,5 @@ public class QueixaServiceImpl implements QueixaService {
 	public Iterator<Queixa> getIterator() {
 		return queixaRepository.findAll().iterator();
 	}
+
 }

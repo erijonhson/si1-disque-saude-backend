@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.ufcg.si1.model.Queixa;
 
-public interface QueixaService {
+public interface QueixaService extends GenericService<Queixa> {
 
 	List<Queixa> findAllQueixas();
 

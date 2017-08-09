@@ -11,6 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -38,6 +39,7 @@ public class Queixa {
 	@JsonManagedReference
 	private Set<Comentario> comentarios;
 
+	@Transient
 	public int situacao;
 
 	public static final int ABERTA = 1;
@@ -45,6 +47,7 @@ public class Queixa {
 	public static final int FECHADA = 3;
 
 	public Queixa() {
+		this(0, "desconhecido", 0, new Cidadao());
 	}
 
 	public Queixa(long id, String descricao, int situacao, Cidadao solicitante) {
