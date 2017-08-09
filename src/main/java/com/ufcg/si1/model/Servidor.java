@@ -5,10 +5,10 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
 @Entity
-@DiscriminatorValue(value = "F")
-public abstract class Funcionario extends Cidadao {
+@DiscriminatorValue(value = "servidor_cidadao")
+public abstract class Servidor extends Cidadao {
 	
-	@Column(name = "Codigo_do_Servidor")
+	@Column(name = "codigo_de_servidor")
 	private String codigoDeServidor;
 	
 	public String getCodigoDeServidor() {

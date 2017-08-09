@@ -92,7 +92,8 @@ public class RestApiController {
         }
 
         currentQueixa.setDescricao(queixa.getDescricao());
-        currentQueixa.setComentario(queixa.getComentario());
+        // TODO: questão de feixar a queixa, como fica? Na minha percepção uma queixa pode ter vários comentários, não apenas um
+        // currentQueixa.setComentario(queixa.getComentario());
 
         queixaService.updateQueixa(currentQueixa);
         return new ResponseEntity<Queixa>(currentQueixa, HttpStatus.OK);
@@ -132,8 +133,8 @@ public class RestApiController {
         } catch (ObjetoInexistenteException e) {
             return new ResponseEntity<List>(HttpStatus.NOT_FOUND);
         }
-        if (us instanceof UnidadeSaude){
-            UnidadeSaude us1 = (UnidadeSaude) us;
+        if (us instanceof UnidadeDeSaude){
+            UnidadeDeSaude us1 = (UnidadeDeSaude) us;
             return new ResponseEntity<>(us1.getEspecialidades(), HttpStatus.OK);
         }
 
@@ -145,10 +146,10 @@ public class RestApiController {
         List<Object> unidades = unidadeSaudeService.getAll();
         if (unidades.isEmpty()) return new ResponseEntity<List>(HttpStatus.NOT_FOUND);
         else{
-            List<UnidadeSaude> unidadeSaudes = new ArrayList<>();
+            List<UnidadeDeSaude> unidadeSaudes = new ArrayList<>();
             for (Object  saude: unidades) {
-                if(saude instanceof UnidadeSaude){
-                    unidadeSaudes.add((UnidadeSaude) saude);
+                if(saude instanceof UnidadeDeSaude){
+                    unidadeSaudes.add((UnidadeDeSaude) saude);
                 }
             }
             return new ResponseEntity<>(unidadeSaudes, HttpStatus.OK);
@@ -173,7 +174,7 @@ public class RestApiController {
 
     //how to save a subclass object?
     @RequestMapping(value = "/unidade/", method = RequestMethod.POST)
-    public ResponseEntity<String> incluirUnidadeSaude(@RequestBody UnidadeSaude us, UriComponentsBuilder ucBuilder) {
+    public ResponseEntity<String> incluirUnidadeSaude(@RequestBody UnidadeDeSaude us, UriComponentsBuilder ucBuilder) {
 
         try {
             unidadeSaudeService.insere(us);
@@ -184,7 +185,7 @@ public class RestApiController {
         }
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(ucBuilder.path("/api/unidade/{id}").buildAndExpand(us.pegaCodigo()).toUri());
+        headers.setLocation(ucBuilder.path("/api/unidade/{id}").buildAndExpand(us.getId()).toUri());
         return new ResponseEntity<String>(headers, HttpStatus.CREATED);
     }
 
@@ -222,9 +223,9 @@ public class RestApiController {
         }
 
         double c = 0.0;
-        if (unidade instanceof PostoSaude)
-            c = ((PostoSaude) unidade).getAtendentes()
-                    / ((PostoSaude) unidade).getTaxaDiariaAtendimentos();
+        if (unidade instanceof PostoDeSaude)
+            c = ((PostoDeSaude) unidade).getAtendentes()
+                    / ((PostoDeSaude) unidade).getTaxaDiariaAtendimentos();
         else if (unidade instanceof Hospital){
             c = ((Hospital) unidade).getNumeroMedicos()
                     / ((Hospital) unidade).getNumeroPacientesDia();
@@ -267,12 +268,12 @@ public class RestApiController {
     @RequestMapping(value="/unidade/busca", method= RequestMethod.GET)
     public ResponseEntity<?> consultarUnidadeSaudePorBairro(@RequestParam(value = "bairro", required = true) String bairro){
         Object us = unidadeSaudeService.findByBairro(bairro);
-        if (us == null && !(us instanceof UnidadeSaude)) {
+        if (us == null && !(us instanceof UnidadeDeSaude)) {
             return new ResponseEntity(new CustomErrorType("Unidade with bairro " + bairro
                     + " not found"), HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity<UnidadeSaude>((UnidadeSaude) us, HttpStatus.OK);
+        return new ResponseEntity<UnidadeDeSaude>((UnidadeDeSaude) us, HttpStatus.OK);
     }
 
     private double numeroQueixasAbertas() {

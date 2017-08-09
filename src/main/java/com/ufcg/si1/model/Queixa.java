@@ -1,7 +1,5 @@
 package com.ufcg.si1.model;
 
-import exceptions.ObjetoInvalidoException;
-
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -17,46 +15,42 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import exceptions.ObjetoInvalidoException;
+
 @Entity
 @Table(name = "tb_queixa")
 public class Queixa {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id_queixa")
 	private Long id;
 
 	@Column(name = "descricao")
 	private String descricao;
 
 	@ManyToOne
-	@JoinColumn(name = "id_cidadao")
+	@JoinColumn(name = "cidadao_id")
 	@JsonBackReference
 	private Cidadao solicitante;
-	
+
 	@OneToMany(mappedBy = "queixa")
 	@JsonManagedReference
 	private Set<Comentario> comentarios;
-	
-	public int situacao; 
-	
-	// usa variaveis estaticas abaixo
-	/* situacoes da queixa */
-	
+
+	public int situacao;
+
 	public static final int ABERTA = 1;
 	public static final int EM_ANDAMENTO = 2;
 	public static final int FECHADA = 3;
 
-	private String comentario = ""; // usado na atualizacao da queixa
+	public Queixa() {
+	}
 
-	public Queixa(){}
-
-	public Queixa(long id, String descricao, int situacao, String comentario,
-                  String nome, String email,
-				  String rua, String uf, String cidade) {
+	public Queixa(long id, String descricao, int situacao, Cidadao solicitante) {
 		this.descricao = descricao;
 		this.situacao = situacao;
-		this.comentario = comentario;
-		this.solicitante = new Cidadao(nome, email, rua, uf, cidade);
+		this.solicitante = solicitante;
 	}
 
 	public long getId() {
@@ -86,21 +80,13 @@ public class Queixa {
 			throw new ObjetoInvalidoException("Status inválido");
 	}
 
-	public void fechar(String coment) throws ObjetoInvalidoException {
-		if (this.situacao == Queixa.EM_ANDAMENTO
-				|| this.situacao == Queixa.ABERTA) {
+	public void fechar() throws ObjetoInvalidoException {
+		if (this.situacao == Queixa.EM_ANDAMENTO || this.situacao == Queixa.ABERTA) {
 			this.situacao = Queixa.FECHADA;
-			this.comentario = coment;
+			// TODO: avaliar funcionamento dessa questão
+			// this.comentario = coment;
 		} else
 			throw new ObjetoInvalidoException("Status Inválido");
-	}
-
-	public String getComentario() {
-		return comentario;
-	}
-
-	public void setComentario(String comentario) {
-		this.comentario = comentario;
 	}
 
 	public Cidadao getSolicitante() {

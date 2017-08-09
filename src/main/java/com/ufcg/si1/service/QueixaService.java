@@ -1,6 +1,5 @@
 package com.ufcg.si1.service;
 
-
 import java.util.Iterator;
 import java.util.List;
 
@@ -10,22 +9,18 @@ public interface QueixaService {
 
 	List<Queixa> findAllQueixas();
 
-
-    void saveQueixa(Queixa queixa);
-
+	void saveQueixa(Queixa queixa);
 
 	Queixa findById(long id);
 
-	void updateQueixa(Queixa user);
-
+	void updateQueixa(Queixa queixa);
 
 	void deleteQueixaById(long id);
 
-    int size();
+	// TODO: apagar esse contrato ridículo
+	int size();
 
+	// TODO: apagar esse contrato ridículo
 	Iterator<Queixa> getIterator();
 
-
-//	boolean isUserExist(Queixa user);
-	
 }

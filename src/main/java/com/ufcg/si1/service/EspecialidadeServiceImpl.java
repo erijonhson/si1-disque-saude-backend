@@ -63,7 +63,7 @@ public class EspecialidadeServiceImpl implements EspecialidadeService {
     public void insere(Especialidade esp) throws Rep,
             ObjetoJaExistenteException {
 
-        esp.setCodigo(++geraCodigo);
+        esp.setCodigo((long) ++geraCodigo);
 
         if (indice == this.vetor.length) {
             throw new Rep("Erro ao incluir no array");
@@ -78,7 +78,7 @@ public class EspecialidadeServiceImpl implements EspecialidadeService {
     }
 
     @Override
-    public boolean existe(int codigo) {
+    public boolean existe(long codigo) {
 
         int indiceAux = 0;
         boolean existe = false;
