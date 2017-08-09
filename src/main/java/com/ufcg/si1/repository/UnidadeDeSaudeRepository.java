@@ -8,6 +8,6 @@ import com.ufcg.si1.model.UnidadeDeSaude;
 
 public interface UnidadeDeSaudeRepository extends JpaRepository<UnidadeDeSaude, Long> {
 
-	List<UnidadeDeSaude> findByLocalBairro(String bairro);
+	public List<UnidadeDeSaude> findByLocalBairro(String bairro);
 
 }
