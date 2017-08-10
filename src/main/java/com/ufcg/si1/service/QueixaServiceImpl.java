@@ -5,11 +5,14 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ufcg.si1.model.Endereco;
 import com.ufcg.si1.model.Queixa;
 import com.ufcg.si1.model.SituacaoDeQueixa;
 import com.ufcg.si1.model.prefeitura.PrefeituraSingleton;
 import com.ufcg.si1.model.prefeitura.SituacaoGeralDasQueixas;
 import com.ufcg.si1.repository.QueixaRepository;
+
+import exceptions.ObjetoInvalidoException;
 
 @Service("queixaService")
 public class QueixaServiceImpl implements QueixaService {
@@ -21,7 +24,7 @@ public class QueixaServiceImpl implements QueixaService {
 	CidadaoService cidadaoService;
 
 	@Autowired
-	EnderecoService enderecoService;
+	GenericService<Endereco> enderecoService;
 
 	@Override
 	public Queixa cadastrar(Queixa queixa) {
@@ -61,5 +64,13 @@ public class QueixaServiceImpl implements QueixaService {
 		float porcentagemQueixasAbertas = queixaRepository.count() / queixaRepository.countBySituacao(SituacaoDeQueixa.ABERTA) * 100;
 		return prefeitura.getSituacao().getSituacaoDasQueixas(porcentagemQueixasAbertas);
 	}
-
+	
+	public Queixa fecharQueixa(Queixa queixa) throws ObjetoInvalidoException {
+		Queixa aFechar = buscarPorId(queixa.getId());
+		aFechar.fechar();
+		
+		aFechar = atualizar(aFechar);
+		
+		return aFechar;
+	}
 }

@@ -1,8 +1,6 @@
 package com.ufcg.si1.controller;
 
 import java.util.Collection;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,13 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.ufcg.si1.model.Queixa;
-import com.ufcg.si1.repository.CidadaoRepository;
-import com.ufcg.si1.repository.EnderecoRepository;
-import com.ufcg.si1.service.CidadaoService;
-import com.ufcg.si1.service.EnderecoService;
-import com.ufcg.si1.service.EnderecoServiceImpl;
+import com.ufcg.si1.service.GenericService;
 import com.ufcg.si1.service.QueixaService;
-import com.ufcg.si1.service.QueixaServiceImpl;
 import com.ufcg.si1.util.CustomErrorType;
 
 import exceptions.ObjetoInvalidoException;
@@ -33,7 +26,7 @@ import exceptions.ObjetoInvalidoException;
 public class QueixaController {
 
 	@Autowired
-	QueixaService queixaService;
+	GenericService<Queixa> queixaService;
 
 	@RequestMapping(
 			value = "/queixa/", 
@@ -41,7 +34,7 @@ public class QueixaController {
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Collection<Queixa>> listAllQueixas() {
 		
-		Collection<Queixa> queixas = queixaService.findAllQueixas();
+		Collection<Queixa> queixas = queixaService.buscarTodos();
 
 		if (queixas.isEmpty()) {
 			return new ResponseEntity(HttpStatus.NO_CONTENT);
@@ -53,12 +46,14 @@ public class QueixaController {
 	@RequestMapping(value = "/queixa/", method = RequestMethod.POST)
 	public ResponseEntity<?> abrirQueixa(@RequestBody Queixa queixa, UriComponentsBuilder ucBuilder) {
 
-		try {
-			queixaService.saveQueixa(queixa);
+		/*try {
+			
 		} catch (ObjetoInvalidoException e) {
 			return new ResponseEntity(HttpStatus.BAD_REQUEST);
 		}
-
+		*/
+		
+		queixaService.cadastrar(queixa);
 		return new ResponseEntity<Queixa>(queixa, HttpStatus.CREATED);
 	}
 
@@ -68,7 +63,7 @@ public class QueixaController {
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Queixa> consultarQueixa(@PathVariable("id") long id) {
 
-		Queixa queixa = queixaService.findById(id);
+		Queixa queixa = queixaService.buscarPorId(id);
 		if (queixa == null) {
 			return new ResponseEntity(new CustomErrorType("Queixa with id " + id + " not found"), HttpStatus.NOT_FOUND);
 		}
@@ -78,7 +73,7 @@ public class QueixaController {
 	@RequestMapping(value = "/queixa/{id}", method = RequestMethod.PUT)
 	public ResponseEntity<Queixa> updateQueixa(@PathVariable("id") long id, @RequestBody Queixa queixa) {
 
-		Queixa currentQueixa = queixaService.findById(id);
+		Queixa currentQueixa = queixaService.buscarPorId(id);
 
 		if (currentQueixa == null) {
 			return new ResponseEntity(new CustomErrorType("Unable to upate. Queixa with id " + id + " not found."),
@@ -90,26 +85,34 @@ public class QueixaController {
 		// queixa pode ter vários comentários, não apenas um
 		// currentQueixa.setComentario(queixa.getComentario());
 
-		queixaService.updateQueixa(currentQueixa);
+		queixaService.atualizar(currentQueixa);
 		return new ResponseEntity<Queixa>(currentQueixa, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/queixa/{id}", method = RequestMethod.DELETE)
 	public ResponseEntity<Queixa> deleteQueixa(@PathVariable("id") long id) {
 
-		Queixa user = queixaService.findById(id);
-		if (user == null) {
+		//TODO Anotar bad smell de nome de variavel, que estava user
+		Queixa queixaEncontrada = queixaService.buscarPorId(id);
+		if (queixaEncontrada == null) {
 			return new ResponseEntity(new CustomErrorType("Unable to delete. Queixa with id " + id + " not found."),
 					HttpStatus.NOT_FOUND);
 		}
-		queixaService.deleteQueixaById(id);
-		return new ResponseEntity<Queixa>(HttpStatus.NO_CONTENT);
+		queixaService.deletar(queixaEncontrada);
+		
+		//TODO badsmel not content
+		return new ResponseEntity<Queixa>(HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/queixa/fechamento", method = RequestMethod.POST)
 	public ResponseEntity<?> fecharQueixa(@RequestBody Queixa queixaAFechar) {
-		queixaAFechar.situacao = Queixa.FECHADA;
-		queixaService.updateQueixa(queixaAFechar);
+		// bad smell variavel public queixaAFechar.situacao
+		try {
+			((QueixaService)queixaService).fecharQueixa(queixaAFechar);
+		} catch (ObjetoInvalidoException e) {
+			e.printStackTrace();
+		}
+		//queixaService.atualizar(queixaAFechar);
 		return new ResponseEntity<Queixa>(queixaAFechar, HttpStatus.OK);
 	}
 
