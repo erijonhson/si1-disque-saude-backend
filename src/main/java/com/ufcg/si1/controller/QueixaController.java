@@ -107,13 +107,17 @@ public class QueixaController {
 	@RequestMapping(value = "/queixa/fechamento", method = RequestMethod.POST)
 	public ResponseEntity<?> fecharQueixa(@RequestBody Queixa queixaAFechar) {
 		// bad smell variavel public queixaAFechar.situacao
+		Queixa queixaFechada = null;
 		try {
-			((QueixaService)queixaService).fecharQueixa(queixaAFechar);
+			queixaFechada = ((QueixaService)queixaService).fecharQueixa(queixaAFechar);
+
+			return new ResponseEntity<Queixa>(queixaFechada, HttpStatus.OK);
 		} catch (ObjetoInvalidoException e) {
 			e.printStackTrace();
 		}
 		//queixaService.atualizar(queixaAFechar);
-		return new ResponseEntity<Queixa>(queixaAFechar, HttpStatus.OK);
+		
+		return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
 	}
 
 }
