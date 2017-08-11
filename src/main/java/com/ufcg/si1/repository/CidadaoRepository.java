@@ -10,4 +10,5 @@ import java.lang.String;
 public interface CidadaoRepository extends JpaRepository<Cidadao, Long> {
 
 	public Cidadao findByEmail(String email);
+
 }

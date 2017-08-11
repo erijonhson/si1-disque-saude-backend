@@ -4,4 +4,6 @@ import com.ufcg.si1.model.Cidadao;
 
 public interface CidadaoService extends GenericService<Cidadao> {
 
+	public Cidadao buscarPorEmail(String email);
+
 }

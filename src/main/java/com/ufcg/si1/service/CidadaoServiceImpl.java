@@ -43,4 +43,9 @@ public class CidadaoServiceImpl implements CidadaoService {
 		cidadaoRepository.delete(cidadao);
 	}
 
+	@Override
+	public Cidadao buscarPorEmail(String email) {
+		return cidadaoRepository.findByEmail(email);
+	}
+
 }

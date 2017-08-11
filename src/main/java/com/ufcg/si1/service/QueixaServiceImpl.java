@@ -23,7 +23,7 @@ public class QueixaServiceImpl implements QueixaService {
 	GenericService<Cidadao> cidadaoService = new CidadaoServiceImpl();
 
 	@Autowired
-	GenericService<Endereco> enderecoService;
+	GenericService<Endereco> enderecoService = new EnderecoServiceImpl();
 
 	@Override
 	public Queixa cadastrar(Queixa queixa) {
@@ -31,8 +31,14 @@ public class QueixaServiceImpl implements QueixaService {
 		// por exemplo, usuário e endereço deveriam já estarem cadastrados, nesse ponto? 
 		// devemos testar se existe, antes?
 		// Acredito que essa é a maneira certa de fazer, de todo modo.
-		enderecoService.cadastrar(queixa.getSolicitante().getEndereco());
-		cidadaoService.cadastrar(queixa.getSolicitante());
+		Cidadao solicitante = queixa.getSolicitante();
+		Cidadao cidadaoBD = ((CidadaoService) cidadaoService).buscarPorEmail(solicitante.getEmail());
+		if (cidadaoBD == null) {
+			enderecoService.cadastrar(solicitante.getEndereco());
+			cidadaoService.cadastrar(solicitante);
+		} else {
+			queixa.setSolicitante(cidadaoBD);
+		}
 		return queixaRepository.save(queixa);
 	}
 
