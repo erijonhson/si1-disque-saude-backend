@@ -1,7 +1,7 @@
 package com.ufcg.si1.controller;
 
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,19 +21,13 @@ import com.ufcg.si1.model.Especialidade;
 import com.ufcg.si1.model.PostoDeSaude;
 import com.ufcg.si1.model.Queixa;
 import com.ufcg.si1.model.UnidadeDeSaude;
-import com.ufcg.si1.repository.CidadaoRepository;
-import com.ufcg.si1.repository.EnderecoRepository;
-import com.ufcg.si1.service.EspecialidadeService;
 import com.ufcg.si1.service.EspecialidadeServiceImpl;
-import com.ufcg.si1.service.QueixaService;
+import com.ufcg.si1.service.GenericService;
 import com.ufcg.si1.service.QueixaServiceImpl;
 import com.ufcg.si1.service.UnidadeDeSaudeService;
 import com.ufcg.si1.service.UnidadeDeSaudeServiceImpl;
-import com.ufcg.si1.util.CustomErrorType;
-import com.ufcg.si1.util.ObjWrapper;
 
 import br.edu.ufcg.Hospital;
-import exceptions.ObjetoInvalidoException;
 
 @RestController
 @RequestMapping("/api")
@@ -41,42 +35,27 @@ import exceptions.ObjetoInvalidoException;
 public class RestApiController {
 
 	@Autowired
-	QueixaService queixaService = new QueixaServiceImpl();
-	
+	GenericService<Queixa> queixaService = new QueixaServiceImpl();
+
 	@Autowired
-	EspecialidadeService especialidadeService = new EspecialidadeServiceImpl();
-	
+	GenericService<Especialidade> especialidadeService = new EspecialidadeServiceImpl();
+
 	@Autowired
-	UnidadeDeSaudeService unidadeSaudeService = new UnidadeDeSaudeServiceImpl();
-	
-	@Autowired
-	CidadaoRepository cidadaoRepository;
-	
-	@Autowired
-	EnderecoRepository enderecoRepository;
-	
-	/*
-	 * situação normal = 0 situação extra =1
-	 */
-	private int situacaoAtualPrefeitura = 0;
+	GenericService<UnidadeDeSaude> unidadeSaudeService = new UnidadeDeSaudeServiceImpl();
 
 	// Especialidade
 
 	@RequestMapping(value = "/especialidade/unidades", method = RequestMethod.GET)
-	public ResponseEntity<?> consultaEspecialidadeporUnidadeSaude(@RequestBody int codigoUnidadeSaude) {
+	public ResponseEntity<Especialidade> consultaEspecialidadeporUnidadeSaude(@RequestBody int codigoUnidadeSaude) {
 
-		Object us = null;
 		try {
-			us = unidadeSaudeService.buscarPorId((long) codigoUnidadeSaude);
-		} catch (Exception e) {
-			return new ResponseEntity<List>(HttpStatus.NOT_FOUND);
+			UnidadeDeSaude us = unidadeSaudeService.buscarPorId((long) codigoUnidadeSaude);
+			Collection<Especialidade> especialidades = us.getEspecialidades();
+			return new ResponseEntity(especialidades, HttpStatus.OK);
+		} catch (RuntimeException re) {
+			return new ResponseEntity(HttpStatus.NOT_FOUND);
 		}
-		if (us instanceof UnidadeDeSaude) {
-			UnidadeDeSaude us1 = (UnidadeDeSaude) us;
-			return new ResponseEntity<>(us1.getEspecialidades(), HttpStatus.OK);
-		}
-
-		return new ResponseEntity<List>(HttpStatus.NOT_FOUND);
+		
 	}
 
 	@RequestMapping(value = "/unidade/", method = RequestMethod.GET)
@@ -128,7 +107,8 @@ public class RestApiController {
 
 		Especialidade q = especialidadeService.buscarPorId(id);
 		if (q == null) {
-			return new ResponseEntity(new CustomErrorType("Especialidade with id " + id + " not found"),
+			return new ResponseEntity(
+					new Error("Especialidade with id " + id + " not found"),
 					HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<Especialidade>(q, HttpStatus.OK);
@@ -139,7 +119,7 @@ public class RestApiController {
 
 		Object us = unidadeSaudeService.buscarPorId(id);
 		if (us == null) {
-			return new ResponseEntity(new CustomErrorType("Unidade with id " + id + " not found"),
+			return new ResponseEntity(new Error("Unidade with id " + id + " not found"),
 					HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<>(us, HttpStatus.OK);
@@ -151,33 +131,37 @@ public class RestApiController {
 		Object unidade = unidadeSaudeService.buscarPorId(id);
 
 		if (unidade == null) {
-			return new ResponseEntity<ObjWrapper<Double>>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 
+		// TODO: Bad small pesado aqui, hein?
+		// acredito que dá pra usar State Pattern ;)
 		double c = 0.0;
 		if (unidade instanceof PostoDeSaude)
 			c = ((PostoDeSaude) unidade).getAtendentes() / ((PostoDeSaude) unidade).getTaxaDiariaAtendimentos();
 		else if (unidade instanceof Hospital) {
 			c = ((Hospital) unidade).getNumeroMedicos() / ((Hospital) unidade).getNumeroPacientesDia();
 		}
-		return new ResponseEntity<ObjWrapper<Double>>(new ObjWrapper<Double>(new Double(c)), HttpStatus.OK);
+		return new ResponseEntity(new Double(c), HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/geral/situacao", method = RequestMethod.GET)
 	public ResponseEntity<?> getSituacaoGeralQueixas() {
-		return new ResponseEntity<ObjWrapper<Integer>>(new ObjWrapper<Integer>(2), HttpStatus.OK);
+		return new ResponseEntity(new Integer(2), HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/unidade/busca", method = RequestMethod.GET)
 	public ResponseEntity<?> consultarUnidadeSaudePorBairro(
 			@RequestParam(value = "bairro", required = true) String bairro) {
-		Object us = unidadeSaudeService.findByBairro(bairro);
-		if (us == null && !(us instanceof UnidadeDeSaude)) {
-			return new ResponseEntity(new CustomErrorType("Unidade with bairro " + bairro + " not found"),
+
+		try {
+			Collection<UnidadeDeSaude> us = ((UnidadeDeSaudeService) unidadeSaudeService).findByBairro(bairro);
+			return new ResponseEntity<UnidadeDeSaude>((UnidadeDeSaude) us, HttpStatus.OK);
+		} catch(RuntimeException re) {
+			return new ResponseEntity(
+					new Error("Unidade with bairro " + bairro + " not found"),
 					HttpStatus.NOT_FOUND);
 		}
-
-		return new ResponseEntity<UnidadeDeSaude>((UnidadeDeSaude) us, HttpStatus.OK);
 	}
 
 }

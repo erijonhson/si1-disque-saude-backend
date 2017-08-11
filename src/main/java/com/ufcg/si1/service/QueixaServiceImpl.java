@@ -5,14 +5,13 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ufcg.si1.model.Cidadao;
 import com.ufcg.si1.model.Endereco;
 import com.ufcg.si1.model.Queixa;
 import com.ufcg.si1.model.SituacaoDeQueixa;
 import com.ufcg.si1.model.prefeitura.PrefeituraSingleton;
 import com.ufcg.si1.model.prefeitura.SituacaoGeralDasQueixas;
 import com.ufcg.si1.repository.QueixaRepository;
-
-import exceptions.ObjetoInvalidoException;
 
 @Service("queixaService")
 public class QueixaServiceImpl implements QueixaService {
@@ -21,7 +20,7 @@ public class QueixaServiceImpl implements QueixaService {
 	QueixaRepository queixaRepository;
 	
 	@Autowired
-	CidadaoService cidadaoService;
+	GenericService<Cidadao> cidadaoService = new CidadaoServiceImpl();
 
 	@Autowired
 	GenericService<Endereco> enderecoService;
@@ -31,6 +30,7 @@ public class QueixaServiceImpl implements QueixaService {
 		// TODO: avaliar nível de gambiarra disso 
 		// por exemplo, usuário e endereço deveriam já estarem cadastrados, nesse ponto? 
 		// devemos testar se existe, antes?
+		// Acredito que essa é a maneira certa de fazer, de todo modo.
 		enderecoService.cadastrar(queixa.getSolicitante().getEndereco());
 		cidadaoService.cadastrar(queixa.getSolicitante());
 		return queixaRepository.save(queixa);
@@ -61,14 +61,15 @@ public class QueixaServiceImpl implements QueixaService {
 
 		PrefeituraSingleton prefeitura = PrefeituraSingleton.getInstance();
 
-		float porcentagemQueixasAbertas = queixaRepository.count() / queixaRepository.countBySituacao(SituacaoDeQueixa.ABERTA) * 100;
-		return prefeitura.getSituacao().getSituacaoDasQueixas(porcentagemQueixasAbertas);
+		float porcentagemQueixasAbertas = 
+				queixaRepository.count() / queixaRepository.countBySituacao(SituacaoDeQueixa.ABERTA) * 100;
+		return prefeitura.getSituacaoDasQueixas(porcentagemQueixasAbertas);
 	}
 	
-	public Queixa fecharQueixa(Queixa queixa) throws ObjetoInvalidoException {
+	public Queixa fecharQueixa(Queixa queixa) {
+		
 		Queixa aFechar = buscarPorId(queixa.getId());
 		aFechar.fechar();
-		
 		aFechar = atualizar(aFechar);
 		
 		return aFechar;

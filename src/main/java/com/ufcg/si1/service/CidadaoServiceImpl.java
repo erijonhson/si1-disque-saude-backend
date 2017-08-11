@@ -22,7 +22,10 @@ public class CidadaoServiceImpl implements CidadaoService {
 	@Override
 	public Cidadao atualizar(Cidadao cidadao) {
 		Cidadao cidadaoBD = cidadaoRepository.findByEmail(cidadao.getEmail());
-		return cidadaoRepository.save(cidadaoBD);
+		if (cidadaoBD != null)
+			return cidadaoRepository.save(cidadaoBD);
+		else
+			return cidadaoRepository.save(cidadao);
 	}
 
 	@Override

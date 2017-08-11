@@ -15,8 +15,6 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-import exceptions.ObjetoInvalidoException;
-
 @Entity
 @Table(name = "tb_queixa")
 public class Queixa {
@@ -62,21 +60,19 @@ public class Queixa {
 	public SituacaoDeQueixa getSituacao() {
 		return situacao;
 	}
-
-	public void abrir() throws ObjetoInvalidoException {
+	
+	public void abrir() {
 		if (this.situacao != SituacaoDeQueixa.EM_ANDAMENTO)
 			this.situacao = SituacaoDeQueixa.ABERTA;
 		else
-			throw new ObjetoInvalidoException("Status inválido");
+			throw new IllegalStateException("Status inválido");
 	}
 
-	public void fechar() throws ObjetoInvalidoException {
+	public void fechar() {
 		if (this.situacao == SituacaoDeQueixa.EM_ANDAMENTO || this.situacao == SituacaoDeQueixa.ABERTA) {
 			this.situacao = SituacaoDeQueixa.FECHADA;
-			// TODO: avaliar funcionamento dessa questão
-			// this.comentario = coment;
 		} else
-			throw new ObjetoInvalidoException("Status Inválido");
+			throw new IllegalStateException("Status inválido");
 	}
 
 	public Cidadao getSolicitante() {

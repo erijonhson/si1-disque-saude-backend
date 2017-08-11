@@ -24,4 +24,8 @@ public class PrefeituraSingleton {
 		this.situacao = situacao;
 	}
 
+	public SituacaoGeralDasQueixas getSituacaoDasQueixas(float porcentagemQueixasAbertas) {
+		return this.situacao.getSituacaoDasQueixas(porcentagemQueixasAbertas);
+	}
+
 }
