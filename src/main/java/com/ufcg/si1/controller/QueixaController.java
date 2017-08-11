@@ -32,7 +32,7 @@ public class QueixaController {
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Collection<Queixa>> listAllQueixas() {
-		
+
 		Collection<Queixa> queixas = queixaService.buscarTodos();
 
 		if (queixas.isEmpty()) {
@@ -40,7 +40,7 @@ public class QueixaController {
 					new Error("Queixa não encontrada"), 
 					HttpStatus.NOT_FOUND);
 		}
-		
+
 		return new ResponseEntity<Collection<Queixa>>(queixas, HttpStatus.OK);
 	}
 
@@ -49,7 +49,7 @@ public class QueixaController {
 			method = RequestMethod.POST,
 			consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Queixa> abrirQueixa(@RequestBody Queixa queixa, UriComponentsBuilder ucBuilder) {
+	public ResponseEntity<Queixa> abrirQueixa(@RequestBody Queixa queixa) {
 
 		try {
 			Queixa queixaCadastrada = queixaService.cadastrar(queixa);
@@ -119,15 +119,8 @@ public class QueixaController {
 					new Error("Não é possível deletar. Queixa não encontrada."),
 					HttpStatus.NOT_FOUND);
 		}
-		
-		try {
-			queixaService.deletar(queixaEncontrada);
-		} catch (RuntimeException re) {
-			return new ResponseEntity(
-					new Error("Não é possível deletar. Erro interno no sistema."),
-					HttpStatus.CONFLICT);
-		}
-		
+		queixaService.deletar(queixaEncontrada);
+
 		//TODO badsmel not content
 		return new ResponseEntity<Queixa>(HttpStatus.OK);
 	}
