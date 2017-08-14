@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import com.ufcg.si1.model.Queixa;
 import com.ufcg.si1.service.GenericService;
@@ -52,6 +51,7 @@ public class QueixaController {
 	public ResponseEntity<Queixa> abrirQueixa(@RequestBody Queixa queixa) {
 
 		try {
+			QueixaFachadaSingleton.getInstance().preparaQueixa(queixa);
 			Queixa queixaCadastrada = queixaService.cadastrar(queixa);
 			return new ResponseEntity<Queixa>(queixaCadastrada, HttpStatus.CREATED);
 		} catch (RuntimeException re) {
@@ -67,6 +67,7 @@ public class QueixaController {
 	public ResponseEntity<Queixa> consultarQueixa(@PathVariable("id") long id) {
 
 		Queixa queixa = queixaService.buscarPorId(id);
+
 		if (queixa == null) {
 			return new ResponseEntity(
 					new Error("Queixa não encontrada"), 

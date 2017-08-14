@@ -1,12 +1,10 @@
 package com.ufcg.si1.model;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
-import javax.persistence.DiscriminatorColumn;
-import javax.persistence.DiscriminatorType;
-import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -22,12 +20,13 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+// TODO: existe UnidadeDeSaude que não é Hospital nem Posto?
 @Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "tipo_unidade_de_saude", discriminatorType = DiscriminatorType.STRING, length = 30)
-@DiscriminatorValue(value = "unidade")
+@Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "tb_unidade_de_saude")
-public class UnidadeDeSaude {
+public class UnidadeDeSaude implements Serializable {
+
+	private static final long serialVersionUID = 1842734734661302140L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

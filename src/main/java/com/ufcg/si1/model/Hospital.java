@@ -2,16 +2,25 @@ package com.ufcg.si1.model;
 
 import java.util.Set;
 
-import javax.persistence.DiscriminatorValue;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.persistence.Transient;
 
 @Entity
-@DiscriminatorValue(value = "hospital_unidade")
+@Table(name = "tb_unidade_de_saude_hospital")
 public class Hospital extends UnidadeDeSaude {
+
+	private static final long serialVersionUID = -58243804726375404L;
 
 	@Transient // não salva no BD
 	private br.edu.ufcg.Hospital hospital;
+	
+	@Column(name = "numero_de_medicos")
+	private int numeroDeMedicos;
+
+	@Column(name = "numero_de_pacientes_por_dia")
+	private int numeroDePacientesPorDia;
 
 	public Hospital() {
 		this("desconhecido");
@@ -19,17 +28,6 @@ public class Hospital extends UnidadeDeSaude {
 
 	public Hospital(String descricao) {
 		super(descricao);
-	}
-
-	@Override
-	public Long getId() {
-		return (long) hospital.getCodigo();
-	}
-
-	@Override
-	public void setId(Long id) {
-		super.setId(id);
-		hospital.setCodigo(id.intValue());
 	}
 
 	@Override
@@ -50,23 +48,21 @@ public class Hospital extends UnidadeDeSaude {
 		return super.getEspecialidades();
 	}
 
-	// TODO: teremos que persistir isso?
-	// observe a especificação do padrão adapter e aprecie a resposta
-	public int getNumeroMedicos() {
-		return hospital.getNumeroMedicos();
+	public int getNumeroDeMedicos() {
+		return numeroDeMedicos;
 	}
 
-	public void setNumeroMedicos(int numeroMedicos) {
-		hospital.setNumeroMedicos(numeroMedicos);
+	public void setNumeroDeMedicos(int numeroDeMedicos) {
+		this.numeroDeMedicos = numeroDeMedicos;
 	}
 
-	// TODO: teremos que persistir isso?
-	public int getNumeroPacientesDia() {
-		return (int) hospital.getNumeroPacientesDia();
+	public int getNumeroDePacientesPorDia() {
+		return numeroDePacientesPorDia;
 	}
 
-	public void setNumeroPacientesDia(int numeroPacientesDia) {
-		hospital.setNumeroPacientesDia(numeroPacientesDia);
+	public void setNumeroDePacientesPorDia(int numeroDePacientesPorDia) {
+		this.numeroDePacientesPorDia = numeroDePacientesPorDia;
+		hospital.setNumeroPacientesDia(numeroDePacientesPorDia);
 	}
 
 }

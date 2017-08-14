@@ -1,13 +1,15 @@
 package com.ufcg.si1.model;
 
 import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.Table;
 
 @Entity
-@DiscriminatorValue(value = "administrador_servidor")
+@Table(name = "tb_servidor_administrador")
 public class Administrador extends Servidor {
 	
+	private static final long serialVersionUID = 1510491667389611246L;
+
 	@Column(name = "senha")
 	private String senha;
 	

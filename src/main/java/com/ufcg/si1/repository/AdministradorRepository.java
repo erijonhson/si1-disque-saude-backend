@@ -8,4 +8,6 @@ import com.ufcg.si1.model.Administrador;
 @Repository
 public interface AdministradorRepository extends JpaRepository<Administrador, Long> {
 
+	public Administrador findByEmail(String email);
+
 }

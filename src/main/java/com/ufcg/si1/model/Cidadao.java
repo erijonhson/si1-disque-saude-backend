@@ -1,14 +1,11 @@
 package com.ufcg.si1.model;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
-import javax.persistence.DiscriminatorColumn;
-import javax.persistence.DiscriminatorType;
-import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -23,15 +20,15 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "tipo_cidadao", discriminatorType = DiscriminatorType.STRING, length = 20)
-@DiscriminatorValue(value = "cidadao")
+@Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "tb_cidadao")
-public class Cidadao {
+public class Cidadao implements Serializable {
+
+	private static final long serialVersionUID = -5341891576602823479L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id_cidadao")
+	@Column(name = "id")
 	private Long id;
 
 	@Column(name = "nome")
@@ -40,7 +37,7 @@ public class Cidadao {
 	@Column(name = "email", nullable = false, unique = true)
 	private String email;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne //(fetch = FetchType.LAZY)
 	@JoinColumn(name = "endereco_id")
 	@JsonBackReference
 	private Endereco endereco;

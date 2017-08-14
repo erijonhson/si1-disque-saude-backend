@@ -1,17 +1,19 @@
 package com.ufcg.si1.model;
 
 import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.Table;
 
 @Entity
-@DiscriminatorValue(value = "posto_unidade")
+@Table(name = "tb_unidade_de_saude_posto")
 public class PostoDeSaude extends UnidadeDeSaude {
+
+	private static final long serialVersionUID = 4379483195292866939L;
 
 	@Column(name = "atendentes")
 	private int atendentes;
 
-	@Column(name = "taxa_Diaria_Atendimentos")
+	@Column(name = "taxa_diaria_atendimentos")
 	private int taxaDiariaAtendimentos;
 
 	public PostoDeSaude() {
@@ -24,7 +26,6 @@ public class PostoDeSaude extends UnidadeDeSaude {
 		this.taxaDiariaAtendimentos = taxa;
 	}
 
-	// implementacoes vazias
 	public int getAtendentes() {
 		return atendentes;
 	}

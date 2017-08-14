@@ -27,18 +27,6 @@ public class QueixaServiceImpl implements QueixaService {
 
 	@Override
 	public Queixa cadastrar(Queixa queixa) {
-		// TODO: avaliar nível de gambiarra disso 
-		// por exemplo, usuário e endereço deveriam já estarem cadastrados, nesse ponto? 
-		// devemos testar se existe, antes?
-		// Acredito que essa é a maneira certa de fazer, de todo modo.
-		Cidadao solicitante = queixa.getSolicitante();
-		Cidadao cidadaoBD = ((CidadaoService) cidadaoService).buscarPorEmail(solicitante.getEmail());
-		if (cidadaoBD == null) {
-			enderecoService.cadastrar(solicitante.getEndereco());
-			cidadaoService.cadastrar(solicitante);
-		} else {
-			queixa.setSolicitante(cidadaoBD);
-		}
 		return queixaRepository.save(queixa);
 	}
 
