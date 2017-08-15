@@ -36,11 +36,11 @@ public class Endereco implements Serializable {
 	private String uf;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "endereco")
-	@JsonManagedReference
+	@JsonManagedReference(value="endereco-movement")
 	private Set<Queixa> queixas;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "local")
-	@JsonManagedReference
+	@JsonManagedReference(value="endereco-unidade-movement")
 	private Set<UnidadeDeSaude> unidadesDeSaude;
 
 	public Endereco() {

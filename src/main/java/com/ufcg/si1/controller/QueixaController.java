@@ -159,6 +159,7 @@ public class QueixaController {
 
 	private void preparaQueixa(Queixa queixa) {
 		preparaSolicitanteDaQueixa(queixa);
+		preparaEnderencoDaQueixa(queixa);
 	}
 
 	private void preparaSolicitanteDaQueixa(Queixa queixa) {
@@ -171,6 +172,18 @@ public class QueixaController {
 		}
 
 		queixa.setSolicitante(solicitanteBD);
+	}
+	
+	private void preparaEnderencoDaQueixa(Queixa queixa) {
+		
+		Endereco endereco = queixa.getEndereco();
+
+		Endereco enderoBD = ((EnderecoServiceImpl) enderecoService).buscarPorRuaECidade(endereco);
+		if (enderoBD == null) {
+			enderoBD = enderecoService.cadastrar(endereco);
+		}
+
+		queixa.setEndereco(enderoBD);
 	}
 
 }

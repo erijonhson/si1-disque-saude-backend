@@ -42,7 +42,7 @@ public class UnidadeDeSaude implements Serializable {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "endereco_id")
-	@JsonBackReference
+	@JsonBackReference(value="endereco-unidade-movement")
 	private Endereco local;
 
 	public UnidadeDeSaude() {

@@ -30,11 +30,11 @@ public class Queixa implements Serializable {
 
 	@ManyToOne
 	@JoinColumn(name = "cidadao_id")
-	@JsonBackReference
+	@JsonBackReference(value="cidadao-movement")
 	private Cidadao solicitante;
 
 	@OneToMany(mappedBy = "queixa")
-	@JsonManagedReference
+	@JsonManagedReference(value="queixa-movement")
 	private Set<Comentario> comentarios;
 
 	@Column(name = "situacao")
@@ -42,7 +42,7 @@ public class Queixa implements Serializable {
 
 	@ManyToOne //(fetch = FetchType.LAZY)
 	@JoinColumn(name = "endereco_id")
-	@JsonBackReference
+	@JsonBackReference(value="endereco-movement")
 	private Endereco endereco;
 
 	public Queixa() {
@@ -117,6 +117,10 @@ public class Queixa implements Serializable {
 
 	public Endereco getEndereco() {
 		return endereco;
+	}
+	
+	public void setEndereco(Endereco endereco) {
+		this.endereco = endereco;
 	}
 
 }

@@ -38,7 +38,7 @@ public class Cidadao implements Serializable {
 	private String email;
 
 	@OneToMany(mappedBy = "solicitante")
-	@JsonManagedReference
+	@JsonManagedReference(value="cidadao-movement")
 	private Set<Queixa> queixas;
 
 	public Cidadao() {
