@@ -8,6 +8,8 @@ import javax.persistence.Table;
 @Table(name = "tb_cidadao_servidor")
 public abstract class Servidor extends Cidadao {
 
+	private static final long serialVersionUID = 8027223823168799125L;
+
 	@Column(name = "codigo_de_servidor")
 	private String codigoDeServidor;
 
@@ -24,16 +26,11 @@ public abstract class Servidor extends Cidadao {
 	 * 
 	 * @param nome
 	 * @param email
-	 * @param rua
-	 * @param uf
-	 * @param cidade
 	 * @param codigoDeServidor
 	 */
-	protected void setDadosFuncionario(String nome, String email, String rua, String bairro, String uf, String cidade,
-			String codigoDeServidor) {
+	protected void setDadosFuncionario(String nome, String email, String codigoDeServidor) {
 		setNome(nome);
 		setEmail(email);
-		setEndereco(new Endereco(rua, bairro, uf, cidade));
 		setCodigoDeServidor(codigoDeServidor);
 	}
 }

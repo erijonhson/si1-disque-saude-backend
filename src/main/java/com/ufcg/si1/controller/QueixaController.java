@@ -13,7 +13,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ufcg.si1.model.Cidadao;
+import com.ufcg.si1.model.Endereco;
 import com.ufcg.si1.model.Queixa;
+import com.ufcg.si1.service.CidadaoServiceImpl;
+import com.ufcg.si1.service.EnderecoServiceImpl;
 import com.ufcg.si1.service.GenericService;
 import com.ufcg.si1.service.QueixaService;
 import com.ufcg.si1.service.QueixaServiceImpl;
@@ -25,6 +29,12 @@ public class QueixaController {
 
 	@Autowired
 	GenericService<Queixa> queixaService = new QueixaServiceImpl();
+
+	@Autowired
+	GenericService<Cidadao> cidadaoService = new CidadaoServiceImpl();
+	
+	@Autowired
+	GenericService<Endereco> enderecoService = new EnderecoServiceImpl();
 
 	@RequestMapping(
 			value = "/queixa/", 
@@ -51,7 +61,7 @@ public class QueixaController {
 	public ResponseEntity<Queixa> abrirQueixa(@RequestBody Queixa queixa) {
 
 		try {
-			QueixaFachadaSingleton.getInstance().preparaQueixa(queixa);
+			preparaQueixa(queixa);
 			Queixa queixaCadastrada = queixaService.cadastrar(queixa);
 			return new ResponseEntity<Queixa>(queixaCadastrada, HttpStatus.CREATED);
 		} catch (RuntimeException re) {
@@ -145,6 +155,22 @@ public class QueixaController {
 					HttpStatus.NOT_MODIFIED);
 		}
 
+	}
+
+	private void preparaQueixa(Queixa queixa) {
+		preparaSolicitanteDaQueixa(queixa);
+	}
+
+	private void preparaSolicitanteDaQueixa(Queixa queixa) {
+
+		Cidadao solicitante = queixa.getSolicitante();
+
+		Cidadao solicitanteBD = ((CidadaoServiceImpl) cidadaoService).buscarPorEmail(solicitante.getEmail());
+		if (solicitanteBD == null) {
+			solicitanteBD = cidadaoService.cadastrar(solicitante);
+		}
+
+		queixa.setSolicitante(solicitanteBD);
 	}
 
 }

@@ -40,6 +40,11 @@ public class Queixa implements Serializable {
 	@Column(name = "situacao")
 	public SituacaoDeQueixa situacao;
 
+	@ManyToOne //(fetch = FetchType.LAZY)
+	@JoinColumn(name = "endereco_id")
+	@JsonBackReference
+	private Endereco endereco;
+
 	public Queixa() {
 		this(0, "desconhecido", SituacaoDeQueixa.ABERTA, new Cidadao());
 	}
@@ -108,6 +113,10 @@ public class Queixa implements Serializable {
 
 	public Long getId() {
 		return id;
+	}
+
+	public Endereco getEndereco() {
+		return endereco;
 	}
 
 }

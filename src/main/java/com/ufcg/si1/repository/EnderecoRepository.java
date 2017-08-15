@@ -6,4 +6,6 @@ import com.ufcg.si1.model.Endereco;
 
 public interface EnderecoRepository extends JpaRepository<Endereco, Long> {
 
+	Endereco findByRuaAndCidade(String rua, String cidade);
+
 }

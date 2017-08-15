@@ -37,7 +37,7 @@ public class Endereco implements Serializable {
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "endereco")
 	@JsonManagedReference
-	private Set<Cidadao> moradores;
+	private Set<Queixa> queixas;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "local")
 	@JsonManagedReference
@@ -66,16 +66,20 @@ public class Endereco implements Serializable {
 		return this.cidade;
 	}
 
-	public Set<Cidadao> getMoradores() {
-		return moradores;
+	public Set<Queixa> getQueixas() {
+		return queixas;
 	}
 
-	public void setMoradores(Set<Cidadao> moradores) {
-		this.moradores = moradores;
+	public Set<UnidadeDeSaude> getUnidadesDeSaude() {
+		return unidadesDeSaude;
 	}
 
-	public void addMorador(Cidadao cidadao) {
-		this.moradores.add(cidadao);
+	public void addQueixa(Queixa queixa) {
+		this.queixas.add(queixa);
+	}
+
+	public void addUnidadeDeSaude(UnidadeDeSaude unidadeDeSaude) {
+		this.unidadesDeSaude.add(unidadeDeSaude);
 	}
 
 	@Override

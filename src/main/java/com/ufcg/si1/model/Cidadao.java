@@ -37,21 +37,15 @@ public class Cidadao implements Serializable {
 	@Column(name = "email", nullable = false, unique = true)
 	private String email;
 
-	@ManyToOne //(fetch = FetchType.LAZY)
-	@JoinColumn(name = "endereco_id")
-	@JsonBackReference
-	private Endereco endereco;
-
 	@OneToMany(mappedBy = "solicitante")
 	@JsonManagedReference
 	private Set<Queixa> queixas;
 
 	public Cidadao() {
-		this("desconhecido", "desconhecido", new Endereco());
+		this("desconhecido", "desconhecido");
 	}
 
-	public Cidadao(String nome, String email, Endereco endereco) {
-		this.endereco = endereco;
+	public Cidadao(String nome, String email) {
 		this.nome = nome;
 		this.email = email;
 		queixas = new HashSet<>();
@@ -71,14 +65,6 @@ public class Cidadao implements Serializable {
 
 	public void setEmail(String email) {
 		this.email = email;
-	}
-
-	public void setEndereco(Endereco endereco) {
-		this.endereco = endereco;
-	}
-
-	public Endereco getEndereco() {
-		return this.endereco;
 	}
 
 	public void addQueixa(Queixa queixa) {

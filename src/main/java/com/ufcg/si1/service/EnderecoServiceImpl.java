@@ -38,5 +38,9 @@ public class EnderecoServiceImpl implements GenericService<Endereco> {
 	public void deletar(Endereco endereco) {
 		enderecoRepository.delete(endereco);
 	}
+	
+	public Endereco buscarPorRuaECidade(Endereco endereco) {
+		return enderecoRepository.findByRuaAndCidade(endereco.getRua(), endereco.getCidade());
+	}
 
 }
