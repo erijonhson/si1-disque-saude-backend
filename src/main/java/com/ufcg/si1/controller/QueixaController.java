@@ -14,15 +14,19 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ufcg.si1.model.Cidadao;
+import com.ufcg.si1.model.Comentario;
 import com.ufcg.si1.model.Endereco;
 import com.ufcg.si1.model.Queixa;
 import com.ufcg.si1.service.CidadaoServiceImpl;
+import com.ufcg.si1.service.ComentarioService;
+import com.ufcg.si1.service.ComentarioServiceImpl;
 import com.ufcg.si1.service.EnderecoServiceImpl;
 import com.ufcg.si1.service.GenericService;
 import com.ufcg.si1.service.QueixaService;
 import com.ufcg.si1.service.QueixaServiceImpl;
 
 import exceptions.Erro;
+
 
 @RestController
 @RequestMapping("/api")
@@ -37,6 +41,9 @@ public class QueixaController {
 	
 	@Autowired
 	GenericService<Endereco> enderecoService = new EnderecoServiceImpl();
+	
+	@Autowired
+	ComentarioService comentarioService;
 
 	@RequestMapping(
 			value = "/queixa/", 
@@ -45,12 +52,6 @@ public class QueixaController {
 	public ResponseEntity<Collection<Queixa>> listAllQueixas() {
 
 		Collection<Queixa> queixas = queixaService.buscarTodos();
-
-		if (queixas.isEmpty()) {
-			return new ResponseEntity(
-					new Erro("Queixa não encontrada"), 
-					HttpStatus.NOT_FOUND);
-		}
 
 		return new ResponseEntity<Collection<Queixa>>(queixas, HttpStatus.OK);
 	}
@@ -159,6 +160,28 @@ public class QueixaController {
 
 	}
 
+	@RequestMapping(
+			value = "/queixa/comentario/{id}",
+			method = RequestMethod.POST,
+			consumes = MediaType.APPLICATION_JSON_VALUE,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Comentario> adicionaComentario(@PathVariable("id") Long idQueixa,@RequestBody Comentario comentario) {
+		Queixa queixaBD = queixaService.buscarPorId(idQueixa);
+		Comentario comentarioBD = null;
+		
+		if(queixaBD != null) {
+			comentario.setQueixa(queixaBD);
+			comentarioBD = comentarioService.cadastrar(comentario);
+			return new ResponseEntity<Comentario>(comentarioBD, HttpStatus.CREATED);
+		}
+		
+		
+		return new ResponseEntity(HttpStatus.NOT_FOUND);
+	}
+	
+	
+	// ----------- privated methods ---------------
+	
 	private void preparaQueixa(Queixa queixa) {
 		preparaSolicitanteDaQueixa(queixa);
 		preparaEnderencoDaQueixa(queixa);

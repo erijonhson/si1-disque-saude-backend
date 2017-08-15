@@ -39,4 +39,20 @@ public class Comentario implements Serializable {
 		this.descricao = descricao;
 	}
 
+	public Long getId() {
+		return this.id;
+	}
+	
+	public void setDescrição(String descricao) {
+		this.descricao = descricao;
+	}
+	
+	public String getDescricao() {
+		return this.descricao;
+	}
+	
+	public void setQueixa(Queixa queixa) {
+		this.queixa = queixa;
+	}
+
 }

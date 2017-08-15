@@ -11,7 +11,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 @Table(name = "tb_queixa")
@@ -30,12 +29,12 @@ public class Queixa implements Serializable {
 	private Cidadao solicitante;
 
 	@Column(name = "situacao")
-	public SituacaoDeQueixa situacao;
+	private SituacaoDeQueixa situacao;
 
 	@ManyToOne //(fetch = FetchType.LAZY)
 	@JoinColumn(name = "endereco_id")
 	private Endereco endereco;
-
+	
 	public Queixa() {
 		this(0, "desconhecido", SituacaoDeQueixa.ABERTA, new Cidadao());
 	}
