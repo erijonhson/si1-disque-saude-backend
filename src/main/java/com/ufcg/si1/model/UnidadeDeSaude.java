@@ -1,12 +1,9 @@
 package com.ufcg.si1.model;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -14,13 +11,9 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 // TODO: existe UnidadeDeSaude que não é Hospital nem Posto?
 @Entity
@@ -38,13 +31,8 @@ public class UnidadeDeSaude implements Serializable {
 	@Column(name = "descricao")
 	private String descricao;
 
-	@OneToMany(mappedBy = "unidadeDeSaude")
-	@JsonManagedReference(value="unidade-especialidade-movement")
-	private Set<Especialidade> especialidades;
-
 	@ManyToOne //(fetch = FetchType.LAZY)
 	@JoinColumn(name = "endereco_id")
-	@JsonBackReference(value="endereco-unidade-movement")
 	private Endereco local;
 
 	public UnidadeDeSaude() {
@@ -53,7 +41,6 @@ public class UnidadeDeSaude implements Serializable {
 
 	public UnidadeDeSaude(String descricao) {
 		this.descricao = descricao;
-		this.especialidades = new HashSet<>();
 	}
 
 	public String getDescricao() {
@@ -62,14 +49,6 @@ public class UnidadeDeSaude implements Serializable {
 
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
-	}
-
-	public Set<Especialidade> getEspecialidades() {
-		return this.especialidades;
-	}
-
-	public void adicionarEspecialidade(Especialidade especialidade) {
-		this.especialidades.add(especialidade);
 	}
 
 	public Long getId() {

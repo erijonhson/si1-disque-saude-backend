@@ -41,7 +41,9 @@ public class EspecialidadeController {
 
 		try {
 			UnidadeDeSaude unidadeDeSaude = unidadeSaudeService.buscarPorId(codigoUnidadeSaude);
-			Collection<Especialidade> especialidades = unidadeDeSaude.getEspecialidades();
+			Collection<Especialidade> especialidades = 
+					((EspecialidadeServiceImpl) especialidadeService)
+					.buscarEspecialidadesPorUnidadeDeSaude(unidadeDeSaude);
 			return new ResponseEntity(especialidades, HttpStatus.OK);
 		} catch (RuntimeException re) {
 			return new ResponseEntity(HttpStatus.NOT_FOUND);

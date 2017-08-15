@@ -1,7 +1,6 @@
 package com.ufcg.si1.model;
 
 import java.io.Serializable;
-import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,13 +9,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
 @Table(name = "tb_queixa")
@@ -32,19 +27,13 @@ public class Queixa implements Serializable {
 
 	@ManyToOne
 	@JoinColumn(name = "cidadao_id")
-	@JsonBackReference(value="cidadao-movement")
 	private Cidadao solicitante;
-
-	@OneToMany(mappedBy = "queixa")
-	@JsonManagedReference(value="queixa-comentario-movement")
-	private Set<Comentario> comentarios;
 
 	@Column(name = "situacao")
 	public SituacaoDeQueixa situacao;
 
 	@ManyToOne //(fetch = FetchType.LAZY)
 	@JoinColumn(name = "endereco_id")
-	@JsonBackReference(value="endereco-queixa-movement")
 	private Endereco endereco;
 
 	public Queixa() {

@@ -1,20 +1,13 @@
 package com.ufcg.si1.model;
 
 import java.io.Serializable;
-import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
 @Table(name = "tb_endereco")
@@ -37,14 +30,6 @@ public class Endereco implements Serializable {
 	@Column(name = "uf")
 	private String uf;
 
-	@OneToMany(mappedBy = "endereco")
-	@JsonManagedReference(value="endereco-queixa-movement")
-	private Set<Queixa> queixas;
-
-	@OneToMany(mappedBy = "local")
-	@JsonManagedReference(value="endereco-unidade-movement")
-	private Set<UnidadeDeSaude> unidadesDeSaude;
-
 	public Endereco() {
 		this("desconhecido", "desconhecido", "desconhecido", "desconhecido");
 	}
@@ -66,22 +51,6 @@ public class Endereco implements Serializable {
 
 	public String getCidade() {
 		return this.cidade;
-	}
-
-	public Set<Queixa> getQueixas() {
-		return queixas;
-	}
-
-	public Set<UnidadeDeSaude> getUnidadesDeSaude() {
-		return unidadesDeSaude;
-	}
-
-	public void addQueixa(Queixa queixa) {
-		this.queixas.add(queixa);
-	}
-
-	public void addUnidadeDeSaude(UnidadeDeSaude unidadeDeSaude) {
-		this.unidadesDeSaude.add(unidadeDeSaude);
 	}
 
 	@Override

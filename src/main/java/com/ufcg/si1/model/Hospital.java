@@ -1,7 +1,5 @@
 package com.ufcg.si1.model;
 
-import java.util.Set;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -39,13 +37,6 @@ public class Hospital extends UnidadeDeSaude {
 	public void setDescricao(String descricao) {
 		hospital.setDescricao(descricao);
 		super.setDescricao(descricao);
-	}
-
-	@Override
-	public Set<Especialidade> getEspecialidades() {
-		// hospital.getEspecialidades().forEach();
-		// solução confusa, não resolve nossos problemas
-		return super.getEspecialidades();
 	}
 
 	public int getNumeroDeMedicos() {

@@ -1,8 +1,6 @@
 package com.ufcg.si1.model;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,15 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -39,10 +29,6 @@ public class Cidadao implements Serializable {
 	@Column(name = "email", nullable = false, unique = true)
 	private String email;
 
-	@OneToMany(mappedBy = "solicitante")
-	@JsonManagedReference(value="cidadao-movement")
-	private Set<Queixa> queixas;
-
 	public Cidadao() {
 		this("desconhecido", "desconhecido");
 	}
@@ -50,7 +36,6 @@ public class Cidadao implements Serializable {
 	public Cidadao(String nome, String email) {
 		this.nome = nome;
 		this.email = email;
-		queixas = new HashSet<>();
 	}
 
 	public String getNome() {
@@ -67,14 +52,6 @@ public class Cidadao implements Serializable {
 
 	public void setEmail(String email) {
 		this.email = email;
-	}
-
-	public void addQueixa(Queixa queixa) {
-		queixas.add(queixa);
-	}
-
-	public Set<Queixa> getQueixas() {
-		return queixas;
 	}
 
 	@Override

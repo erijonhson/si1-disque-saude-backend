@@ -29,7 +29,6 @@ public class Comentario implements Serializable {
 
 	@ManyToOne
 	@JoinColumn(name = "queixa_id")
-	@JsonBackReference(value="queixa-comentario-movement")
 	private Queixa queixa;
 
 	public Comentario() {
