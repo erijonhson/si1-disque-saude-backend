@@ -41,4 +41,5 @@ public class PostoDeSaude extends UnidadeDeSaude {
 	public void setTaxaDiariaAtendimentos(int taxaDiariaAtendimentos) {
 		this.taxaDiariaAtendimentos = taxaDiariaAtendimentos;
 	}
+
 }

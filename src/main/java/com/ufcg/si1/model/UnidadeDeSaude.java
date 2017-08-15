@@ -18,7 +18,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 // TODO: existe UnidadeDeSaude que não é Hospital nem Posto?
 @Entity
@@ -37,10 +39,10 @@ public class UnidadeDeSaude implements Serializable {
 	private String descricao;
 
 	@OneToMany(mappedBy = "unidadeDeSaude")
-	@JsonManagedReference
+	@JsonManagedReference(value="unidade-especialidade-movement")
 	private Set<Especialidade> especialidades;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne //(fetch = FetchType.LAZY)
 	@JoinColumn(name = "endereco_id")
 	@JsonBackReference(value="endereco-unidade-movement")
 	private Endereco local;

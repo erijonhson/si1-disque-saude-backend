@@ -12,6 +12,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
 @Table(name = "tb_comentario")
@@ -27,7 +29,7 @@ public class Comentario implements Serializable {
 
 	@ManyToOne
 	@JoinColumn(name = "queixa_id")
-	@JsonBackReference(value="queixa-movement")
+	@JsonBackReference(value="queixa-comentario-movement")
 	private Queixa queixa;
 
 	public Comentario() {
@@ -37,4 +39,5 @@ public class Comentario implements Serializable {
 	public Comentario(String descricao) {
 		this.descricao = descricao;
 	}
+
 }

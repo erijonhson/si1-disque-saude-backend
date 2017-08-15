@@ -14,7 +14,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
 @Table(name = "tb_queixa")
@@ -34,7 +36,7 @@ public class Queixa implements Serializable {
 	private Cidadao solicitante;
 
 	@OneToMany(mappedBy = "queixa")
-	@JsonManagedReference(value="queixa-movement")
+	@JsonManagedReference(value="queixa-comentario-movement")
 	private Set<Comentario> comentarios;
 
 	@Column(name = "situacao")
@@ -42,7 +44,7 @@ public class Queixa implements Serializable {
 
 	@ManyToOne //(fetch = FetchType.LAZY)
 	@JoinColumn(name = "endereco_id")
-	@JsonBackReference(value="endereco-movement")
+	@JsonBackReference(value="endereco-queixa-movement")
 	private Endereco endereco;
 
 	public Queixa() {

@@ -6,6 +6,6 @@ import com.ufcg.si1.model.UnidadeDeSaude;
 
 public interface UnidadeDeSaudeService extends GenericService<UnidadeDeSaude> {
 
-	List<UnidadeDeSaude> findByBairro(String bairro);
+	List<UnidadeDeSaude> buscaPorBairro(String bairro);
 
 }

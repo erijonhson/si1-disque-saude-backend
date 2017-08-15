@@ -13,6 +13,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
 @Table(name = "tb_especialidade")
@@ -26,9 +28,9 @@ public class Especialidade implements Serializable {
 	@Column(name = "descricao")
 	private String descricao;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne //(fetch = FetchType.LAZY)
 	@JoinColumn(name = "unidade_de_saude_id")
-	@JsonBackReference
+	@JsonBackReference(value="unidade-especialidade-movement")
 	private UnidadeDeSaude unidadeDeSaude;
 
 	public Especialidade() {

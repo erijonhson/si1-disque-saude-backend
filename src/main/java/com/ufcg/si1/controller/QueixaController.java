@@ -22,6 +22,8 @@ import com.ufcg.si1.service.GenericService;
 import com.ufcg.si1.service.QueixaService;
 import com.ufcg.si1.service.QueixaServiceImpl;
 
+import exceptions.Erro;
+
 @RestController
 @RequestMapping("/api")
 @CrossOrigin
@@ -46,7 +48,7 @@ public class QueixaController {
 
 		if (queixas.isEmpty()) {
 			return new ResponseEntity(
-					new Error("Queixa não encontrada"), 
+					new Erro("Queixa não encontrada"), 
 					HttpStatus.NOT_FOUND);
 		}
 
@@ -80,7 +82,7 @@ public class QueixaController {
 
 		if (queixa == null) {
 			return new ResponseEntity(
-					new Error("Queixa não encontrada"), 
+					new Erro("Queixa não encontrada"), 
 					HttpStatus.NOT_FOUND);
 		}
 
@@ -98,7 +100,7 @@ public class QueixaController {
 
 		if (currentQueixa == null) {
 			return new ResponseEntity(
-					new Error("Não é possível atualizar. Queixa não encontrada."),
+					new Erro("Não é possível atualizar. Queixa não encontrada."),
 					HttpStatus.NOT_FOUND);
 		}
 
@@ -110,7 +112,7 @@ public class QueixaController {
 			queixaService.atualizar(currentQueixa);
 		} catch(RuntimeException re) {
 			return new ResponseEntity(
-					new Error("Não é possível atualizar. Erro interno no sistema."),
+					new Erro("Não é possível atualizar. Erro interno no sistema."),
 					HttpStatus.NOT_FOUND);
 		}
 
@@ -127,7 +129,7 @@ public class QueixaController {
 		Queixa queixaEncontrada = queixaService.buscarPorId(id);
 		if (queixaEncontrada == null) {
 			return new ResponseEntity(
-					new Error("Não é possível deletar. Queixa não encontrada."),
+					new Erro("Não é possível deletar. Queixa não encontrada."),
 					HttpStatus.NOT_FOUND);
 		}
 		queixaService.deletar(queixaEncontrada);
@@ -151,7 +153,7 @@ public class QueixaController {
 			return new ResponseEntity<Queixa>(queixaFechada, HttpStatus.OK);
 		} catch (RuntimeException re) {
 			return new ResponseEntity(
-					new Error("Não é possível fechar Queixa. Erro interno no sistema."),
+					new Erro("Não é possível fechar Queixa. Erro interno no sistema."),
 					HttpStatus.NOT_MODIFIED);
 		}
 

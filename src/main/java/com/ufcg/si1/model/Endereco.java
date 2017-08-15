@@ -12,7 +12,9 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
 @Table(name = "tb_endereco")
@@ -35,11 +37,11 @@ public class Endereco implements Serializable {
 	@Column(name = "uf")
 	private String uf;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "endereco")
-	@JsonManagedReference(value="endereco-movement")
+	@OneToMany(mappedBy = "endereco")
+	@JsonManagedReference(value="endereco-queixa-movement")
 	private Set<Queixa> queixas;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "local")
+	@OneToMany(mappedBy = "local")
 	@JsonManagedReference(value="endereco-unidade-movement")
 	private Set<UnidadeDeSaude> unidadesDeSaude;
 
@@ -86,4 +88,5 @@ public class Endereco implements Serializable {
 	public String toString() {
 		return "[rua=" + rua + " uf=" + uf + " cidade=" + cidade + "]";
 	}
+
 }

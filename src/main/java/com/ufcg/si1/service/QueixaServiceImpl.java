@@ -42,7 +42,7 @@ public class QueixaServiceImpl implements QueixaService {
 
 	@Override
 	public Queixa buscarPorId(Long id) {
-		return queixaRepository.getOne(id);
+		return queixaRepository.findOne(id);
 	}
 
 	@Override

@@ -31,7 +31,7 @@ public class EspecialidadeServiceImpl implements EspecialidadeService {
 
 	@Override
 	public Especialidade buscarPorId(Long id) {
-		return especialidadeRepository.getOne(id);
+		return especialidadeRepository.findOne(id);
 	}
 
 	@Override

@@ -40,7 +40,7 @@ public class UnidadeDeSaudeServiceImpl implements UnidadeDeSaudeService {
 	}
 
 	@Override
-	public List<UnidadeDeSaude> findByBairro(String bairro) {
+	public List<UnidadeDeSaude> buscaPorBairro(String bairro) {
 		return unidadeDeSaudeRepository.findByLocalBairro(bairro);
 	}
 
