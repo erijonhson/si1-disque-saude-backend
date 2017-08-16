@@ -41,7 +41,7 @@ public class AdministradorController {
 
 			String token = Jwts.builder()
 					.setSubject(administradorAutenticado.getNome())
-					.signWith(SignatureAlgorithm.HS512, TokenFilter.key)
+					.signWith(SignatureAlgorithm.HS512, TokenFilter.mykey)
 					.setExpiration(new Date(System.currentTimeMillis() + 24 * 60 * 1000))
 					.compact();
 

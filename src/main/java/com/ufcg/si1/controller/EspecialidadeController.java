@@ -15,8 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ufcg.si1.model.Especialidade;
 import com.ufcg.si1.model.UnidadeDeSaude;
+import com.ufcg.si1.service.EspecialidadeService;
 import com.ufcg.si1.service.EspecialidadeServiceImpl;
-import com.ufcg.si1.service.GenericService;
+import com.ufcg.si1.service.UnidadeDeSaudeService;
 import com.ufcg.si1.service.UnidadeDeSaudeServiceImpl;
 
 import exceptions.Erro;
@@ -27,10 +28,10 @@ import exceptions.Erro;
 public class EspecialidadeController {
 
 	@Autowired
-	GenericService<Especialidade> especialidadeService = new EspecialidadeServiceImpl();
+	EspecialidadeService especialidadeService = new EspecialidadeServiceImpl();
 
 	@Autowired
-	GenericService<UnidadeDeSaude> unidadeSaudeService = new UnidadeDeSaudeServiceImpl();
+	UnidadeDeSaudeService unidadeSaudeService = new UnidadeDeSaudeServiceImpl();
 
 	@RequestMapping(
 			value = "/especialidade/unidades", 

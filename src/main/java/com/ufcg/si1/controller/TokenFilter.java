@@ -8,6 +8,8 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
 
 import io.jsonwebtoken.Jwts;
@@ -17,7 +19,7 @@ public class TokenFilter extends GenericFilterBean {
 
 	// TODO: como fazer para que essa chave seja variável de ambiente?
 	// de maneira que ela será ignorada no .gitignore, mas existirá no heroku?
-	public static String key = "hightechcursos";
+	public static String mykey = "hightechcursos"; // System.getenv("myKey"); 
 	private static int tokenPosition = "Bearer ".length();
 
 	@Override
@@ -37,7 +39,7 @@ public class TokenFilter extends GenericFilterBean {
 
 		// verificar se o token é valido
 		try {
-			Jwts.parser().setSigningKey(TokenFilter.key).parseClaimsJws(token).getBody();
+			Jwts.parser().setSigningKey(TokenFilter.mykey).parseClaimsJws(token).getBody();
 		} catch (SignatureException e) {
 			throw new ServletException("Usuário inválido. Faça login para continuar!");
 		}
@@ -45,3 +47,10 @@ public class TokenFilter extends GenericFilterBean {
 		chain.doFilter(request, response);
 	}
 }
+
+/*
+Properties p = new Properties();
+FileInputStream fis = new FileInputStream("LOCAL_ARQUIVO");
+p.load(fis);
+p.getPropertie("NOME_PROPERTIE");
+*/

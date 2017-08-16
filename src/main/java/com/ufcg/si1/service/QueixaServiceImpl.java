@@ -5,8 +5,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ufcg.si1.model.Cidadao;
-import com.ufcg.si1.model.Endereco;
 import com.ufcg.si1.model.Queixa;
 import com.ufcg.si1.model.SituacaoDeQueixa;
 import com.ufcg.si1.model.prefeitura.PrefeituraSingleton;
@@ -19,12 +17,6 @@ public class QueixaServiceImpl implements QueixaService {
 	@Autowired
 	QueixaRepository queixaRepository;
 	
-	@Autowired
-	GenericService<Cidadao> cidadaoService = new CidadaoServiceImpl();
-
-	@Autowired
-	GenericService<Endereco> enderecoService = new EnderecoServiceImpl();
-
 	@Override
 	public Queixa cadastrar(Queixa queixa) {
 		return queixaRepository.save(queixa);

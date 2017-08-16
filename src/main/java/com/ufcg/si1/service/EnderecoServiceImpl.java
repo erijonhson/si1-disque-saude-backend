@@ -9,7 +9,7 @@ import com.ufcg.si1.model.Endereco;
 import com.ufcg.si1.repository.EnderecoRepository;
 
 @Service("enderecoService")
-public class EnderecoServiceImpl implements GenericService<Endereco> {
+public class EnderecoServiceImpl implements EnderecoService {
 
 	@Autowired
 	EnderecoRepository enderecoRepository;

@@ -18,11 +18,11 @@ import com.ufcg.si1.model.Cidadao;
 import com.ufcg.si1.model.Comentario;
 import com.ufcg.si1.model.Endereco;
 import com.ufcg.si1.model.Queixa;
+import com.ufcg.si1.service.CidadaoService;
 import com.ufcg.si1.service.CidadaoServiceImpl;
 import com.ufcg.si1.service.ComentarioService;
-import com.ufcg.si1.service.ComentarioServiceImpl;
+import com.ufcg.si1.service.EnderecoService;
 import com.ufcg.si1.service.EnderecoServiceImpl;
-import com.ufcg.si1.service.GenericService;
 import com.ufcg.si1.service.QueixaService;
 import com.ufcg.si1.service.QueixaServiceImpl;
 
@@ -35,13 +35,13 @@ import exceptions.Erro;
 public class QueixaController {
 
 	@Autowired
-	GenericService<Queixa> queixaService = new QueixaServiceImpl();
+	QueixaService queixaService = new QueixaServiceImpl();
 
 	@Autowired
-	GenericService<Cidadao> cidadaoService = new CidadaoServiceImpl();
+	CidadaoService cidadaoService = new CidadaoServiceImpl();
 	
 	@Autowired
-	GenericService<Endereco> enderecoService = new EnderecoServiceImpl();
+	EnderecoService enderecoService = new EnderecoServiceImpl();
 	
 	@Autowired
 	ComentarioService comentarioService;
