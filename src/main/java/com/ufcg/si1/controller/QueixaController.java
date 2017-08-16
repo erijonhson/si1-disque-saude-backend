@@ -188,7 +188,7 @@ public class QueixaController {
 		List<Comentario> listaComentariosQueixa = comentarioService.buscaTodosComentariosDeQueixa(idQueixa);		
 		
 		
-		return new ResponseEntity<List<Comentario>>(listaComentariosQueixa,HttpStatus.NOT_FOUND);
+		return new ResponseEntity<List<Comentario>>(listaComentariosQueixa,HttpStatus.OK);
 		
 	}
 	
