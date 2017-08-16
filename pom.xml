@@ -2,7 +2,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.websystique.springboot</groupId>
+	<groupId>com.ufcg.si1</groupId>
 	<artifactId>SpringBootRestApi</artifactId>
 	<version>1.0.0</version>
 	<packaging>jar</packaging>
@@ -67,6 +67,11 @@
 		<dependency>
     		<groupId>com.h2database</groupId>
     		<artifactId>h2</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt</artifactId>
+			<version>0.6.0</version>
 		</dependency>
 	</dependencies>
 	<build>

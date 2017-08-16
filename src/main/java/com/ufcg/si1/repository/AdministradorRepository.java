@@ -10,4 +10,6 @@ public interface AdministradorRepository extends JpaRepository<Administrador, Lo
 
 	public Administrador findByEmail(String email);
 
+	public Administrador findByEmailAndSenha(String email, String senha);
+
 }
