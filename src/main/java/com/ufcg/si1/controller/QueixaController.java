@@ -1,6 +1,7 @@
 package com.ufcg.si1.controller;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -177,6 +178,18 @@ public class QueixaController {
 		
 		
 		return new ResponseEntity(HttpStatus.NOT_FOUND);
+	}
+	
+	@RequestMapping(
+			value = "/queixa/comentario/{id}",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<Comentario>> buscaComentariosDaQueixa(@PathVariable("id") Long idQueixa) {
+		List<Comentario> listaComentariosQueixa = comentarioService.buscaTodosComentariosDeQueixa(idQueixa);		
+		
+		
+		return new ResponseEntity<List<Comentario>>(listaComentariosQueixa,HttpStatus.NOT_FOUND);
+		
 	}
 	
 	

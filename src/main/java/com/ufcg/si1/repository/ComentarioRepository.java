@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.ufcg.si1.model.Comentario;
 
 public interface ComentarioRepository extends JpaRepository<Comentario, Long> {
-
-	public List<Comentario> findComentariosByQueixa(Long id); 
+	
+	public List<Comentario> findByQueixaId(Long queixaId); 
 	
 }

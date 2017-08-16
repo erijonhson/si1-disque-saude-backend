@@ -44,4 +44,9 @@ public class ComentarioServiceImpl implements ComentarioService {
 		}
 	}
 
+	@Override
+	public List<Comentario> buscaTodosComentariosDeQueixa(Long id) {
+		return comentarioRepository.findByQueixaId(id);
+	}
+
 }
