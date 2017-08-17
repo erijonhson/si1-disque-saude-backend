@@ -40,8 +40,13 @@ public class AdministradorServiceImpl implements AdministradorService {
 	}
 
 	@Override
-	public void deletar(Administrador administrador) {
-		administradorRepository.delete(administrador);
+	public void deletar(Long id) {
+
+		if (!administradorRepository.exists(id)) {
+			throw new RuntimeException("Administrador inexistente ou inválido!");
+		}
+
+		administradorRepository.delete(id);
 	}
 
 	@Override

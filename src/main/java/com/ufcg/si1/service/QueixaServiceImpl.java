@@ -24,6 +24,11 @@ public class QueixaServiceImpl implements QueixaService {
 
 	@Override
 	public Queixa atualizar(Queixa queixa) {
+
+		if (!queixaRepository.exists(queixa.getId())) {
+			throw new RuntimeException("Queixa inexistente ou inválida!");
+		}
+
 		return queixaRepository.save(queixa);
 	}
 
@@ -38,8 +43,13 @@ public class QueixaServiceImpl implements QueixaService {
 	}
 
 	@Override
-	public void deletar(Queixa queixa) {
-		queixaRepository.delete(queixa);
+	public void deletar(Long id) {
+
+		if (!queixaRepository.exists(id)) {
+			throw new RuntimeException("Queixa inexistente ou inválida!");
+		}
+
+		queixaRepository.delete(id);
 	}
 
 	@Override

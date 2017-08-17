@@ -37,8 +37,13 @@ public class EspecialidadeServiceImpl implements EspecialidadeService {
 	}
 
 	@Override
-	public void deletar(Especialidade especialidade) {
-		especialidadeRepository.delete(especialidade);
+	public void deletar(Long id) {
+
+		if (!especialidadeRepository.exists(id)) {
+			throw new RuntimeException("Especialidade inexistente ou inválida!");
+		}
+
+		especialidadeRepository.delete(id);
 	}
 
 	@Override

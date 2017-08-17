@@ -91,7 +91,7 @@ public class AdministradorController {
 			value = "/administrador/", 
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Collection<Administrador>> listAllCidadaos() {
+	public ResponseEntity<Collection<Administrador>> listAllAdministradores() {
 
 		Collection<Administrador> administradores = administradorService.buscarTodos();
 

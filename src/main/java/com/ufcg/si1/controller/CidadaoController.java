@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ufcg.si1.model.Cidadao;
 import com.ufcg.si1.service.CidadaoService;
-import com.ufcg.si1.service.CidadaoServiceImpl;
 
 @RestController
 @RequestMapping("/api")
@@ -21,7 +20,7 @@ import com.ufcg.si1.service.CidadaoServiceImpl;
 public class CidadaoController {
 
 	@Autowired
-	CidadaoService cidadaoService = new CidadaoServiceImpl();
+	CidadaoService cidadaoService;
 
 	@RequestMapping(
 			value = "/cidadao/", 

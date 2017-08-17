@@ -35,8 +35,13 @@ public class UnidadeDeSaudeServiceImpl implements UnidadeDeSaudeService {
 	}
 
 	@Override
-	public void deletar(UnidadeDeSaude unidadeDeSaude) {
-		unidadeDeSaudeRepository.delete(unidadeDeSaude);
+	public void deletar(Long id) {
+
+		if (!unidadeDeSaudeRepository.exists(id)) {
+			throw new RuntimeException("Unidade de Saúde inexistente ou inválida!");
+		}
+
+		unidadeDeSaudeRepository.delete(id);
 	}
 
 	@Override

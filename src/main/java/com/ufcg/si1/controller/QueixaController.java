@@ -1,7 +1,6 @@
 package com.ufcg.si1.controller;
 
 import java.util.Collection;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,12 +18,9 @@ import com.ufcg.si1.model.Comentario;
 import com.ufcg.si1.model.Endereco;
 import com.ufcg.si1.model.Queixa;
 import com.ufcg.si1.service.CidadaoService;
-import com.ufcg.si1.service.CidadaoServiceImpl;
 import com.ufcg.si1.service.ComentarioService;
 import com.ufcg.si1.service.EnderecoService;
-import com.ufcg.si1.service.EnderecoServiceImpl;
 import com.ufcg.si1.service.QueixaService;
-import com.ufcg.si1.service.QueixaServiceImpl;
 
 import exceptions.Erro;
 
@@ -35,13 +31,13 @@ import exceptions.Erro;
 public class QueixaController {
 
 	@Autowired
-	QueixaService queixaService = new QueixaServiceImpl();
+	QueixaService queixaService;
 
 	@Autowired
-	CidadaoService cidadaoService = new CidadaoServiceImpl();
+	CidadaoService cidadaoService;
 	
 	@Autowired
-	EnderecoService enderecoService = new EnderecoServiceImpl();
+	EnderecoService enderecoService;
 	
 	@Autowired
 	ComentarioService comentarioService;
@@ -92,41 +88,42 @@ public class QueixaController {
 	}
 
 	@RequestMapping(
-			value = "/queixa/{id}", 
+			value = "/administrador/queixa/", 
 			method = RequestMethod.PUT,
 			consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Queixa> updateQueixa(@PathVariable("id") long id, @RequestBody Queixa queixa) {
-
-		Queixa currentQueixa = queixaService.buscarPorId(id);
-
-		if (currentQueixa == null) {
-			return new ResponseEntity(
-					new Erro("Não é possível atualizar. Queixa não encontrada."),
-					HttpStatus.NOT_FOUND);
-		}
-
-		currentQueixa.setDescricao(queixa.getDescricao());
-		// TODO: como fica a situação de colocar Queixa em andamento?
-		// currentQueixa.setSituacao(queixa.getSituacao());
+	public ResponseEntity<Queixa> updateQueixa(@RequestBody Queixa queixa) {
 
 		try {
-			queixaService.atualizar(currentQueixa);
+
+			queixa = queixaService.atualizar(queixa);
+
+			return new ResponseEntity<Queixa>(queixa, HttpStatus.OK);
+
 		} catch(RuntimeException re) {
 			return new ResponseEntity(
-					new Erro("Não é possível atualizar. Erro interno no sistema."),
+					new Erro(re.getMessage()),
 					HttpStatus.NOT_FOUND);
 		}
 
-		return new ResponseEntity<Queixa>(currentQueixa, HttpStatus.OK);
 	}
 
 	@RequestMapping(
-			value = "/queixa/{id}", 
+			value = "/administrador/queixa/{id}",
 			method = RequestMethod.DELETE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Queixa> deleteQueixa(@PathVariable("id") long id) {
+	public ResponseEntity deleteQueixa(@PathVariable("id") long id) {
 
+		try {
+
+			queixaService.deletar(id);
+
+		} catch(RuntimeException re) {
+			return new ResponseEntity(
+					new Erro(re.getMessage()),
+					HttpStatus.NOT_FOUND);
+		}
+		
 		//TODO: bad smell de nome de variavel, que estava user
 		Queixa queixaEncontrada = queixaService.buscarPorId(id);
 		if (queixaEncontrada == null) {
@@ -134,14 +131,14 @@ public class QueixaController {
 					new Erro("Não é possível deletar. Queixa não encontrada."),
 					HttpStatus.NOT_FOUND);
 		}
-		queixaService.deletar(queixaEncontrada);
+		
 
 		//TODO badsmel not content
 		return new ResponseEntity<Queixa>(HttpStatus.OK);
 	}
 
 	@RequestMapping(
-			value = "/queixa/fechamento", 
+			value = "/administrador/queixa/fechamento", 
 			method = RequestMethod.POST,
 			consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
@@ -151,8 +148,11 @@ public class QueixaController {
 		Queixa queixaFechada = null;
 
 		try {
-			queixaFechada = ((QueixaService) queixaService).fecharQueixa(queixa);
+
+			queixaFechada = queixaService.fecharQueixa(queixa);
+
 			return new ResponseEntity<Queixa>(queixaFechada, HttpStatus.OK);
+
 		} catch (RuntimeException re) {
 			return new ResponseEntity(
 					new Erro("Não é possível fechar Queixa. Erro interno no sistema."),
@@ -162,39 +162,40 @@ public class QueixaController {
 	}
 
 	@RequestMapping(
-			value = "/queixa/comentario/{id}",
+			value = "/queixa/comentario/{idQueixa}",
 			method = RequestMethod.POST,
 			consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Comentario> adicionaComentario(@PathVariable("id") Long idQueixa,@RequestBody Comentario comentario) {
+	public ResponseEntity<Comentario> adicionaComentario(@PathVariable("idQueixa") Long idQueixa, @RequestBody Comentario comentario) {
+
 		Queixa queixaBD = queixaService.buscarPorId(idQueixa);
-		Comentario comentarioBD = null;
-		
-		if(queixaBD != null) {
-			comentario.setQueixa(queixaBD);
-			comentarioBD = comentarioService.cadastrar(comentario);
-			return new ResponseEntity<Comentario>(comentarioBD, HttpStatus.CREATED);
+
+		if(queixaBD == null) {
+			return new ResponseEntity(
+					new Erro("Não é possível adicionar comentário em Queixa inexistente!"),
+					HttpStatus.NOT_ACCEPTABLE);
 		}
-		
-		
-		return new ResponseEntity(HttpStatus.NOT_FOUND);
+
+		comentario.setQueixa(queixaBD);
+		comentario = comentarioService.cadastrar(comentario);
+		return new ResponseEntity<Comentario>(comentario, HttpStatus.CREATED);
+
 	}
-	
+
 	@RequestMapping(
 			value = "/queixa/comentario/{id}",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<Comentario>> buscaComentariosDaQueixa(@PathVariable("id") Long idQueixa) {
-		List<Comentario> listaComentariosQueixa = comentarioService.buscaTodosComentariosDeQueixa(idQueixa);		
-		
-		
-		return new ResponseEntity<List<Comentario>>(listaComentariosQueixa,HttpStatus.OK);
-		
+	public ResponseEntity<Collection<Comentario>> buscaComentariosDaQueixa(@PathVariable("id") Long idQueixa) {
+
+		Collection<Comentario> listaComentariosQueixa = comentarioService.buscaTodosComentariosDeQueixa(idQueixa);
+
+		return new ResponseEntity<Collection<Comentario>>(listaComentariosQueixa, HttpStatus.OK);
+
 	}
-	
-	
+
 	// ----------- privated methods ---------------
-	
+
 	private void preparaQueixa(Queixa queixa) {
 		preparaSolicitanteDaQueixa(queixa);
 		preparaEnderencoDaQueixa(queixa);
@@ -204,7 +205,7 @@ public class QueixaController {
 
 		Cidadao solicitante = queixa.getSolicitante();
 
-		Cidadao solicitanteBD = ((CidadaoServiceImpl) cidadaoService).buscarPorEmail(solicitante.getEmail());
+		Cidadao solicitanteBD = cidadaoService.buscarPorEmail(solicitante.getEmail());
 		if (solicitanteBD == null) {
 			solicitanteBD = cidadaoService.cadastrar(solicitante);
 		}
@@ -216,7 +217,7 @@ public class QueixaController {
 		
 		Endereco endereco = queixa.getEndereco();
 
-		Endereco enderoBD = ((EnderecoServiceImpl) enderecoService).buscarPorRuaECidade(endereco);
+		Endereco enderoBD = enderecoService.buscarPorRuaECidade(endereco);
 		if (enderoBD == null) {
 			enderoBD = enderecoService.cadastrar(endereco);
 		}

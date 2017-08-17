@@ -8,8 +8,6 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
 
 import io.jsonwebtoken.Jwts;
@@ -17,8 +15,6 @@ import io.jsonwebtoken.SignatureException;
 
 public class TokenFilter extends GenericFilterBean {
 
-	// TODO: como fazer para que essa chave seja variável de ambiente?
-	// de maneira que ela será ignorada no .gitignore, mas existirá no heroku?
 	public static String mykey = "hightechcursos"; // System.getenv("myKey"); 
 	private static int tokenPosition = "Bearer ".length();
 
@@ -48,9 +44,3 @@ public class TokenFilter extends GenericFilterBean {
 	}
 }
 
-/*
-Properties p = new Properties();
-FileInputStream fis = new FileInputStream("LOCAL_ARQUIVO");
-p.load(fis);
-p.getPropertie("NOME_PROPERTIE");
-*/

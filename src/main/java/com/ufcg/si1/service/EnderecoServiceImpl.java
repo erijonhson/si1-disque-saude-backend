@@ -35,8 +35,13 @@ public class EnderecoServiceImpl implements EnderecoService {
 	}
 
 	@Override
-	public void deletar(Endereco endereco) {
-		enderecoRepository.delete(endereco);
+	public void deletar(Long id) {
+
+		if (!enderecoRepository.exists(id)) {
+			throw new RuntimeException("Endereço inexistente ou inválido!");
+		}
+
+		enderecoRepository.delete(id);
 	}
 	
 	public Endereco buscarPorRuaECidade(Endereco endereco) {

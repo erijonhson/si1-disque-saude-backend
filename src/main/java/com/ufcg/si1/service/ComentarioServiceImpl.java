@@ -38,10 +38,13 @@ public class ComentarioServiceImpl implements ComentarioService {
 	}
 
 	@Override
-	public void deletar(Comentario comentario) {
-		if(comentarioRepository.exists(comentario.getId())) {
-			comentarioRepository.delete(comentario);
+	public void deletar(Long id) {
+
+		if (!comentarioRepository.exists(id)) {
+			throw new RuntimeException("Comentário inexistente ou inválido!");
 		}
+
+		comentarioRepository.delete(id);
 	}
 
 	@Override

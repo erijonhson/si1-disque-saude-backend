@@ -39,8 +39,13 @@ public class CidadaoServiceImpl implements CidadaoService {
 	}
 
 	@Override
-	public void deletar(Cidadao cidadao) {
-		cidadaoRepository.delete(cidadao);
+	public void deletar(Long id) {
+
+		if (!cidadaoRepository.exists(id)) {
+			throw new RuntimeException("Cidadao inexistente ou inválido!");
+		}
+
+		cidadaoRepository.delete(id);
 	}
 
 	@Override

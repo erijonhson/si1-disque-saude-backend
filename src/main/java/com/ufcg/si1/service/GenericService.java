@@ -16,6 +16,6 @@ public interface GenericService<T> {
 
 	public T buscarPorId(Long id);
 
-	public void deletar(T t);
+	public void deletar(Long id);
 
 }
