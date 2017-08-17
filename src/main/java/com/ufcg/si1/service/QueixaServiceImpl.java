@@ -58,7 +58,7 @@ public class QueixaServiceImpl implements QueixaService {
 
 	public long quantidadeDeQueixasAbertas() {
 
-		return queixaRepository.countBySituacao(SituacaoDeQueixa.ABERTA) * 100;
+		return queixaRepository.countBySituacao(SituacaoDeQueixa.ABERTA);
 
 	}
 
