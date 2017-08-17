@@ -13,13 +13,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
 // TODO: existe UnidadeDeSaude que não é Hospital nem Posto?
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "tb_unidade_de_saude")
-public class UnidadeDeSaude implements Serializable {
+public abstract class UnidadeDeSaude implements Serializable {
 
 	private static final long serialVersionUID = 1842734734661302140L;
 
@@ -58,5 +56,7 @@ public class UnidadeDeSaude implements Serializable {
 	public void setId(Long id) {
 		this.id = id;
 	}
+
+	public abstract double mediaDeMedicoPorPacienteEmUmDia();
 
 }

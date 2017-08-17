@@ -56,4 +56,9 @@ public class Hospital extends UnidadeDeSaude {
 		hospital.setNumeroPacientesDia(numeroDePacientesPorDia);
 	}
 
+	@Override
+	public double mediaDeMedicoPorPacienteEmUmDia() {
+		return this.getNumeroDeMedicos() / this.getNumeroDePacientesPorDia();
+	}
+
 }

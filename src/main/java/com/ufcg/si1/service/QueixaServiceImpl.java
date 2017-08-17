@@ -7,8 +7,6 @@ import org.springframework.stereotype.Service;
 
 import com.ufcg.si1.model.Queixa;
 import com.ufcg.si1.model.SituacaoDeQueixa;
-import com.ufcg.si1.model.prefeitura.PrefeituraSingleton;
-import com.ufcg.si1.model.prefeitura.SituacaoGeralDasQueixas;
 import com.ufcg.si1.repository.QueixaRepository;
 
 @Service("queixaService")
@@ -52,16 +50,18 @@ public class QueixaServiceImpl implements QueixaService {
 		queixaRepository.delete(id);
 	}
 
-	@Override
-	public SituacaoGeralDasQueixas situacaoGeralDasQueixas() {
+	public long quantidadeDeQueixas() {
 
-		PrefeituraSingleton prefeitura = PrefeituraSingleton.getInstance();
+		return queixaRepository.count();
 
-		float porcentagemQueixasAbertas = 
-				queixaRepository.count() / queixaRepository.countBySituacao(SituacaoDeQueixa.ABERTA) * 100;
-		return prefeitura.getSituacaoDasQueixas(porcentagemQueixasAbertas);
 	}
-	
+
+	public long quantidadeDeQueixasAbertas() {
+
+		return queixaRepository.countBySituacao(SituacaoDeQueixa.ABERTA) * 100;
+
+	}
+
 	public Queixa fecharQueixa(Queixa queixa) {
 		
 		Queixa aFechar = buscarPorId(queixa.getId());

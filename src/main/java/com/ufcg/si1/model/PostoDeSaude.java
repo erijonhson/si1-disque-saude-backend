@@ -42,4 +42,9 @@ public class PostoDeSaude extends UnidadeDeSaude {
 		this.taxaDiariaAtendimentos = taxaDiariaAtendimentos;
 	}
 
+	@Override
+	public double mediaDeMedicoPorPacienteEmUmDia() {
+		return this.getAtendentes() / this.getTaxaDiariaAtendimentos();
+	}
+
 }

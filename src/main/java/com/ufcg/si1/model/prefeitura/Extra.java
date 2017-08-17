@@ -3,7 +3,7 @@ package com.ufcg.si1.model.prefeitura;
 public class Extra implements SituacaoDaPrefeitura {
 
 	@Override
-	public SituacaoGeralDasQueixas getSituacaoDasQueixas(float porcentagemQueixasAbertas) {
+	public SituacaoGeralDasQueixas getSituacaoDasQueixas(double porcentagemQueixasAbertas) {
 		if (porcentagemQueixasAbertas > 10) {
 			return SituacaoGeralDasQueixas.RUIM;
 		} else if (porcentagemQueixasAbertas > 5) {
