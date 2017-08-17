@@ -71,6 +71,25 @@ public class QueixaController {
 	}
 
 	@RequestMapping(
+			value = "/queixa/addall", 
+			method = RequestMethod.POST,
+			consumes = MediaType.APPLICATION_JSON_VALUE,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Collection<Queixa>> abrirPaioDeQueixa(@RequestBody Collection<Queixa> queixas) {
+
+		try {
+			queixas.forEach(q -> {
+				preparaQueixa(q);
+				q = queixaService.cadastrar(q);
+			});
+			return new ResponseEntity<Collection<Queixa>>(queixas, HttpStatus.CREATED);
+		} catch (RuntimeException re) {
+			return new ResponseEntity(HttpStatus.CONFLICT);
+		}
+
+	}
+
+	@RequestMapping(
 			value = "/queixa/{id}", 
 			method = RequestMethod.GET, 
 			produces = MediaType.APPLICATION_JSON_VALUE)
