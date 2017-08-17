@@ -3,6 +3,7 @@ package com.ufcg.si1.model.prefeitura;
 public class PrefeituraSingleton {
 
 	private PrefeituraSingleton() {
+		this.situacao = new Normal();
 	}
 
 	public static PrefeituraSingleton instance;
