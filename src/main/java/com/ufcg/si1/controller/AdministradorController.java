@@ -30,7 +30,7 @@ public class AdministradorController {
 
 	@RequestMapping(
 			method = RequestMethod.POST, 
-			value = "/login/administrador", 
+			value = "/admin/login", 
 			consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Login> login(@RequestBody Administrador administrador) {
@@ -48,16 +48,16 @@ public class AdministradorController {
 			return new ResponseEntity<Login>(new Login(token, administradorAutenticado), HttpStatus.OK);
 
 		} catch (Throwable t) {
-			
+
 			return new ResponseEntity(new Erro(t.getMessage()), HttpStatus.UNAUTHORIZED);
-			
+
 		}
 
 	}
 
 	@RequestMapping(
 			method = RequestMethod.POST, 
-			value = "/cadastrar/administrador", 
+			value = "/admin/cadastrar", 
 			consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Administrador> cadastrar(@RequestBody Administrador administrador) {

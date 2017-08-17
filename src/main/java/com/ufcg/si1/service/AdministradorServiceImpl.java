@@ -58,6 +58,8 @@ public class AdministradorServiceImpl implements AdministradorService {
 			throw new RuntimeException("Email ou senha inválidos!");
 		}
 
+		administradorBD.setSenha(null);
+
 		return administradorBD;
 	}
 
