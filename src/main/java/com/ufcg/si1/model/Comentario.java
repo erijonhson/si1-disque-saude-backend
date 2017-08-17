@@ -11,13 +11,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-
 @Entity
 @Table(name = "tb_comentario")
 public class Comentario implements Serializable {
+
+	private static final long serialVersionUID = 5894930156191632828L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

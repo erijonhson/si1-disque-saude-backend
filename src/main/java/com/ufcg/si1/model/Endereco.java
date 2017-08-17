@@ -13,6 +13,8 @@ import javax.persistence.Table;
 @Table(name = "tb_endereco")
 public class Endereco implements Serializable {
 
+	private static final long serialVersionUID = -2679280688929055056L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id_endereco")
@@ -45,6 +47,10 @@ public class Endereco implements Serializable {
 		return this.rua;
 	}
 
+	public String getBairro() {
+		return bairro;
+	}
+
 	public String getUf() {
 		return this.uf;
 	}
@@ -55,7 +61,7 @@ public class Endereco implements Serializable {
 
 	@Override
 	public String toString() {
-		return "[rua=" + rua + " uf=" + uf + " cidade=" + cidade + "]";
+		return "rua=" + rua + " bairro=" + bairro + " uf=" + uf + " cidade=" + cidade;
 	}
 
 }
