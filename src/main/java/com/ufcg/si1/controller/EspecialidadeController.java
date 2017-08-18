@@ -14,11 +14,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ufcg.si1.model.Especialidade;
-import com.ufcg.si1.model.UnidadeDeSaude;
 import com.ufcg.si1.service.EspecialidadeService;
 import com.ufcg.si1.service.EspecialidadeServiceImpl;
-import com.ufcg.si1.service.UnidadeDeSaudeService;
-import com.ufcg.si1.service.UnidadeDeSaudeServiceImpl;
 
 import exceptions.Erro;
 
@@ -30,42 +27,47 @@ public class EspecialidadeController {
 	@Autowired
 	EspecialidadeService especialidadeService = new EspecialidadeServiceImpl();
 
-	@Autowired
-	UnidadeDeSaudeService unidadeSaudeService = new UnidadeDeSaudeServiceImpl();
-
 	@RequestMapping(
-			value = "/especialidade/unidades", 
+			value = "/especialidade/unidade/{idUnidadeDeSaude}", 
 			method = RequestMethod.GET,
-			consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Especialidade> consultaEspecialidadeporUnidadeSaude(@RequestBody long codigoUnidadeSaude) {
+	public ResponseEntity<Especialidade> consultaEspecialidadeporUnidadeSaude(
+			@PathVariable("idUnidadeDeSaude") long idUnidadeDeSaude) {
 
 		try {
-			UnidadeDeSaude unidadeDeSaude = unidadeSaudeService.buscarPorId(codigoUnidadeSaude);
+
 			Collection<Especialidade> especialidades = 
-					((EspecialidadeServiceImpl) especialidadeService)
-					.buscarEspecialidadesPorUnidadeDeSaude(unidadeDeSaude);
+					especialidadeService.buscarEspecialidadesPorUnidadeDeSaude(idUnidadeDeSaude);
+
 			return new ResponseEntity(especialidades, HttpStatus.OK);
+
 		} catch (RuntimeException re) {
-			return new ResponseEntity(HttpStatus.NOT_FOUND);
+			return new ResponseEntity(
+					new Erro("Não foi possível consultar Especialidades."),
+					HttpStatus.NOT_FOUND);
 		}
 		
 	}
 
 	@RequestMapping(
-			value = "/especialidade/", 
+			value = "/administrador/especialidade/", 
 			method = RequestMethod.POST,
 			consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Especialidade> incluirEspecialidade(@RequestBody Especialidade especialidade) {
 
 		try {
+
 			especialidade = especialidadeService.cadastrar(especialidade);
+
+			return new ResponseEntity<Especialidade>(especialidade, HttpStatus.CREATED);
+
 		} catch (RuntimeException re) {
-			return new ResponseEntity(HttpStatus.CONFLICT);
+			return new ResponseEntity(
+					new Erro("Não foi possível adicionar Especialidade."),
+					HttpStatus.CONFLICT);
 		}
 
-		return new ResponseEntity<Especialidade>(especialidade, HttpStatus.CREATED);
 	}
 
 	@RequestMapping(
@@ -75,6 +77,7 @@ public class EspecialidadeController {
 	public ResponseEntity<Especialidade> consultarEspecialidade(@PathVariable("id") long id) {
 
 		Especialidade especialidade = especialidadeService.buscarPorId(id);
+
 		if (especialidade == null) {
 			return new ResponseEntity(
 					new Erro("Especialidade não encontrada."),

@@ -15,10 +15,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ufcg.si1.model.Endereco;
+import com.ufcg.si1.model.PostoDeSaude;
 import com.ufcg.si1.model.UnidadeDeSaude;
-import com.ufcg.si1.service.GenericService;
+import com.ufcg.si1.model.hospital.HospitalAdapter;
+import com.ufcg.si1.service.EnderecoService;
 import com.ufcg.si1.service.UnidadeDeSaudeService;
-import com.ufcg.si1.service.UnidadeDeSaudeServiceImpl;
 
 import exceptions.Erro;
 
@@ -28,7 +30,10 @@ import exceptions.Erro;
 public class UnidadeDeSaudeController {
 
 	@Autowired
-	GenericService<UnidadeDeSaude> unidadeSaudeService = new UnidadeDeSaudeServiceImpl();
+	UnidadeDeSaudeService unidadeSaudeService;
+
+	@Autowired
+	EnderecoService enderecoService;
 
 	@RequestMapping(
 			value = "/unidade/", 
@@ -38,7 +43,8 @@ public class UnidadeDeSaudeController {
 
 		List<UnidadeDeSaude> unidades = unidadeSaudeService.buscarTodos();
 		if (unidades.isEmpty()) {
-			return new ResponseEntity(new Erro("Unidade de Saúde não encontrada."),
+			return new ResponseEntity(
+					new Erro("Unidade de Saúde não encontrada."),
 					HttpStatus.NOT_FOUND);
 		}
 
@@ -46,20 +52,26 @@ public class UnidadeDeSaudeController {
 	}
 
 	@RequestMapping(
-			value = "/unidade/", 
+			value = "/administrador/unidade/", 
 			method = RequestMethod.POST,
 			consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<UnidadeDeSaude> incluirUnidadeSaude(@RequestBody UnidadeDeSaude unidadeDeSaude) {
+	public ResponseEntity<UnidadeDeSaude> incluirUnidadeDeSaude(@RequestBody UnidadeDeSaude unidadeDeSaude) {
 
 		try {
-			unidadeSaudeService.cadastrar(unidadeDeSaude);
+
+			preparaUnidadeDeSaude(unidadeDeSaude);
+
+			unidadeDeSaude = unidadeSaudeService.cadastrar(unidadeDeSaude);
+
+			return new ResponseEntity<UnidadeDeSaude>(unidadeDeSaude, HttpStatus.CREATED);
+
 		} catch (RuntimeException re) {
-			return new ResponseEntity(new Erro("Unidade de Saúde não encontrada."),
+			return new ResponseEntity(
+					new Erro("Unidade de Saúde inválida."),
 					HttpStatus.NOT_FOUND);
 		}
 
-		return new ResponseEntity<UnidadeDeSaude>(unidadeDeSaude, HttpStatus.CREATED);
 	}
 
 	@RequestMapping(
@@ -70,7 +82,8 @@ public class UnidadeDeSaudeController {
 
 		UnidadeDeSaude unidadeDeSaude = unidadeSaudeService.buscarPorId(id);
 		if (unidadeDeSaude == null) {
-			return new ResponseEntity(new Erro("Unidade de Saúde não encontrada."),
+			return new ResponseEntity(
+					new Erro("Unidade de Saúde não encontrada."),
 					HttpStatus.NOT_FOUND);
 		}
 
@@ -81,17 +94,34 @@ public class UnidadeDeSaudeController {
 			value = "/unidade/busca", 
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> consultarUnidadeSaudePorBairro(
+	public ResponseEntity<Collection<UnidadeDeSaude>> consultarUnidadeSaudePorBairro(
 			@RequestParam(value = "bairro", required = true) String bairro) {
 
 		try {
-			Collection<UnidadeDeSaude> unidadeDeSaude = ((UnidadeDeSaudeService) unidadeSaudeService).buscaPorBairro(bairro);
-			return new ResponseEntity<UnidadeDeSaude>((UnidadeDeSaude) unidadeDeSaude, HttpStatus.OK);
+
+			Collection<UnidadeDeSaude> unidadesDeSaude = unidadeSaudeService.buscaPorBairro(bairro);
+
+			return new ResponseEntity<Collection<UnidadeDeSaude>>(unidadesDeSaude, HttpStatus.OK);
+
 		} catch(RuntimeException re) {
-			return new ResponseEntity(new Erro("Unidade de Saúde não encontrada."),
+			return new ResponseEntity(
+					new Erro("Unidade de Saúde não encontrada."),
 					HttpStatus.NOT_FOUND);
 		}
 
 	}
 
+	// ----------- privated methods ---------------
+
+	private void preparaUnidadeDeSaude(UnidadeDeSaude unidadeDeSaude) {
+
+		Endereco endereco = unidadeDeSaude.getLocal();
+
+		Endereco enderoBD = enderecoService.buscarPorRuaECidade(endereco);
+		if (enderoBD == null) {
+			enderoBD = enderecoService.cadastrar(endereco);
+		}
+
+		unidadeDeSaude.setLocal(enderoBD);
+	}
 }

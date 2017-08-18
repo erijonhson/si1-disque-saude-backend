@@ -61,11 +61,16 @@ public class QueixaController {
 	public ResponseEntity<Queixa> abrirQueixa(@RequestBody Queixa queixa) {
 
 		try {
+
 			preparaQueixa(queixa);
-			Queixa queixaCadastrada = queixaService.cadastrar(queixa);
-			return new ResponseEntity<Queixa>(queixaCadastrada, HttpStatus.CREATED);
+
+			queixa = queixaService.cadastrar(queixa);
+
+			return new ResponseEntity<Queixa>(queixa, HttpStatus.CREATED);
+
 		} catch (RuntimeException re) {
-			return new ResponseEntity(HttpStatus.CONFLICT);
+			return new ResponseEntity(
+					HttpStatus.CONFLICT);
 		}
 
 	}
@@ -217,7 +222,7 @@ public class QueixaController {
 
 	private void preparaQueixa(Queixa queixa) {
 		preparaSolicitanteDaQueixa(queixa);
-		preparaEnderencoDaQueixa(queixa);
+		preparaEnderecoDaQueixa(queixa);
 	}
 
 	private void preparaSolicitanteDaQueixa(Queixa queixa) {
@@ -232,7 +237,7 @@ public class QueixaController {
 		queixa.setSolicitante(solicitanteBD);
 	}
 	
-	private void preparaEnderencoDaQueixa(Queixa queixa) {
+	private void preparaEnderecoDaQueixa(Queixa queixa) {
 		
 		Endereco endereco = queixa.getEndereco();
 

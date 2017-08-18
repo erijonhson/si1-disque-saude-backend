@@ -40,9 +40,9 @@ public class AdministradorController {
 			Administrador administradorAutenticado = administradorService.login(administrador);
 
 			String token = Jwts.builder()
-					.setSubject(administradorAutenticado.getNome())
+					.setSubject(administradorAutenticado.getEmail())
 					.signWith(SignatureAlgorithm.HS512, TokenFilter.mykey)
-					.setExpiration(new Date(System.currentTimeMillis() + 24 * 60 * 1000))
+					.setExpiration(new Date(System.currentTimeMillis() + TokenFilter.oneMillisDay))
 					.compact();
 
 			return new ResponseEntity<Login>(new Login(token, administradorAutenticado), HttpStatus.OK);

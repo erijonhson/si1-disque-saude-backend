@@ -13,10 +13,21 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-// TODO: existe UnidadeDeSaude que não é Hospital nem Posto?
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.ufcg.si1.model.hospital.HospitalAdapter;
+import com.ufcg.si1.model.hospital.HospitalInterface;
+
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "tb_unidade_de_saude")
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
+@JsonSubTypes({
+    @JsonSubTypes.Type(value = PostoDeSaude.class, name = "Posto"),
+    @JsonSubTypes.Type(value = HospitalAdapter.class, name = "Hospital") }
+)
 public abstract class UnidadeDeSaude implements Serializable {
 
 	private static final long serialVersionUID = 1842734734661302140L;
@@ -53,8 +64,12 @@ public abstract class UnidadeDeSaude implements Serializable {
 		return this.id;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public Endereco getLocal() {
+		return local;
+	}
+
+	public void setLocal(Endereco local) {
+		this.local = local;
 	}
 
 	public abstract double mediaDeMedicoPorPacienteEmUmDia();

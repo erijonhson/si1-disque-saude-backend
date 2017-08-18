@@ -38,6 +38,10 @@ public class Cidadao implements Serializable {
 		this.email = email;
 	}
 
+	public Long getId() {
+		return id;
+	}
+
 	public String getNome() {
 		return nome;
 	}

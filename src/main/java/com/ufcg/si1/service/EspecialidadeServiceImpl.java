@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ufcg.si1.model.Especialidade;
-import com.ufcg.si1.model.UnidadeDeSaude;
 import com.ufcg.si1.repository.EspecialidadeRepository;
 
 @Service("especialidadeService")
@@ -47,10 +46,8 @@ public class EspecialidadeServiceImpl implements EspecialidadeService {
 	}
 
 	@Override
-	public Collection<Especialidade> buscarEspecialidadesPorUnidadeDeSaude(UnidadeDeSaude unidadeDeSaude) {
-		return especialidadeRepository.findByUnidadeDeSaudeId(unidadeDeSaude.getId());
+	public Collection<Especialidade> buscarEspecialidadesPorUnidadeDeSaude(Long idUnidadeDeSaude) {
+		return especialidadeRepository.findByUnidadeDeSaudeId(idUnidadeDeSaude);
 	}
-	
-	
 
 }

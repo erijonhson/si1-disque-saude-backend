@@ -43,6 +43,10 @@ public class Endereco implements Serializable {
 		this.cidade = cidade;
 	}
 
+	public Long getId() {
+		return id;
+	}
+
 	public String getRua() {
 		return this.rua;
 	}

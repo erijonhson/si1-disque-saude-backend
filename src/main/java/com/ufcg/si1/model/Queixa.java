@@ -58,7 +58,27 @@ public class Queixa implements Serializable {
 	public SituacaoDeQueixa getSituacao() {
 		return situacao;
 	}
-	
+
+	public Cidadao getSolicitante() {
+		return solicitante;
+	}
+
+	public void setSolicitante(Cidadao solicitante) {
+		this.solicitante = solicitante;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public Endereco getEndereco() {
+		return endereco;
+	}
+
+	public void setEndereco(Endereco endereco) {
+		this.endereco = endereco;
+	}
+
 	public void abrir() {
 		if (this.situacao != SituacaoDeQueixa.EM_ANDAMENTO)
 			this.situacao = SituacaoDeQueixa.ABERTA;
@@ -71,14 +91,6 @@ public class Queixa implements Serializable {
 			this.situacao = SituacaoDeQueixa.FECHADA;
 		} else
 			throw new IllegalStateException("Status inválido");
-	}
-
-	public Cidadao getSolicitante() {
-		return solicitante;
-	}
-
-	public void setSolicitante(Cidadao solicitante) {
-		this.solicitante = solicitante;
 	}
 
 	@Override
@@ -101,18 +113,6 @@ public class Queixa implements Serializable {
 		if (id != other.id)
 			return false;
 		return true;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public Endereco getEndereco() {
-		return endereco;
-	}
-	
-	public void setEndereco(Endereco endereco) {
-		this.endereco = endereco;
 	}
 
 }

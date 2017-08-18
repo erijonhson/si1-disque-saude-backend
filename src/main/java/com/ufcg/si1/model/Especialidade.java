@@ -11,6 +11,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
 @Entity
 @Table(name = "tb_especialidade")
 public class Especialidade implements Serializable {
@@ -64,7 +66,7 @@ public class Especialidade implements Serializable {
 	
 	@Override
 	public String toString() {
-		return "[codigo=" + codigo + " descricao=" + descricao + "]";
+		return "codigo=" + codigo + " descricao=" + descricao;
 	}
 
 }

@@ -1,42 +1,35 @@
-package com.ufcg.si1.model;
+package com.ufcg.si1.model.hospital;
 
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
 import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.Table;
-import javax.persistence.Transient;
+
+import com.ufcg.si1.model.UnidadeDeSaude;
 
 @Entity
 @Table(name = "tb_unidade_de_saude_hospital")
-public class Hospital extends UnidadeDeSaude {
+public abstract class HospitalInterface extends UnidadeDeSaude {
 
 	private static final long serialVersionUID = -58243804726375404L;
 
-	@Transient // não salva no BD
-	private br.edu.ufcg.Hospital hospital;
-	
 	@Column(name = "numero_de_medicos")
 	private int numeroDeMedicos;
 
 	@Column(name = "numero_de_pacientes_por_dia")
 	private int numeroDePacientesPorDia;
 
-	public Hospital() {
-		this("desconhecido");
+	public HospitalInterface() {
+		this("desconhecido", 0, 0);
 	}
 
-	public Hospital(String descricao) {
+	public HospitalInterface(String descricao, int numeroDeMedicos, int numeroDePacientesPorDia) {
 		super(descricao);
-	}
-
-	@Override
-	public String getDescricao() {
-		return hospital.getDescricao();
-	}
-
-	@Override
-	public void setDescricao(String descricao) {
-		hospital.setDescricao(descricao);
-		super.setDescricao(descricao);
+		this.numeroDeMedicos = numeroDeMedicos;
+		this.numeroDePacientesPorDia = numeroDePacientesPorDia;
 	}
 
 	public int getNumeroDeMedicos() {
@@ -53,12 +46,6 @@ public class Hospital extends UnidadeDeSaude {
 
 	public void setNumeroDePacientesPorDia(int numeroDePacientesPorDia) {
 		this.numeroDePacientesPorDia = numeroDePacientesPorDia;
-		hospital.setNumeroPacientesDia(numeroDePacientesPorDia);
-	}
-
-	@Override
-	public double mediaDeMedicoPorPacienteEmUmDia() {
-		return this.getNumeroDeMedicos() / this.getNumeroDePacientesPorDia();
 	}
 
 }

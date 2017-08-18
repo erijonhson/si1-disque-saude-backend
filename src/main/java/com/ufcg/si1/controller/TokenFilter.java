@@ -15,6 +15,7 @@ import io.jsonwebtoken.SignatureException;
 
 public class TokenFilter extends GenericFilterBean {
 
+	public static final long oneMillisDay = 86400000;
 	public static String mykey = "hightechcursos"; // System.getenv("myKey"); 
 	private static int tokenPosition = "Bearer ".length();
 
