@@ -36,7 +36,7 @@ public class PrefeituraController {
 			value = "/geral/medicos/{idUnidadeDeSaude}", 
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Double> calcularMediaMedicoPacienteDia(@PathVariable("idUnidadeDeSaude") long idUnidadeDeSaude) {
+	public ResponseEntity<?> calcularMediaMedicoPacienteDia(@PathVariable("idUnidadeDeSaude") long idUnidadeDeSaude) {
 
 		UnidadeDeSaude unidadeDeSaude = unidadeSaudeService.buscarPorId(idUnidadeDeSaude);
 
@@ -46,7 +46,7 @@ public class PrefeituraController {
 					HttpStatus.NOT_FOUND);
 		}
 
-		return new ResponseEntity<Double>(unidadeDeSaude.mediaDeMedicoPorPacienteEmUmDia(), HttpStatus.OK);
+		return new ResponseEntity(unidadeDeSaude.mediaDeMedicoPorPacienteEmUmDia(), HttpStatus.OK);
 	}
 
 	@RequestMapping(

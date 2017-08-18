@@ -44,7 +44,10 @@ public class PostoDeSaude extends UnidadeDeSaude {
 
 	@Override
 	public double mediaDeMedicoPorPacienteEmUmDia() {
-		return this.getAtendentes() / this.getTaxaDiariaAtendimentos();
+		if (this.getTaxaDiariaAtendimentos() > 0)
+			return this.getAtendentes() / this.getTaxaDiariaAtendimentos();
+		else
+			return 0.0;
 	}
 
 }

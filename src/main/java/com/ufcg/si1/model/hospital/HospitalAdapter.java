@@ -1,11 +1,6 @@
 package com.ufcg.si1.model.hospital;
 
-import javax.persistence.DiscriminatorColumn;
-import javax.persistence.DiscriminatorType;
-import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -34,7 +29,10 @@ public class HospitalAdapter extends HospitalInterface {
 
 	@Override
 	public double mediaDeMedicoPorPacienteEmUmDia() {
-		return super.getNumeroDeMedicos() / super.getNumeroDePacientesPorDia();
+		if (this.getNumeroDePacientesPorDia() > 0)
+			return super.getNumeroDeMedicos() / super.getNumeroDePacientesPorDia();
+		else
+			return 0.0;
 	}
 
 }
