@@ -56,22 +56,26 @@ public class EspecialidadeController {
 		
 	}
 
-	// TODO: não está funcionando, mas é um extra
 	@RequestMapping(
-			value = "/administrador/especialidade/",
+			value = "/administrador/especialidade/{id}",
 			method = RequestMethod.POST,
 			consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Especialidade> incluirEspecialidade(@RequestBody UnidadeEspecialidade context) {
+	public ResponseEntity<Especialidade> incluirEspecialidade(@PathVariable("id") long id, @RequestBody Especialidade especialidade) {
 
 		try {
 
-			Especialidade especialidade = context.getEspecialidade();
-			UnidadeDeSaude unidadeDeSaude = context.getUnidadeDeSaude();
-			Set<UnidadeDeSaude> unidades = new HashSet<>();
-			unidades.add(unidadeDeSaude);
-			especialidade.setUnidadesDeSaude(unidades);
-			especialidade = especialidadeService.cadastrar(especialidade);
+			// TODO: rever a Gambis
+			UnidadeDeSaude unidadeDeSaudeBD = unidadeDeSaudeService.buscarPorId(id);
+			if (unidadeDeSaudeBD == null)
+				throw new RuntimeException();
+
+			Especialidade especialidadeBD = especialidadeService.buscarPorDescricao(especialidade.getDescricao());
+			if (especialidadeBD != null)
+				especialidade = especialidadeBD;
+			
+			unidadeDeSaudeBD.getEspecialidades().add(especialidade);
+			unidadeDeSaudeBD = unidadeDeSaudeService.atualizar(unidadeDeSaudeBD);
 
 			return new ResponseEntity<Especialidade>(especialidade, HttpStatus.CREATED);
 
@@ -100,30 +104,4 @@ public class EspecialidadeController {
 		return new ResponseEntity<Especialidade>(especialidade, HttpStatus.OK);
 	}
 
-	@JsonDeserialize
-	private class UnidadeEspecialidade {
-
-		private UnidadeDeSaude unidadeDeSaude;
-		private Especialidade especialidade;
-
-		public UnidadeEspecialidade() {
-			
-		}
-
-		public UnidadeDeSaude getUnidadeDeSaude() {
-			return unidadeDeSaude;
-		}
-
-		public void setUnidadeDeSaude(UnidadeDeSaude unidadeDeSaude) {
-			this.unidadeDeSaude = unidadeDeSaude;
-		}
-
-		public Especialidade getEspecialidade() {
-			return especialidade;
-		}
-
-		public void setEspecialidade(Especialidade especialidade) {
-			this.especialidade = especialidade;
-		}
-	}
 }
