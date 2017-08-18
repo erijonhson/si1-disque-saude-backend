@@ -1,6 +1,8 @@
 package com.ufcg.si1.controller;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,9 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.ufcg.si1.model.Especialidade;
+import com.ufcg.si1.model.UnidadeDeSaude;
 import com.ufcg.si1.service.EspecialidadeService;
-import com.ufcg.si1.service.EspecialidadeServiceImpl;
+import com.ufcg.si1.service.UnidadeDeSaudeService;
 
 import exceptions.Erro;
 
@@ -25,13 +29,16 @@ import exceptions.Erro;
 public class EspecialidadeController {
 
 	@Autowired
-	EspecialidadeService especialidadeService = new EspecialidadeServiceImpl();
+	EspecialidadeService especialidadeService;
+
+	@Autowired
+	UnidadeDeSaudeService unidadeDeSaudeService;
 
 	@RequestMapping(
 			value = "/especialidade/unidade/{idUnidadeDeSaude}", 
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Especialidade> consultaEspecialidadeporUnidadeSaude(
+	public ResponseEntity<Collection<Especialidade>> consultaEspecialidadeporUnidadeSaude(
 			@PathVariable("idUnidadeDeSaude") long idUnidadeDeSaude) {
 
 		try {
@@ -39,7 +46,7 @@ public class EspecialidadeController {
 			Collection<Especialidade> especialidades = 
 					especialidadeService.buscarEspecialidadesPorUnidadeDeSaude(idUnidadeDeSaude);
 
-			return new ResponseEntity(especialidades, HttpStatus.OK);
+			return new ResponseEntity<Collection<Especialidade>>(especialidades, HttpStatus.OK);
 
 		} catch (RuntimeException re) {
 			return new ResponseEntity(
@@ -49,15 +56,21 @@ public class EspecialidadeController {
 		
 	}
 
+	// TODO: não está funcionando, mas é um extra
 	@RequestMapping(
-			value = "/administrador/especialidade/", 
+			value = "/administrador/especialidade/",
 			method = RequestMethod.POST,
 			consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Especialidade> incluirEspecialidade(@RequestBody Especialidade especialidade) {
+	public ResponseEntity<Especialidade> incluirEspecialidade(@RequestBody UnidadeEspecialidade context) {
 
 		try {
 
+			Especialidade especialidade = context.getEspecialidade();
+			UnidadeDeSaude unidadeDeSaude = context.getUnidadeDeSaude();
+			Set<UnidadeDeSaude> unidades = new HashSet<>();
+			unidades.add(unidadeDeSaude);
+			especialidade.setUnidadesDeSaude(unidades);
 			especialidade = especialidadeService.cadastrar(especialidade);
 
 			return new ResponseEntity<Especialidade>(especialidade, HttpStatus.CREATED);
@@ -87,4 +100,30 @@ public class EspecialidadeController {
 		return new ResponseEntity<Especialidade>(especialidade, HttpStatus.OK);
 	}
 
+	@JsonDeserialize
+	private class UnidadeEspecialidade {
+
+		private UnidadeDeSaude unidadeDeSaude;
+		private Especialidade especialidade;
+
+		public UnidadeEspecialidade() {
+			
+		}
+
+		public UnidadeDeSaude getUnidadeDeSaude() {
+			return unidadeDeSaude;
+		}
+
+		public void setUnidadeDeSaude(UnidadeDeSaude unidadeDeSaude) {
+			this.unidadeDeSaude = unidadeDeSaude;
+		}
+
+		public Especialidade getEspecialidade() {
+			return especialidade;
+		}
+
+		public void setEspecialidade(Especialidade especialidade) {
+			this.especialidade = especialidade;
+		}
+	}
 }

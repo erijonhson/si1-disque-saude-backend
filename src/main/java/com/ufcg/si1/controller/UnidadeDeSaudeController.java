@@ -1,7 +1,10 @@
 package com.ufcg.si1.controller;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,10 +19,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ufcg.si1.model.Endereco;
-import com.ufcg.si1.model.PostoDeSaude;
+import com.ufcg.si1.model.Especialidade;
 import com.ufcg.si1.model.UnidadeDeSaude;
-import com.ufcg.si1.model.hospital.HospitalAdapter;
 import com.ufcg.si1.service.EnderecoService;
+import com.ufcg.si1.service.EspecialidadeService;
 import com.ufcg.si1.service.UnidadeDeSaudeService;
 
 import exceptions.Erro;
@@ -34,6 +37,9 @@ public class UnidadeDeSaudeController {
 
 	@Autowired
 	EnderecoService enderecoService;
+
+	@Autowired
+	EspecialidadeService especialidadeService;
 
 	@RequestMapping(
 			value = "/unidade/", 
@@ -105,7 +111,27 @@ public class UnidadeDeSaudeController {
 
 		} catch(RuntimeException re) {
 			return new ResponseEntity(
-					new Erro("Unidade de Saúde não encontrada."),
+					new Erro("Unidades de Saúde não encontradas."),
+					HttpStatus.NOT_FOUND);
+		}
+
+	}
+
+	@RequestMapping(
+			value = "/unidade/busca/{idEspecialidade}", 
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Collection<UnidadeDeSaude>> consultarUnidadeSaudePorEspecialidade(@PathVariable("idEspecialidade") Long idEspecialidade) {
+
+		try {
+
+			Collection<UnidadeDeSaude> unidadesDeSaude = unidadeSaudeService.buscaPorEspecialidade(idEspecialidade);
+
+			return new ResponseEntity<Collection<UnidadeDeSaude>>(unidadesDeSaude, HttpStatus.OK);
+
+		} catch(RuntimeException re) {
+			return new ResponseEntity(
+					new Erro("Unidades de Saúde não encontradas."),
 					HttpStatus.NOT_FOUND);
 		}
 
@@ -114,6 +140,11 @@ public class UnidadeDeSaudeController {
 	// ----------- privated methods ---------------
 
 	private void preparaUnidadeDeSaude(UnidadeDeSaude unidadeDeSaude) {
+		preparaEnderecoUnidadeDeSaude(unidadeDeSaude);
+		preparaEspecialidadesUnidadeDeSaude(unidadeDeSaude);
+	}
+	
+	private void preparaEnderecoUnidadeDeSaude(UnidadeDeSaude unidadeDeSaude) {
 
 		Endereco endereco = unidadeDeSaude.getLocal();
 
@@ -124,4 +155,23 @@ public class UnidadeDeSaudeController {
 
 		unidadeDeSaude.setLocal(enderoBD);
 	}
+
+	private void preparaEspecialidadesUnidadeDeSaude(UnidadeDeSaude unidadeDeSaude){
+
+		Set<Especialidade> especialidades = unidadeDeSaude.getEspecialidades();
+		Set<Especialidade> result = new HashSet();
+
+		for (Especialidade especialidade : especialidades) {
+			Especialidade espBD = especialidadeService.buscarPorDescricao(especialidade.getDescricao());
+			if (espBD == null) {
+				especialidade = especialidadeService.cadastrar(especialidade);
+			} else {
+				especialidade = espBD;
+			}
+			result.add(especialidade);
+		}
+
+		unidadeDeSaude.setEspecialidades(result);
+	}
+
 }

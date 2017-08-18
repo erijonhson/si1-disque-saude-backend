@@ -10,4 +10,6 @@ public interface UnidadeDeSaudeRepository extends JpaRepository<UnidadeDeSaude, 
 
 	public List<UnidadeDeSaude> findByLocalBairro(String bairro);
 
+	public List<UnidadeDeSaude> findByEspecialidadesId(Long idEspecialidade);
+
 }

@@ -10,6 +10,8 @@ import com.ufcg.si1.model.Especialidade;
 @Repository
 public interface EspecialidadeRepository extends JpaRepository<Especialidade, Long> {
 
-	List<Especialidade> findByUnidadeDeSaudeId(Long unidadedesaudeId);
+	public List<Especialidade> findByUnidadesDeSaudeId(Long idUnidadedesaude);
+
+	public Especialidade findByDescricao(String descricao);
 
 }

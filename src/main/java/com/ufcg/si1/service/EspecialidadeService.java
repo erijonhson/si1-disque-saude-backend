@@ -8,4 +8,6 @@ public interface EspecialidadeService extends GenericService<Especialidade> {
 
 	public Collection<Especialidade> buscarEspecialidadesPorUnidadeDeSaude(Long idUnidadeDeSaude);
 
+	public Especialidade buscarPorDescricao(String descricao);
+
 }

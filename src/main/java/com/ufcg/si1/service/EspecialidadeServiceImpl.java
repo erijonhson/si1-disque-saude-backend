@@ -47,7 +47,12 @@ public class EspecialidadeServiceImpl implements EspecialidadeService {
 
 	@Override
 	public Collection<Especialidade> buscarEspecialidadesPorUnidadeDeSaude(Long idUnidadeDeSaude) {
-		return especialidadeRepository.findByUnidadeDeSaudeId(idUnidadeDeSaude);
+		return especialidadeRepository.findByUnidadesDeSaudeId(idUnidadeDeSaude);
+	}
+
+	@Override
+	public Especialidade buscarPorDescricao(String descricao) {
+		return especialidadeRepository.findByDescricao(descricao);
 	}
 
 }

@@ -49,4 +49,9 @@ public class UnidadeDeSaudeServiceImpl implements UnidadeDeSaudeService {
 		return unidadeDeSaudeRepository.findByLocalBairro(bairro);
 	}
 
+	@Override
+	public List<UnidadeDeSaude> buscaPorEspecialidade(Long idEspecialidade) {
+		return unidadeDeSaudeRepository.findByEspecialidadesId(idEspecialidade);
+	}
+
 }
