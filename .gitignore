@@ -26,3 +26,6 @@ nbdist/
 
 ### mac ###
 .DS_Store
+
+### h2 ###
+h2/

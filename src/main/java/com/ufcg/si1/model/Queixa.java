@@ -1,44 +1,50 @@
 package com.ufcg.si1.model;
 
-import exceptions.ObjetoInvalidoException;
-import org.springframework.http.ResponseEntity;
+import java.io.Serializable;
 
-public class Queixa {
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
-	private long id;
 
+@Entity
+@Table(name = "tb_queixa")
+public class Queixa implements Serializable {
+
+	private static final long serialVersionUID = -8364601133955924234L;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id_queixa")
+	private Long id;
+
+	@Column(name = "descricao")
 	private String descricao;
 
-	private Pessoa solicitante;
+	@ManyToOne
+	@JoinColumn(name = "cidadao_id")
+	private Cidadao solicitante;
 
-	public int situacao; // usa variaveis estaticas abaixo
-	/* situacoes da queixa */
-	public static final int ABERTA = 1;
-	public static final int EM_ANDAMENTO = 2;
-	public static final int FECHADA = 3;
+	@Column(name = "situacao")
+	private SituacaoDeQueixa situacao;
 
-	private String comentario = ""; // usado na atualizacao da queixa
-
-	public Queixa(){
-		id=0;
+	@ManyToOne //(fetch = FetchType.LAZY)
+	@JoinColumn(name = "endereco_id")
+	private Endereco endereco;
+	
+	public Queixa() {
+		this(0, "desconhecido", SituacaoDeQueixa.ABERTA, new Cidadao());
 	}
 
-	public Queixa(long id, String descricao, int situacao, String comentario,
-                  String nome, String email,
-				  String rua, String uf, String cidade) {
-		this.id = id;
+	public Queixa(long id, String descricao, SituacaoDeQueixa situacao, Cidadao solicitante) {
 		this.descricao = descricao;
 		this.situacao = situacao;
-		this.comentario = comentario;
-		this.solicitante = new Pessoa(nome, email, rua, uf, cidade);
-	}
-
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
+		this.solicitante = solicitante;
 	}
 
 	public String getDescricao() {
@@ -49,40 +55,42 @@ public class Queixa {
 		this.descricao = descricao;
 	}
 
-	public int getSituacao() {
+	public SituacaoDeQueixa getSituacao() {
 		return situacao;
 	}
 
-	public void abrir() throws ObjetoInvalidoException {
-		if (this.situacao != Queixa.EM_ANDAMENTO)
-			this.situacao = Queixa.ABERTA;
-		else
-			throw new ObjetoInvalidoException("Status inválido");
-	}
-
-	public void fechar(String coment) throws ObjetoInvalidoException {
-		if (this.situacao == Queixa.EM_ANDAMENTO
-				|| this.situacao == Queixa.ABERTA) {
-			this.situacao = Queixa.FECHADA;
-			this.comentario = coment;
-		} else
-			throw new ObjetoInvalidoException("Status Inválido");
-	}
-
-	public String getComentario() {
-		return comentario;
-	}
-
-	public void setComentario(String comentario) {
-		this.comentario = comentario;
-	}
-
-	public Pessoa getSolicitante() {
+	public Cidadao getSolicitante() {
 		return solicitante;
 	}
 
-	public void setSolicitante(Pessoa solicitante) {
+	public void setSolicitante(Cidadao solicitante) {
 		this.solicitante = solicitante;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public Endereco getEndereco() {
+		return endereco;
+	}
+
+	public void setEndereco(Endereco endereco) {
+		this.endereco = endereco;
+	}
+
+	public void abrir() {
+		if (this.situacao != SituacaoDeQueixa.EM_ANDAMENTO)
+			this.situacao = SituacaoDeQueixa.ABERTA;
+		else
+			throw new IllegalStateException("Status inválido");
+	}
+
+	public void fechar() {
+		if (this.situacao == SituacaoDeQueixa.EM_ANDAMENTO || this.situacao == SituacaoDeQueixa.ABERTA) {
+			this.situacao = SituacaoDeQueixa.FECHADA;
+		} else
+			throw new IllegalStateException("Status inválido");
 	}
 
 	@Override

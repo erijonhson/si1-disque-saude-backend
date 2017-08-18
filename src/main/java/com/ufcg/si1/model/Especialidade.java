@@ -1,34 +1,73 @@
 package com.ufcg.si1.model;
 
+import java.io.Serializable;
+import java.util.Set;
 
-public class Especialidade {
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 
-    private int codigo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
-    private String descricao;
+@Entity
+@Table(name = "tb_especialidade")
+public class Especialidade implements Serializable {
 
-    public Especialidade(String descricao) {
-        this.codigo = 0; // gerado no repositorio
-        this.descricao = descricao;
-    }
+	private static final long serialVersionUID = 8749919939488270668L;
 
-    public Especialidade(){
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id_especialidade")
+	private Long id;
 
-    }
+	@Column(name = "descricao", nullable = false)
+	private String descricao;
 
-    public String getDescricao() {
-        return this.descricao;
-    }
+	@ManyToMany(mappedBy="especialidades", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+	@JsonIgnore
+	private Set<UnidadeDeSaude> unidadesDeSaude;
 
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
+	public Especialidade() {
+		this("desconhecido");
+	}
 
-    public int getCodigo() {
-        return this.codigo;
-    }
+	public Especialidade(String descricao) {
+		this.id = 0L;
+		this.descricao = descricao;
+	}
 
-    public void setCodigo(int cod) {
-        this.codigo = cod;
-    }
+	public String getDescricao() {
+		return this.descricao;
+	}
+
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
+	}
+
+	public Long getId() {
+		return this.id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Set<UnidadeDeSaude> getUnidadesDeSaude() {
+		return unidadesDeSaude;
+	}
+
+	public void setUnidadesDeSaude(Set<UnidadeDeSaude> unidadesDeSaude) {
+		this.unidadesDeSaude = unidadesDeSaude;
+	}
+
+	@Override
+	public String toString() {
+		return "id=" + id + " descricao=" + descricao;
+	}
+
 }

@@ -1,31 +1,14 @@
 package com.ufcg.si1.service;
 
 
-import java.util.Iterator;
-import java.util.List;
-
 import com.ufcg.si1.model.Queixa;
 
-public interface QueixaService {
+public interface QueixaService extends GenericService<Queixa> {
 
-	List<Queixa> findAllQueixas();
+	public long quantidadeDeQueixas();
 
+	public long quantidadeDeQueixasAbertas();
 
-    void saveQueixa(Queixa queixa);
+	public Queixa fecharQueixa(Queixa queixa);
 
-
-	Queixa findById(long id);
-
-	void updateQueixa(Queixa user);
-
-
-	void deleteQueixaById(long id);
-
-    int size();
-
-	Iterator<Queixa> getIterator();
-
-
-//	boolean isUserExist(Queixa user);
-	
 }
