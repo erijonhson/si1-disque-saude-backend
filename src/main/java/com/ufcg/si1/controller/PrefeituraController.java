@@ -33,7 +33,7 @@ public class PrefeituraController {
 	QueixaService queixaService;
 
 	@RequestMapping(
-			value = "/geral/medicos/{idUnidadeDeSaude}", 
+			value = "/administrador/geral/medicos/{idUnidadeDeSaude}", 
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> calcularMediaMedicoPacienteDia(@PathVariable("idUnidadeDeSaude") long idUnidadeDeSaude) {
@@ -50,7 +50,7 @@ public class PrefeituraController {
 	}
 
 	@RequestMapping(
-			value = "/geral/situacao", 
+			value = "/administrador/geral/situacao", 
 			method = RequestMethod.GET)
 	public ResponseEntity<Integer> getSituacaoGeralQueixas() {
 

@@ -76,7 +76,7 @@ public class QueixaController {
 	}
 
 	@RequestMapping(
-			value = "/queixa/addall", 
+			value = "/administrador/queixa/addall", 
 			method = RequestMethod.POST,
 			consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
