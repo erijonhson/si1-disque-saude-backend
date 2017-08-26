@@ -1,6 +1,6 @@
 {
   "name": "Disque Saude",
-  "description": "Projeto final de SI1 UFCG",
+  "description": "Projeto final de SI1 CCC UFCG",
   "repository": "https://github.com/erijonhson/si1-disque-saude-backend",
   "image": "https://disquesaudesi.herokuapp.com/img/favicon.ico",
   "addons": [ "heroku-postgresql" ]
