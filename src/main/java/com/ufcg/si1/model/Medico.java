@@ -9,6 +9,10 @@ public class Medico extends Servidor {
 
 	private static final long serialVersionUID = -6684509343541720221L;
 
+	public Medico() {
+		this("desconhecido", "desconhecido", "desconhecido");
+	}
+
 	public Medico(String nome, String email, String codigoDeServidor) {
 		setDadosFuncionario(nome, email, codigoDeServidor);
 	}
