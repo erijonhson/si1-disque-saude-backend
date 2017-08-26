@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Bean;
 import com.ufcg.si1.controller.TokenFilter;
 
 @SpringBootApplication(scanBasePackages={"com.ufcg"})// same as @Configuration @EnableAutoConfiguration @ComponentScan combined
-@EnableAutoConfiguration(exclude = {DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class})
+// @EnableAutoConfiguration(exclude = {DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class})
 public class SpringBootRestApiApp {
 
 	@Bean
