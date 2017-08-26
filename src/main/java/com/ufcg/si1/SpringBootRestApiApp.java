@@ -1,18 +1,24 @@
 package com.ufcg.si1;
 
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 
 import com.ufcg.si1.controller.TokenFilter;
 
-@SpringBootApplication(scanBasePackages={"com.ufcg"})// same as @Configuration @EnableAutoConfiguration @ComponentScan combined
-// @EnableAutoConfiguration(exclude = {DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class})
-public class SpringBootRestApiApp {
+@SpringBootApplication(
+		scanBasePackages={"com.ufcg"}, 
+		exclude = {
+				DataSourceAutoConfiguration.class, 
+				HibernateJpaAutoConfiguration.class, 
+				JpaRepositoriesAutoConfiguration.class})
+public class SpringBootRestApiApp extends SpringBootServletInitializer {
 
 	@Bean
 	public FilterRegistrationBean filtroJwt() {
@@ -23,6 +29,11 @@ public class SpringBootRestApiApp {
 		return frb;
 	}
 
+	@Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+        return application.sources(SpringBootRestApiApp.class);
+    }
+	
 	public static void main(String[] args) {
 		SpringApplication.run(SpringBootRestApiApp.class, args);
 	}
