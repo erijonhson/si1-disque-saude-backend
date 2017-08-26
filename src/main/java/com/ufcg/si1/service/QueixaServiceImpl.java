@@ -2,7 +2,10 @@ package com.ufcg.si1.service;
 
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.ufcg.si1.model.Queixa;
@@ -12,7 +15,8 @@ import com.ufcg.si1.repository.QueixaRepository;
 @Service("queixaService")
 public class QueixaServiceImpl implements QueixaService {
 
-	@Autowired
+	@Resource
+	@Qualifier("queixaRepository")
 	QueixaRepository queixaRepository;
 	
 	@Override
