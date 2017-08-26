@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import com.ufcg.si1.model.Endereco;
 
-@Repository("enderecoRepository")
+@Repository(value = "enderecoRepository")
 public interface EnderecoRepository extends JpaRepository<Endereco, Long> {
 
 	Endereco findByRuaAndCidade(String rua, String cidade);

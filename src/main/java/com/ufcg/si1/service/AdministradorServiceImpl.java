@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import com.ufcg.si1.model.Administrador;
 import com.ufcg.si1.repository.AdministradorRepository;
 
-@Service("administradorService")
+@Service(value = "administradorService")
 public class AdministradorServiceImpl implements AdministradorService {
 
 	@Resource(name = "administradorRepository")

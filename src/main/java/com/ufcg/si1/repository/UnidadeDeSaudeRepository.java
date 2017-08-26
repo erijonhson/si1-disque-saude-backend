@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import com.ufcg.si1.model.UnidadeDeSaude;
 
-@Repository("unidadeDeSaudeRepository")
+@Repository(value = "unidadeDeSaudeRepository")
 public interface UnidadeDeSaudeRepository extends JpaRepository<UnidadeDeSaude, Long> {
 
 	public List<UnidadeDeSaude> findByLocalBairro(String bairro);

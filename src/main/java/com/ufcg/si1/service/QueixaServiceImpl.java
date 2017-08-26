@@ -10,7 +10,7 @@ import com.ufcg.si1.model.Queixa;
 import com.ufcg.si1.model.SituacaoDeQueixa;
 import com.ufcg.si1.repository.QueixaRepository;
 
-@Service("queixaService")
+@Service(value = "queixaService")
 public class QueixaServiceImpl implements QueixaService {
 
 	@Resource(name = "queixaRepository")

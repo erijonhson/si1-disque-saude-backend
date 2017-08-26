@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import com.ufcg.si1.model.Endereco;
 import com.ufcg.si1.repository.EnderecoRepository;
 
-@Service("enderecoService")
+@Service(value = "enderecoService")
 public class EnderecoServiceImpl implements EnderecoService {
 
 	@Resource(name = "enderecoRepository")

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import com.ufcg.si1.model.Comentario;
 import com.ufcg.si1.repository.ComentarioRepository;
 
-@Service("comentarioService")
+@Service(value = "comentarioService")
 public class ComentarioServiceImpl implements ComentarioService {
 
 	@Resource(name = "comentarioRepository")

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import com.ufcg.si1.model.Especialidade;
 import com.ufcg.si1.repository.EspecialidadeRepository;
 
-@Service("especialidadeService")
+@Service(value = "especialidadeService")
 public class EspecialidadeServiceImpl implements EspecialidadeService {
 
 	@Resource(name = "especialidadeRepository")

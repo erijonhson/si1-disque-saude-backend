@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import com.ufcg.si1.model.prefeitura.PrefeituraSingleton;
 import com.ufcg.si1.model.prefeitura.SituacaoGeralDasQueixas;
 
-@Service("prefeituraService")
+@Service(value = "prefeituraService")
 public class PrefeituraServiceImpl implements PrefeituraService {
 
 	@Override

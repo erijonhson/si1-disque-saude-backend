@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import com.ufcg.si1.model.Cidadao;
 import com.ufcg.si1.repository.CidadaoRepository;
 
-@Service("cidadaoService")
+@Service(value = "cidadaoService")
 public class CidadaoServiceImpl implements CidadaoService {
 
 	@Resource(name = "cidadaoRepository")

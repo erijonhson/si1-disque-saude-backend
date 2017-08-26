@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import com.ufcg.si1.model.Cidadao;
 import java.lang.String;
 
-@Repository("cidadaoRepository")
+@Repository(value = "cidadaoRepository")
 public interface CidadaoRepository extends JpaRepository<Cidadao, Long> {
 
 	public Cidadao findByEmail(String email);

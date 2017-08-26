@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import com.ufcg.si1.model.UnidadeDeSaude;
 import com.ufcg.si1.repository.UnidadeDeSaudeRepository;
 
-@Service("unidadeDeSaudeService")
+@Service(value = "unidadeDeSaudeService")
 public class UnidadeDeSaudeServiceImpl implements UnidadeDeSaudeService {
 
 	@Resource(name = "unidadeDeSaudeRepository")
