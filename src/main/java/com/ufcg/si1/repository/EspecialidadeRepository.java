@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import com.ufcg.si1.model.Especialidade;
 
-@Repository
+@Repository("especialidadeRepository")
 public interface EspecialidadeRepository extends JpaRepository<Especialidade, Long> {
 
 	public List<Especialidade> findByUnidadesDeSaudeId(Long idUnidadedesaude);

@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import com.ufcg.si1.model.Medico;
 
-@Repository
+@Repository("medicoRepository")
 public interface MedicoRepository extends JpaRepository<Medico, Long> {
 
 	public Medico findByEmail(String email);

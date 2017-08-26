@@ -28,7 +28,11 @@
 	</properties>
 
 	<repositories>
-		<!--other repositories if any -->
+		<!-- 
+			https://devcenter.heroku.com/articles/local-maven-dependencies
+			Em um terminal, fiz:
+			mvn deploy:deploy-file -Durl=file:///home/ejos/ufcg/si1/backend/lib/ -Dfile=lib/hospital-0.0.jar -DgroupId=br.edu.ufcg -DartifactId=hospital -Dpackaging=jar -Dversion=0.0 
+		-->
 		<repository>
 			<id>disquesaude.local</id>
 			<name>disquesaude</name>

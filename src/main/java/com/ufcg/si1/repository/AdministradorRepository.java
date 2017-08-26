@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import com.ufcg.si1.model.Administrador;
 
-@Repository
+@Repository("administradorRepository")
 public interface AdministradorRepository extends JpaRepository<Administrador, Long> {
 
 	public Administrador findByEmail(String email);
