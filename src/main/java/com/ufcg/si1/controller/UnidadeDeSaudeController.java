@@ -2,11 +2,11 @@ package com.ufcg.si1.controller;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -33,12 +33,15 @@ import exceptions.Erro;
 public class UnidadeDeSaudeController {
 
 	@Autowired
-	UnidadeDeSaudeService unidadeSaudeService;
+	@Qualifier("unidadeDeSaudeService")
+	UnidadeDeSaudeService unidadeDeSaudeService;
 
 	@Autowired
+	@Qualifier("enderecoService")
 	EnderecoService enderecoService;
 
 	@Autowired
+	@Qualifier("especialidadeService")
 	EspecialidadeService especialidadeService;
 
 	@RequestMapping(
@@ -47,7 +50,7 @@ public class UnidadeDeSaudeController {
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Collection<UnidadeDeSaude>> getAllUnidades() {
 
-		List<UnidadeDeSaude> unidades = unidadeSaudeService.buscarTodos();
+		List<UnidadeDeSaude> unidades = unidadeDeSaudeService.buscarTodos();
 		if (unidades.isEmpty()) {
 			return new ResponseEntity(
 					new Erro("Unidade de Saúde não encontrada."),
@@ -68,7 +71,7 @@ public class UnidadeDeSaudeController {
 
 			preparaUnidadeDeSaude(unidadeDeSaude);
 
-			unidadeDeSaude = unidadeSaudeService.cadastrar(unidadeDeSaude);
+			unidadeDeSaude = unidadeDeSaudeService.cadastrar(unidadeDeSaude);
 
 			return new ResponseEntity<UnidadeDeSaude>(unidadeDeSaude, HttpStatus.CREATED);
 
@@ -86,7 +89,7 @@ public class UnidadeDeSaudeController {
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<UnidadeDeSaude> consultarUnidadeSaude(@PathVariable("id") long id) {
 
-		UnidadeDeSaude unidadeDeSaude = unidadeSaudeService.buscarPorId(id);
+		UnidadeDeSaude unidadeDeSaude = unidadeDeSaudeService.buscarPorId(id);
 		if (unidadeDeSaude == null) {
 			return new ResponseEntity(
 					new Erro("Unidade de Saúde não encontrada."),
@@ -105,7 +108,7 @@ public class UnidadeDeSaudeController {
 
 		try {
 
-			Collection<UnidadeDeSaude> unidadesDeSaude = unidadeSaudeService.buscaPorBairro(bairro);
+			Collection<UnidadeDeSaude> unidadesDeSaude = unidadeDeSaudeService.buscaPorBairro(bairro);
 
 			return new ResponseEntity<Collection<UnidadeDeSaude>>(unidadesDeSaude, HttpStatus.OK);
 
@@ -125,7 +128,7 @@ public class UnidadeDeSaudeController {
 
 		try {
 
-			Collection<UnidadeDeSaude> unidadesDeSaude = unidadeSaudeService.buscaPorEspecialidade(idEspecialidade);
+			Collection<UnidadeDeSaude> unidadesDeSaude = unidadeDeSaudeService.buscaPorEspecialidade(idEspecialidade);
 
 			return new ResponseEntity<Collection<UnidadeDeSaude>>(unidadesDeSaude, HttpStatus.OK);
 

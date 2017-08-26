@@ -1,10 +1,9 @@
 package com.ufcg.si1.controller;
 
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.ufcg.si1.model.Especialidade;
 import com.ufcg.si1.model.UnidadeDeSaude;
 import com.ufcg.si1.service.EspecialidadeService;
@@ -29,9 +27,11 @@ import exceptions.Erro;
 public class EspecialidadeController {
 
 	@Autowired
+	@Qualifier("especialidadeService")
 	EspecialidadeService especialidadeService;
 
 	@Autowired
+	@Qualifier("unidadeDeSaudeService")
 	UnidadeDeSaudeService unidadeDeSaudeService;
 
 	@RequestMapping(

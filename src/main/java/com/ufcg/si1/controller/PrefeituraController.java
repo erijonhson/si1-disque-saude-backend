@@ -1,6 +1,7 @@
 package com.ufcg.si1.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -24,12 +25,15 @@ import exceptions.Erro;
 public class PrefeituraController {
 
 	@Autowired
+	@Qualifier("prefeituraService")
 	PrefeituraService prefeituraService;
+	
+	@Autowired
+	@Qualifier("unidadeDeSaudeService")
+	UnidadeDeSaudeService unidadeDeSaudeService;
 
 	@Autowired
-	UnidadeDeSaudeService unidadeSaudeService;
-
-	@Autowired
+	@Qualifier("queixaService")
 	QueixaService queixaService;
 
 	@RequestMapping(
@@ -38,7 +42,7 @@ public class PrefeituraController {
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> calcularMediaMedicoPacienteDia(@PathVariable("idUnidadeDeSaude") long idUnidadeDeSaude) {
 
-		UnidadeDeSaude unidadeDeSaude = unidadeSaudeService.buscarPorId(idUnidadeDeSaude);
+		UnidadeDeSaude unidadeDeSaude = unidadeDeSaudeService.buscarPorId(idUnidadeDeSaude);
 
 		if (unidadeDeSaude == null) {
 			return new ResponseEntity(

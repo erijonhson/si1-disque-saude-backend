@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +27,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 public class AdministradorController {
 
 	@Autowired
+	@Qualifier("administradorService")
 	AdministradorService administradorService;
 
 	@RequestMapping(
