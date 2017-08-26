@@ -2,8 +2,8 @@ package com.ufcg.si1.controller;
 
 import java.util.Collection;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import javax.annotation.Resource;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,8 +20,7 @@ import com.ufcg.si1.service.CidadaoService;
 @CrossOrigin
 public class CidadaoController {
 
-	@Autowired
-	@Qualifier("cidadaoService")
+	@Resource(name = "cidadaoService")
 	CidadaoService cidadaoService;
 
 	@RequestMapping(

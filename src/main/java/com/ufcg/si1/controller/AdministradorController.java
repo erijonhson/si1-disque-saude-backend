@@ -3,8 +3,8 @@ package com.ufcg.si1.controller;
 import java.util.Collection;
 import java.util.Date;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import javax.annotation.Resource;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -26,8 +26,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 @CrossOrigin
 public class AdministradorController {
 
-	@Autowired
-	@Qualifier("administradorService")
+	@Resource(name = "administradorService")
 	AdministradorService administradorService;
 
 	@RequestMapping(

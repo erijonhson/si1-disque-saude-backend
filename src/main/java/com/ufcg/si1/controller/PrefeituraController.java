@@ -1,7 +1,7 @@
 package com.ufcg.si1.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import javax.annotation.Resource;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -24,16 +24,13 @@ import exceptions.Erro;
 @CrossOrigin
 public class PrefeituraController {
 
-	@Autowired
-	@Qualifier("prefeituraService")
+	@Resource(name = "prefeituraService")
 	PrefeituraService prefeituraService;
 	
-	@Autowired
-	@Qualifier("unidadeDeSaudeService")
+	@Resource(name = "unidadeDeSaudeService")
 	UnidadeDeSaudeService unidadeDeSaudeService;
 
-	@Autowired
-	@Qualifier("queixaService")
+	@Resource(name = "queixaService")
 	QueixaService queixaService;
 
 	@RequestMapping(

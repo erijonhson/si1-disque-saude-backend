@@ -3,8 +3,8 @@ package com.ufcg.si1.service;
 import java.util.Collection;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import javax.annotation.Resource;
+
 import org.springframework.stereotype.Service;
 
 import com.ufcg.si1.model.Especialidade;
@@ -13,8 +13,7 @@ import com.ufcg.si1.repository.EspecialidadeRepository;
 @Service("especialidadeService")
 public class EspecialidadeServiceImpl implements EspecialidadeService {
 
-	@Autowired
-	@Qualifier("especialidadeRepository")
+	@Resource(name = "especialidadeRepository")
 	EspecialidadeRepository especialidadeRepository;
 
 	@Override

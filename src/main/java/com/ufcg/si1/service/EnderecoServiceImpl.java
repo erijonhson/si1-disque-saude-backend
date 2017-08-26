@@ -2,8 +2,8 @@ package com.ufcg.si1.service;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import javax.annotation.Resource;
+
 import org.springframework.stereotype.Service;
 
 import com.ufcg.si1.model.Endereco;
@@ -12,8 +12,7 @@ import com.ufcg.si1.repository.EnderecoRepository;
 @Service("enderecoService")
 public class EnderecoServiceImpl implements EnderecoService {
 
-	@Autowired
-	@Qualifier("enderecoRepository")
+	@Resource(name = "enderecoRepository")
 	EnderecoRepository enderecoRepository;
 
 	@Override

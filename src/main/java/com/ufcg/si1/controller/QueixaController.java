@@ -2,8 +2,8 @@ package com.ufcg.si1.controller;
 
 import java.util.Collection;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import javax.annotation.Resource;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -31,20 +31,16 @@ import exceptions.Erro;
 @CrossOrigin
 public class QueixaController {
 
-	@Autowired
-	@Qualifier("queixaService")
+	@Resource(name = "queixaService")
 	QueixaService queixaService;
 
-	@Autowired
-	@Qualifier("cidadaoService")
+	@Resource(name = "cidadaoService")
 	CidadaoService cidadaoService;
 	
-	@Autowired
-	@Qualifier("enderecoService")
+	@Resource(name = "enderecoService")
 	EnderecoService enderecoService;
 	
-	@Autowired
-	@Qualifier("comentarioService")
+	@Resource(name = "comentarioService")
 	ComentarioService comentarioService;
 
 	@RequestMapping(
