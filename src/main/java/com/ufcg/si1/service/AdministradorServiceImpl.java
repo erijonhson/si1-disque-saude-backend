@@ -2,7 +2,8 @@ package com.ufcg.si1.service;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
+
 import org.springframework.stereotype.Service;
 
 import com.ufcg.si1.model.Administrador;
@@ -11,7 +12,7 @@ import com.ufcg.si1.repository.AdministradorRepository;
 @Service(value = "administradorService")
 public class AdministradorServiceImpl implements AdministradorService {
 
-	@Autowired
+	@Resource(name = "administradorRepository")
 	AdministradorRepository administradorRepository;
 
 	@Override
