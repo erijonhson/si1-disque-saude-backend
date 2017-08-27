@@ -1,7 +1,6 @@
 package com.ufcg.si1;
 
 import java.io.IOException;
-import java.util.Enumeration;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -27,13 +26,6 @@ public class TokenFilter extends GenericFilterBean {
 			throws IOException, ServletException {
 
 		HttpServletRequest req = (HttpServletRequest) request;
-
-		Enumeration headerNames = req.getHeaderNames();
-		while (headerNames.hasMoreElements()) {
-			String key = (String) headerNames.nextElement();
-			String value = req.getHeader(key);
-			System.out.println(key + " : " + value);
-		}
 
 		String header = req.getHeader("Authorization");
 
