@@ -1,6 +1,7 @@
-package com.ufcg.si1.controller;
+package com.ufcg.si1;
 
 import java.io.IOException;
+import java.util.Enumeration;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -8,11 +9,13 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.filter.GenericFilterBean;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureException;
 
+@CrossOrigin
 public class TokenFilter extends GenericFilterBean {
 
 	public static final long oneMillisDay = 86400000;
@@ -24,6 +27,13 @@ public class TokenFilter extends GenericFilterBean {
 			throws IOException, ServletException {
 
 		HttpServletRequest req = (HttpServletRequest) request;
+
+		Enumeration headerNames = req.getHeaderNames();
+		while (headerNames.hasMoreElements()) {
+			String key = (String) headerNames.nextElement();
+			String value = req.getHeader(key);
+			System.out.println(key + " : " + value);
+		}
 
 		String header = req.getHeader("Authorization");
 

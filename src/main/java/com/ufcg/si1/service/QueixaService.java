@@ -11,4 +11,6 @@ public interface QueixaService extends GenericService<Queixa> {
 
 	public Queixa fecharQueixa(Queixa queixa);
 
+	public Queixa reabrirQueixa(Queixa queixa);
+
 }

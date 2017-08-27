@@ -163,6 +163,29 @@ public class QueixaController {
 	}
 
 	@RequestMapping(
+			value = "/administrador/queixa/reabrir", 
+			method = RequestMethod.POST,
+			consumes = MediaType.APPLICATION_JSON_VALUE,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Queixa> reabrirQueixa(@RequestBody Queixa queixa) {
+
+		Queixa queixaFechada = null;
+
+		try {
+
+			queixaFechada = queixaService.reabrirQueixa(queixa);
+
+			return new ResponseEntity<Queixa>(queixaFechada, HttpStatus.OK);
+
+		} catch (RuntimeException re) {
+			return new ResponseEntity(
+					new Erro("Não é possível fechar Queixa. Erro interno no sistema."),
+					HttpStatus.NOT_MODIFIED);
+		}
+
+	}
+
+	@RequestMapping(
 			value = "/administrador/queixa/fechamento", 
 			method = RequestMethod.POST,
 			consumes = MediaType.APPLICATION_JSON_VALUE,

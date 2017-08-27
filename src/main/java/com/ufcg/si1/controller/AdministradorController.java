@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ufcg.si1.TokenFilter;
 import com.ufcg.si1.model.Administrador;
 import com.ufcg.si1.service.AdministradorService;
 

@@ -71,4 +71,13 @@ public class QueixaServiceImpl implements QueixaService {
 		
 		return aFechar;
 	}
+
+	public Queixa reabrirQueixa(Queixa queixa) {
+		Queixa reabrir = buscarPorId(queixa.getId());
+		reabrir.abrir();
+		reabrir = atualizar(reabrir);
+		
+		return reabrir;
+	}
+
 }
