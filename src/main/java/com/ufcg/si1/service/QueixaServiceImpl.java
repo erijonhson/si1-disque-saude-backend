@@ -7,8 +7,8 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import com.ufcg.si1.model.Queixa;
-import com.ufcg.si1.model.SituacaoDeQueixa;
 import com.ufcg.si1.queixa.state.QueixaAberta;
+import com.ufcg.si1.queixa.state.QueixaAndamento;
 import com.ufcg.si1.queixa.state.QueixaState;
 import com.ufcg.si1.repository.QueixaRepository;
 import com.ufcg.si1.repository.QueixaStateRepository;
@@ -66,7 +66,9 @@ public class QueixaServiceImpl implements QueixaService {
 	
 	public long quantidadeDeQueixasAbertas() {
 
-		return queixaRepository.countByState(new QueixaAberta());
+		long totalAbertas = queixaRepository.countByState(new QueixaAberta());
+		long totalEmAndamento = queixaRepository.countByState(new QueixaAndamento());
+		return totalAbertas + totalEmAndamento;
 
 	}
 	

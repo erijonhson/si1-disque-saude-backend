@@ -8,14 +8,12 @@ import com.ufcg.si1.model.Queixa;
 public class QueixaAberta extends QueixaState {
 	
 	public QueixaAberta() {
-		super.id = 1L;
-		this.situacao = "ABERTA";
+		super(1L, "ABERTA");
 	}
-	
+
 	public QueixaAberta(Queixa queixa) {
-		super(queixa);
-		super.id = 1L;
-		this.situacao = "ABERTA";
+		this();
+		super.queixa = queixa;
 	}
 
 	@Override

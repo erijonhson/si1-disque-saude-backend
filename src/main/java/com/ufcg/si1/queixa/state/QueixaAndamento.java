@@ -8,14 +8,12 @@ import com.ufcg.si1.model.Queixa;
 public class QueixaAndamento extends QueixaState {
 
 	public QueixaAndamento() {
-		super.id = 2L;
-		this.situacao = "EM ANDAMENTO";
+		super(2L, "EM ANDAMENTO");
 	}
 	
 	public QueixaAndamento(Queixa queixa) {
-		super(queixa);
-		super.id = 2L;
-		this.situacao = "EM ANDAMENTO";
+		this();
+		super.queixa = queixa;
 	}
 
 	@Override

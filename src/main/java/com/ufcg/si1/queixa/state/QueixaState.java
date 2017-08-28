@@ -2,8 +2,6 @@ package com.ufcg.si1.queixa.state;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
@@ -29,9 +27,10 @@ public abstract class QueixaState {
 	protected String situacao;
 
 	public QueixaState(){}
-	
-	public QueixaState(Queixa queixa) {
-		this.queixa = queixa;
+
+	protected QueixaState(long id, String situacao) {
+		this.id = id;
+		this.situacao = situacao;
 	}
 	
 	public QueixaState mudaEstadoQueixa(Queixa queixa) {

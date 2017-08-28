@@ -3,7 +3,6 @@ package com.ufcg.si1;
 import javax.annotation.Resource;
 
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -48,16 +47,16 @@ public class SpringBootRestApiApp extends SpringBootServletInitializer {
 	}
 
 	@Resource(name = "queixaStateRepository")
-    QueixaStateRepository queixaStateRepository;
-	
+	QueixaStateRepository queixaStateRepository;
+
 	@Bean
-    InitializingBean sendDatabase() {
-        return () -> {
-        	queixaStateRepository.save(new QueixaAberta());
-        	queixaStateRepository.save(new QueixaAndamento());
-        	queixaStateRepository.save(new QueixaFechada());
-        };
-    }
+	InitializingBean sendDatabase() {
+		return () -> {
+			queixaStateRepository.save(new QueixaAberta());
+			queixaStateRepository.save(new QueixaAndamento());
+			queixaStateRepository.save(new QueixaFechada());
+		};
+	}
 
 	@Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {

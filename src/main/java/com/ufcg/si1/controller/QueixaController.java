@@ -166,7 +166,7 @@ public class QueixaController {
 
 // TODO: colocar admin aqui
 	@RequestMapping(
-			value = "/queixa/fechamento", 
+			value = "/administrador/queixa/fechamento", 
 			method = RequestMethod.POST,
 			consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
