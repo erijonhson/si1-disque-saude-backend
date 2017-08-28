@@ -1,5 +1,9 @@
 package com.ufcg.si1;
 
+import javax.annotation.Resource;
+
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -10,6 +14,11 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+import com.ufcg.si1.queixa.state.QueixaAberta;
+import com.ufcg.si1.queixa.state.QueixaAndamento;
+import com.ufcg.si1.queixa.state.QueixaFechada;
+import com.ufcg.si1.repository.QueixaStateRepository;
+
 @SpringBootApplication(scanBasePackages={"com.ufcg"})
 public class SpringBootRestApiApp extends SpringBootServletInitializer {
 
@@ -18,7 +27,7 @@ public class SpringBootRestApiApp extends SpringBootServletInitializer {
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		CorsConfiguration config = new CorsConfiguration();
 		config.setAllowCredentials(true);
-		//config.addAllowedOrigin("*");
+		config.addAllowedOrigin("*");
 		config.addAllowedOrigin("https://disquesaudesi.herokuapp.com");
 		config.addAllowedOrigin("http://localhost:8000");
 		config.addAllowedHeader("*");
@@ -37,6 +46,18 @@ public class SpringBootRestApiApp extends SpringBootServletInitializer {
 		frb.addUrlPatterns("/api/*/deletar");
 		return frb;
 	}
+
+	@Resource(name = "queixaStateRepository")
+    QueixaStateRepository queixaStateRepository;
+	
+	@Bean
+    InitializingBean sendDatabase() {
+        return () -> {
+        	queixaStateRepository.save(new QueixaAberta());
+        	queixaStateRepository.save(new QueixaAndamento());
+        	queixaStateRepository.save(new QueixaFechada());
+        };
+    }
 
 	@Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {

@@ -11,6 +11,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.ufcg.si1.queixa.state.QueixaAberta;
+import com.ufcg.si1.queixa.state.QueixaState;
+
 
 @Entity
 @Table(name = "tb_queixa")
@@ -30,21 +33,22 @@ public class Queixa implements Serializable {
 	@JoinColumn(name = "cidadao_id")
 	private Cidadao solicitante;
 
-	@Column(name = "situacao")
-	private SituacaoDeQueixa situacao;
-
 	@ManyToOne //(fetch = FetchType.LAZY)
 	@JoinColumn(name = "endereco_id")
 	private Endereco endereco;
+
+	@ManyToOne
+	@JoinColumn(name = "state")
+	private QueixaState state;
 	
 	public Queixa() {
-		this(0, "desconhecido", SituacaoDeQueixa.ABERTA, new Cidadao());
+		this(0, "desconhecido", new Cidadao());
 	}
 
-	public Queixa(long id, String descricao, SituacaoDeQueixa situacao, Cidadao solicitante) {
+	public Queixa(long id, String descricao, Cidadao solicitante) {
 		this.descricao = descricao;
-		this.situacao = situacao;
 		this.solicitante = solicitante;
+		state = new QueixaAberta(this);
 	}
 
 	public String getDescricao() {
@@ -55,8 +59,8 @@ public class Queixa implements Serializable {
 		this.descricao = descricao;
 	}
 
-	public SituacaoDeQueixa getSituacao() {
-		return situacao;
+	public String getSituacao() {
+		return state.getSituacao();
 	}
 
 	public Cidadao getSolicitante() {
@@ -79,20 +83,15 @@ public class Queixa implements Serializable {
 		this.endereco = endereco;
 	}
 
-	public void abrir() {
-		if (this.situacao != SituacaoDeQueixa.EM_ANDAMENTO)
-			this.situacao = SituacaoDeQueixa.ABERTA;
-		else
-			throw new IllegalStateException("Status inválido");
+	public void setQueixaState(QueixaState state) {
+		this.state = state;
 	}
-
-	public void fechar() {
-		if (this.situacao == SituacaoDeQueixa.EM_ANDAMENTO || this.situacao == SituacaoDeQueixa.ABERTA) {
-			this.situacao = SituacaoDeQueixa.FECHADA;
-		} else
-			throw new IllegalStateException("Status inválido");
+	
+	//Padrao State
+	public QueixaState mudaStateQueixa() {
+		return state.mudaEstadoQueixa(this);
 	}
-
+		
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -114,5 +113,4 @@ public class Queixa implements Serializable {
 			return false;
 		return true;
 	}
-
 }

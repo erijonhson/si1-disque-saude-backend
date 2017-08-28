@@ -18,6 +18,8 @@ import com.ufcg.si1.model.Cidadao;
 import com.ufcg.si1.model.Comentario;
 import com.ufcg.si1.model.Endereco;
 import com.ufcg.si1.model.Queixa;
+import com.ufcg.si1.queixa.state.QueixaAberta;
+import com.ufcg.si1.queixa.state.QueixaState;
 import com.ufcg.si1.service.CidadaoService;
 import com.ufcg.si1.service.ComentarioService;
 import com.ufcg.si1.service.EnderecoService;
@@ -162,42 +164,19 @@ public class QueixaController {
 		return new ResponseEntity<Queixa>(HttpStatus.OK);
 	}
 
+// TODO: colocar admin aqui
 	@RequestMapping(
-			value = "/administrador/queixa/reabrir", 
+			value = "/queixa/fechamento", 
 			method = RequestMethod.POST,
 			consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Queixa> reabrirQueixa(@RequestBody Queixa queixa) {
+	public ResponseEntity<Queixa> mudaStateQueixa(@RequestBody Queixa queixa) {
 
 		Queixa queixaFechada = null;
 
 		try {
 
-			queixaFechada = queixaService.reabrirQueixa(queixa);
-
-			return new ResponseEntity<Queixa>(queixaFechada, HttpStatus.OK);
-
-		} catch (RuntimeException re) {
-			return new ResponseEntity(
-					new Erro("Não é possível fechar Queixa. Erro interno no sistema."),
-					HttpStatus.NOT_MODIFIED);
-		}
-
-	}
-
-	@RequestMapping(
-			value = "/administrador/queixa/fechamento", 
-			method = RequestMethod.POST,
-			consumes = MediaType.APPLICATION_JSON_VALUE,
-			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Queixa> fecharQueixa(@RequestBody Queixa queixa) {
-
-		// TODO: bad smell: variavel public queixaAFechar.situacao
-		Queixa queixaFechada = null;
-
-		try {
-
-			queixaFechada = queixaService.fecharQueixa(queixa);
+			queixaFechada = queixaService.mudaStateQueixa(queixa);
 
 			return new ResponseEntity<Queixa>(queixaFechada, HttpStatus.OK);
 
@@ -247,6 +226,16 @@ public class QueixaController {
 	private void preparaQueixa(Queixa queixa) {
 		preparaSolicitanteDaQueixa(queixa);
 		preparaEnderecoDaQueixa(queixa);
+		preparaStateQueixa(queixa);
+	}
+
+	private void preparaStateQueixa(Queixa queixa) {
+		
+		QueixaState state = new QueixaAberta(queixa);
+		
+		// QueixaState newState = queixaService.saveState(state);
+		
+		queixa.setQueixaState(state);
 	}
 
 	private void preparaSolicitanteDaQueixa(Queixa queixa) {
