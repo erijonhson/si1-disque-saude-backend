@@ -21,9 +21,9 @@ public abstract class QueixaState {
 	protected Queixa queixa;
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	// @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id_state_queixa")
-	private Long id;
+	protected Long id;
 
 	@Column(name = "situacao")
 	protected String situacao;
@@ -34,7 +34,8 @@ public abstract class QueixaState {
 		this.queixa = queixa;
 	}
 	
-	public QueixaState mudaEstadoQueixa() {
+	public QueixaState mudaEstadoQueixa(Queixa queixa) {
+		this.queixa = queixa;
 		return next();
 	}
 	
@@ -44,4 +45,9 @@ public abstract class QueixaState {
 	public String getSituacao() {
 		return this.situacao;
 	}
+
+	public Long getId() {
+		return id;
+	}
+
 }

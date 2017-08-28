@@ -166,7 +166,7 @@ public class QueixaController {
 
 // TODO: colocar admin aqui
 	@RequestMapping(
-			value = "/administrador/queixa/fechamento", 
+			value = "/queixa/fechamento", 
 			method = RequestMethod.POST,
 			consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
@@ -233,9 +233,9 @@ public class QueixaController {
 		
 		QueixaState state = new QueixaAberta(queixa);
 		
-		QueixaState newState = queixaService.saveState(state);
+		// QueixaState newState = queixaService.saveState(state);
 		
-		queixa.setQueixaState(newState);
+		queixa.setQueixaState(state);
 	}
 
 	private void preparaSolicitanteDaQueixa(Queixa queixa) {

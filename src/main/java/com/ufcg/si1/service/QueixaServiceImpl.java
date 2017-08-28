@@ -80,8 +80,8 @@ public class QueixaServiceImpl implements QueixaService {
 	public Queixa mudaStateQueixa(Queixa queixa) {
 		Queixa aFechar = buscarPorId(queixa.getId());
 		QueixaState state = aFechar.mudaStateQueixa();
-		saveState(state);
-		aFechar.setQueixaState(state);
+		// saveState(state);
+		// aFechar.setQueixaState(state);
 		aFechar = atualizar(aFechar);
 		
 		return aFechar;

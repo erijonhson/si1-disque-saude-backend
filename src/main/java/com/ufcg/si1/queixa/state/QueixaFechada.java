@@ -7,23 +7,22 @@ import com.ufcg.si1.model.Queixa;
 @Entity
 public class QueixaFechada extends QueixaState {
 
-	public QueixaFechada() {}
+	public QueixaFechada() {
+		super.id = 3L;
+		this.situacao = "FECHADA";
+	}
 	
 	public QueixaFechada(Queixa queixa) {
 		super(queixa);
+		super.id = 3L;
 		this.situacao = "FECHADA";
 	}
 
 	@Override
 	protected QueixaState next() {
 		QueixaState next = new QueixaAberta(this.queixa);
-		
-		atualizaQueixaState();
-		
+		this.queixa.setQueixaState(next);
 		return next;
 	}
 
-	protected void atualizaQueixaState() {
-		this.queixa.setQueixaState(this);
-	}
 }

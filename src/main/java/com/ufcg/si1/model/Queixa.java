@@ -89,7 +89,7 @@ public class Queixa implements Serializable {
 	
 	//Padrao State
 	public QueixaState mudaStateQueixa() {
-		return state.mudaEstadoQueixa();
+		return state.mudaEstadoQueixa(this);
 	}
 		
 	@Override
