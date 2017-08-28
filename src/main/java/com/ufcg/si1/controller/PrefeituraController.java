@@ -50,12 +50,15 @@ public class PrefeituraController {
 		return new ResponseEntity(unidadeDeSaude.mediaDeMedicoPorPacienteEmUmDia(), HttpStatus.OK);
 	}
 
+	
 	@RequestMapping(
 			value = "/administrador/geral/situacao", 
 			method = RequestMethod.GET)
 	public ResponseEntity<Integer> getSituacaoGeralQueixas() {
 
 		long quantidadeDeQueixas = queixaService.quantidadeDeQueixas();
+		
+		// reabilitar
 		long quantidadeDeQueixasAbertas = queixaService.quantidadeDeQueixasAbertas();
 
 		SituacaoGeralDasQueixas situacaoGeralDasQueixas = 
@@ -64,5 +67,6 @@ public class PrefeituraController {
 
 		return new ResponseEntity<Integer>(situacaoGeralDasQueixas.getSituacao(), HttpStatus.OK);
 	}
+	
 
 }

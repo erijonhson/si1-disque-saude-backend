@@ -18,7 +18,7 @@ public class SpringBootRestApiApp extends SpringBootServletInitializer {
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		CorsConfiguration config = new CorsConfiguration();
 		config.setAllowCredentials(true);
-		//config.addAllowedOrigin("*");
+		config.addAllowedOrigin("*");
 		config.addAllowedOrigin("https://disquesaudesi.herokuapp.com");
 		config.addAllowedOrigin("http://localhost:8000");
 		config.addAllowedHeader("*");

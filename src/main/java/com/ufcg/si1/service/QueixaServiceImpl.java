@@ -8,13 +8,19 @@ import org.springframework.stereotype.Service;
 
 import com.ufcg.si1.model.Queixa;
 import com.ufcg.si1.model.SituacaoDeQueixa;
+import com.ufcg.si1.queixa.state.QueixaAberta;
+import com.ufcg.si1.queixa.state.QueixaState;
 import com.ufcg.si1.repository.QueixaRepository;
+import com.ufcg.si1.repository.QueixaStateRepository;
 
 @Service(value = "queixaService")
 public class QueixaServiceImpl implements QueixaService {
 
 	@Resource(name = "queixaRepository")
 	QueixaRepository queixaRepository;
+	
+	@Resource(name = "queixaStateRepository")
+	QueixaStateRepository queixaStateRepository;
 	
 	@Override
 	public Queixa cadastrar(Queixa queixa) {
@@ -57,27 +63,28 @@ public class QueixaServiceImpl implements QueixaService {
 
 	}
 
+	
 	public long quantidadeDeQueixasAbertas() {
 
-		return queixaRepository.countBySituacao(SituacaoDeQueixa.ABERTA);
+		return queixaRepository.countByState(new QueixaAberta());
 
 	}
+	
 
-	public Queixa fecharQueixa(Queixa queixa) {
-		
+	public QueixaState saveState(QueixaState state) {
+		return queixaStateRepository.save(state);
+	}
+	
+	
+	@Override
+	public Queixa mudaStateQueixa(Queixa queixa) {
 		Queixa aFechar = buscarPorId(queixa.getId());
-		aFechar.fechar();
+		QueixaState state = aFechar.mudaStateQueixa();
+		saveState(state);
+		aFechar.setQueixaState(state);
 		aFechar = atualizar(aFechar);
 		
 		return aFechar;
-	}
-
-	public Queixa reabrirQueixa(Queixa queixa) {
-		Queixa reabrir = buscarPorId(queixa.getId());
-		reabrir.abrir();
-		reabrir = atualizar(reabrir);
-		
-		return reabrir;
 	}
 
 }

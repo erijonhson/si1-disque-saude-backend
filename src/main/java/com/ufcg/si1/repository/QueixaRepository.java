@@ -5,10 +5,11 @@ import org.springframework.stereotype.Repository;
 
 import com.ufcg.si1.model.Queixa;
 import com.ufcg.si1.model.SituacaoDeQueixa;
+import com.ufcg.si1.queixa.state.QueixaState;
 
 @Repository(value = "queixaRepository")
 public interface QueixaRepository extends JpaRepository<Queixa, Long> {
 
-	long countBySituacao(SituacaoDeQueixa situacao);
+	long countByState(QueixaState state);
 
 }
