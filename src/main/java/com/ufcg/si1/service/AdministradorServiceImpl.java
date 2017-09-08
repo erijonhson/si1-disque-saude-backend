@@ -9,6 +9,11 @@ import org.springframework.stereotype.Service;
 import com.ufcg.si1.model.Administrador;
 import com.ufcg.si1.repository.AdministradorRepository;
 
+import exception.ConflictRuntimeException;
+import exception.ConstantesDeErro;
+import exception.LoginRuntimeException;
+import exception.NoContentRuntimeException;
+
 @Service(value = "administradorService")
 public class AdministradorServiceImpl implements AdministradorService {
 
@@ -17,22 +22,34 @@ public class AdministradorServiceImpl implements AdministradorService {
 
 	@Override
 	public Administrador cadastrar(Administrador administrador) {
-		return administradorRepository.save(administrador);
+		try {
+			return administradorRepository.save(administrador);
+		} catch (Exception e) {
+			throw new ConflictRuntimeException("Administrador já existe!");
+		}
 	}
 
 	@Override
 	public Administrador atualizar(Administrador administrador) {
-		Administrador administradorBD = 
-				administradorRepository.findByEmail(administrador.getEmail());
-		if (administradorBD != null)
-			return administradorRepository.save(administradorBD);
-		else
-			return administradorRepository.save(administrador);
+		try {
+			Administrador administradorBD = 
+					administradorRepository.findByEmail(administrador.getEmail());
+			if (administradorBD != null)
+				return administradorRepository.save(administradorBD);
+			else
+				return administradorRepository.save(administrador);
+		} catch (Exception e) {
+			throw new ConflictRuntimeException("Erro na atualização!");
+		}
 	}
 
 	@Override
 	public List<Administrador> buscarTodos() {
-		return administradorRepository.findAll();
+		List<Administrador> administradores = administradorRepository.findAll();
+		if (administradores == null) {
+			throw new NoContentRuntimeException(ConstantesDeErro.ADMINISTRADORES_INEXISTENTES);
+		}
+		return administradores;
 	}
 
 	@Override
@@ -44,7 +61,7 @@ public class AdministradorServiceImpl implements AdministradorService {
 	public void deletar(Long id) {
 
 		if (!administradorRepository.exists(id)) {
-			throw new RuntimeException("Administrador inexistente ou inválido!");
+			throw new ConflictRuntimeException("Administrador inexistente ou inválido!");
 		}
 
 		administradorRepository.delete(id);
@@ -56,12 +73,13 @@ public class AdministradorServiceImpl implements AdministradorService {
 	}
 
 	public Administrador login(Administrador administrador) {
+
 		Administrador administradorBD = 
 				administradorRepository.findByEmailAndSenha(
 						administrador.getEmail(), administrador.getSenha());
 
 		if (administradorBD == null) {
-			throw new RuntimeException("Email ou senha inválidos!");
+			throw new LoginRuntimeException("Email ou senha inválidos!");
 		}
 
 		administradorBD.setSenha(null);

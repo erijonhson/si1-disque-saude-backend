@@ -25,7 +25,7 @@ import com.ufcg.si1.service.ComentarioService;
 import com.ufcg.si1.service.EnderecoService;
 import com.ufcg.si1.service.QueixaService;
 
-import exceptions.Erro;
+import exception.Erro;
 
 
 @RestController

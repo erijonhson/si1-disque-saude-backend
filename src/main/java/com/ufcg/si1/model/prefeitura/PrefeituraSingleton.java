@@ -8,7 +8,7 @@ public class PrefeituraSingleton {
 
 	public static PrefeituraSingleton instance;
 
-	public static PrefeituraSingleton getInstance() {
+	public synchronized static PrefeituraSingleton getInstance() {
 		if (instance == null) {
 			instance = new PrefeituraSingleton();
 		}

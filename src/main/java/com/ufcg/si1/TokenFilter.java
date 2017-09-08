@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.filter.GenericFilterBean;
 
+import exception.LoginRuntimeException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureException;
 
@@ -30,7 +31,7 @@ public class TokenFilter extends GenericFilterBean {
 		String header = req.getHeader("Authorization");
 
 		if (header == null || !header.startsWith("Bearer ")) {
-			throw new ServletException("Usuário inválido. Faça login para continuar!");
+			throw new LoginRuntimeException();
 		}
 
 		// Extraindo somente a string do Token sem o Bearer
@@ -40,7 +41,7 @@ public class TokenFilter extends GenericFilterBean {
 		try {
 			Jwts.parser().setSigningKey(TokenFilter.mykey).parseClaimsJws(token).getBody();
 		} catch (SignatureException e) {
-			throw new ServletException("Usuário inválido. Faça login para continuar!");
+			throw new LoginRuntimeException();
 		}
 
 		chain.doFilter(request, response);

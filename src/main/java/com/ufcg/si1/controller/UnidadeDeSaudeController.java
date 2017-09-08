@@ -25,7 +25,7 @@ import com.ufcg.si1.service.EnderecoService;
 import com.ufcg.si1.service.EspecialidadeService;
 import com.ufcg.si1.service.UnidadeDeSaudeService;
 
-import exceptions.Erro;
+import exception.Erro;
 
 @RestController
 @RequestMapping("/api")

@@ -5,9 +5,7 @@ import java.util.Date;
 
 import javax.annotation.Resource;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,7 +16,6 @@ import com.ufcg.si1.TokenFilter;
 import com.ufcg.si1.model.Administrador;
 import com.ufcg.si1.service.AdministradorService;
 
-import exceptions.Erro;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
@@ -35,25 +32,17 @@ public class AdministradorController {
 			value = "/admin/login", 
 			consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Login> login(@RequestBody Administrador administrador) {
+	public Login login(@RequestBody Administrador administrador) {
 
-		try {
+		Administrador administradorAutenticado = administradorService.login(administrador);
 
-			Administrador administradorAutenticado = administradorService.login(administrador);
+		String token = Jwts.builder()
+				.setSubject(administradorAutenticado.getEmail())
+				.signWith(SignatureAlgorithm.HS512, TokenFilter.mykey)
+				.setExpiration(new Date(System.currentTimeMillis() + TokenFilter.oneMillisDay))
+				.compact();
 
-			String token = Jwts.builder()
-					.setSubject(administradorAutenticado.getEmail())
-					.signWith(SignatureAlgorithm.HS512, TokenFilter.mykey)
-					.setExpiration(new Date(System.currentTimeMillis() + TokenFilter.oneMillisDay))
-					.compact();
-
-			return new ResponseEntity<Login>(new Login(token, administradorAutenticado), HttpStatus.OK);
-
-		} catch (Throwable t) {
-
-			return new ResponseEntity(new Erro(t.getMessage()), HttpStatus.UNAUTHORIZED);
-
-		}
+		return new Login(token, administradorAutenticado);
 
 	}
 
@@ -62,18 +51,8 @@ public class AdministradorController {
 			value = "/admin/cadastrar", 
 			consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Administrador> cadastrar(@RequestBody Administrador administrador) {
-
-		HttpStatus status;
-		Administrador administradorCadastrado = null;
-		try {
-			administradorCadastrado = administradorService.cadastrar(administrador);
-			status = HttpStatus.CREATED;
-		} catch (Throwable t) {
-			status = HttpStatus.NOT_ACCEPTABLE;
-		}
-
-		return new ResponseEntity<Administrador>(administradorCadastrado, status);
+	public Administrador cadastrar(@RequestBody Administrador administrador) {
+		return administradorService.cadastrar(administrador);
 	}
 
 	private class Login {
@@ -93,15 +72,8 @@ public class AdministradorController {
 			value = "/administrador/", 
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Collection<Administrador>> listAllAdministradores() {
-
-		Collection<Administrador> administradores = administradorService.buscarTodos();
-
-		if (administradores.isEmpty()) {
-			return new ResponseEntity(HttpStatus.NO_CONTENT);
-		}
-		
-		return new ResponseEntity<Collection<Administrador>>(administradores, HttpStatus.OK);
+	public Collection<Administrador> listAllAdministradores() {
+		return administradorService.buscarTodos();
 	}
 
 }

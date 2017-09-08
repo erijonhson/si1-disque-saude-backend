@@ -17,7 +17,7 @@ import com.ufcg.si1.service.PrefeituraService;
 import com.ufcg.si1.service.QueixaService;
 import com.ufcg.si1.service.UnidadeDeSaudeService;
 
-import exceptions.Erro;
+import exception.Erro;
 
 @RestController
 @RequestMapping("/api")

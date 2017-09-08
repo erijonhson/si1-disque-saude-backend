@@ -9,6 +9,9 @@ import org.springframework.stereotype.Service;
 import com.ufcg.si1.model.Cidadao;
 import com.ufcg.si1.repository.CidadaoRepository;
 
+import exception.ConstantesDeErro;
+import exception.NoContentRuntimeException;
+
 @Service(value = "cidadaoService")
 public class CidadaoServiceImpl implements CidadaoService {
 
@@ -31,7 +34,11 @@ public class CidadaoServiceImpl implements CidadaoService {
 
 	@Override
 	public List<Cidadao> buscarTodos() {
-		return cidadaoRepository.findAll();
+		List<Cidadao> cidadaos = cidadaoRepository.findAll();
+		if (cidadaos == null) {
+			throw new NoContentRuntimeException(ConstantesDeErro.CIDADAOS_INEXISTENTES);
+		}
+		return cidadaos;
 	}
 
 	@Override
