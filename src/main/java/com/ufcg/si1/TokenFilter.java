@@ -8,13 +8,15 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.filter.GenericFilterBean;
 
-import exception.LoginRuntimeException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureException;
+import com.ufcg.si1.exception.LoginRuntimeException;
 
+import io.jsonwebtoken.Jwts;
+
+@Component
 @CrossOrigin
 public class TokenFilter extends GenericFilterBean {
 
@@ -27,6 +29,7 @@ public class TokenFilter extends GenericFilterBean {
 			throws IOException, ServletException {
 
 		HttpServletRequest req = (HttpServletRequest) request;
+		// HttpServletResponse res = (HttpServletResponse) response;
 
 		String header = req.getHeader("Authorization");
 
@@ -40,8 +43,10 @@ public class TokenFilter extends GenericFilterBean {
 		// verificar se o token é valido
 		try {
 			Jwts.parser().setSigningKey(TokenFilter.mykey).parseClaimsJws(token).getBody();
-		} catch (SignatureException e) {
+		} catch (Exception e) {
 			throw new LoginRuntimeException();
+			// res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Usuário inválido. Faça login para continuar!");
+			// return ;
 		}
 
 		chain.doFilter(request, response);

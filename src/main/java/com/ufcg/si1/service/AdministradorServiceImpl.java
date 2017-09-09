@@ -6,13 +6,12 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import com.ufcg.si1.exception.ConflictRuntimeException;
+import com.ufcg.si1.exception.ConstantesDeErro;
+import com.ufcg.si1.exception.LoginRuntimeException;
+import com.ufcg.si1.exception.NotFoundRuntimeException;
 import com.ufcg.si1.model.Administrador;
 import com.ufcg.si1.repository.AdministradorRepository;
-
-import exception.ConflictRuntimeException;
-import exception.ConstantesDeErro;
-import exception.LoginRuntimeException;
-import exception.NoContentRuntimeException;
 
 @Service(value = "administradorService")
 public class AdministradorServiceImpl implements AdministradorService {
@@ -47,7 +46,7 @@ public class AdministradorServiceImpl implements AdministradorService {
 	public List<Administrador> buscarTodos() {
 		List<Administrador> administradores = administradorRepository.findAll();
 		if (administradores == null) {
-			throw new NoContentRuntimeException(ConstantesDeErro.ADMINISTRADORES_INEXISTENTES);
+			throw new NotFoundRuntimeException(ConstantesDeErro.ADMINISTRADOR_NAO_ENCONTRADO);
 		}
 		return administradores;
 	}

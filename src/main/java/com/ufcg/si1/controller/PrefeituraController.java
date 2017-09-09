@@ -11,13 +11,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ufcg.si1.exception.Erro;
 import com.ufcg.si1.model.UnidadeDeSaude;
 import com.ufcg.si1.model.prefeitura.SituacaoGeralDasQueixas;
 import com.ufcg.si1.service.PrefeituraService;
 import com.ufcg.si1.service.QueixaService;
 import com.ufcg.si1.service.UnidadeDeSaudeService;
-
-import exception.Erro;
 
 @RestController
 @RequestMapping("/api")

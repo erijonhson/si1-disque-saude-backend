@@ -7,6 +7,8 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import com.ufcg.si1.exception.ConstantesDeErro;
+import com.ufcg.si1.exception.NotFoundRuntimeException;
 import com.ufcg.si1.model.Especialidade;
 import com.ufcg.si1.repository.EspecialidadeRepository;
 
@@ -33,7 +35,11 @@ public class EspecialidadeServiceImpl implements EspecialidadeService {
 
 	@Override
 	public Especialidade buscarPorId(Long id) {
-		return especialidadeRepository.findOne(id);
+		Especialidade especialidade = especialidadeRepository.findOne(id);
+		if (especialidade == null) {
+			throw new NotFoundRuntimeException(ConstantesDeErro.ESPECIALIDADE_NAO_ENCONTRADA);
+		}
+		return especialidade;
 	}
 
 	@Override
@@ -48,7 +54,10 @@ public class EspecialidadeServiceImpl implements EspecialidadeService {
 
 	@Override
 	public Collection<Especialidade> buscarEspecialidadesPorUnidadeDeSaude(Long idUnidadeDeSaude) {
-		return especialidadeRepository.findByUnidadesDeSaudeId(idUnidadeDeSaude);
+		Collection<Especialidade> especialidades = especialidadeRepository.findByUnidadesDeSaudeId(idUnidadeDeSaude);
+		if (especialidades == null || especialidades.isEmpty())
+			throw new NotFoundRuntimeException(ConstantesDeErro.ESPECIALIDADE_NAO_ENCONTRADA);
+		return especialidades;
 	}
 
 	@Override

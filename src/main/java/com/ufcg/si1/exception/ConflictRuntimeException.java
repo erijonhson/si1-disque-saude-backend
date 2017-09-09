@@ -1,4 +1,4 @@
-package exception;
+package com.ufcg.si1.exception;
 
 public class ConflictRuntimeException extends RuntimeException {
 

@@ -18,14 +18,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ufcg.si1.exception.Erro;
 import com.ufcg.si1.model.Endereco;
 import com.ufcg.si1.model.Especialidade;
 import com.ufcg.si1.model.UnidadeDeSaude;
 import com.ufcg.si1.service.EnderecoService;
 import com.ufcg.si1.service.EspecialidadeService;
 import com.ufcg.si1.service.UnidadeDeSaudeService;
-
-import exception.Erro;
 
 @RestController
 @RequestMapping("/api")
@@ -135,6 +134,15 @@ public class UnidadeDeSaudeController {
 					HttpStatus.NOT_FOUND);
 		}
 
+	}
+
+	@RequestMapping(
+			value = "/administrador/especialidade/{id}",
+			method = RequestMethod.POST,
+			consumes = MediaType.APPLICATION_JSON_VALUE,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public Especialidade incluirEspecialidade(@PathVariable("id") long id, @RequestBody Especialidade especialidade) {
+		return unidadeDeSaudeService.incluirEspecialidadeEmUnidadeDeSaude(id, especialidade);
 	}
 
 	// ----------- privated methods ---------------

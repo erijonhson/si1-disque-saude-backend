@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ufcg.si1.exception.Erro;
 import com.ufcg.si1.model.Cidadao;
 import com.ufcg.si1.model.Comentario;
 import com.ufcg.si1.model.Endereco;
@@ -24,8 +25,6 @@ import com.ufcg.si1.service.CidadaoService;
 import com.ufcg.si1.service.ComentarioService;
 import com.ufcg.si1.service.EnderecoService;
 import com.ufcg.si1.service.QueixaService;
-
-import exception.Erro;
 
 
 @RestController
