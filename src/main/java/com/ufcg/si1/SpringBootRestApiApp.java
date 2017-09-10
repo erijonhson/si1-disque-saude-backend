@@ -37,15 +37,6 @@ public class SpringBootRestApiApp extends SpringBootServletInitializer {
 		return bean;
 	}
 
-	@Bean
-	public FilterRegistrationBean filtroJwt() {
-		FilterRegistrationBean frb = new FilterRegistrationBean();
-		frb.setFilter(new TokenFilter());
-		frb.addUrlPatterns("/api/administrador/*");
-		frb.addUrlPatterns("/api/*/deletar");
-		return frb;
-	}
-
 	@Resource(name = "queixaStateRepository")
 	QueixaStateRepository queixaStateRepository;
 

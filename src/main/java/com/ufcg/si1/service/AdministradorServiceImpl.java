@@ -6,6 +6,10 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import com.ufcg.si1.exception.ConflictRuntimeException;
+import com.ufcg.si1.exception.ConstantesDeErro;
+import com.ufcg.si1.exception.LoginRuntimeException;
+import com.ufcg.si1.exception.NotFoundRuntimeException;
 import com.ufcg.si1.model.Administrador;
 import com.ufcg.si1.repository.AdministradorRepository;
 
@@ -17,56 +21,72 @@ public class AdministradorServiceImpl implements AdministradorService {
 
 	@Override
 	public Administrador cadastrar(Administrador administrador) {
-		return administradorRepository.save(administrador);
+		try {
+			return administradorRepository.save(administrador);
+		} catch (Exception e) {
+			throw new ConflictRuntimeException(ConstantesDeErro.ADMINISTRADOR_CONFLITO);
+		}
 	}
 
 	@Override
 	public Administrador atualizar(Administrador administrador) {
-		Administrador administradorBD = 
-				administradorRepository.findByEmail(administrador.getEmail());
-		if (administradorBD != null)
-			return administradorRepository.save(administradorBD);
-		else
+		try {
+			Administrador administradorBD = 
+					administradorRepository.findByEmail(administrador.getEmail());
+			if (administradorBD != null) {
+				administrador = administradorBD;
+			}
 			return administradorRepository.save(administrador);
+		} catch (Exception e) {
+			throw new ConflictRuntimeException(ConstantesDeErro.ADMINISTRADOR_CONFLITO);
+		}
 	}
 
 	@Override
 	public List<Administrador> buscarTodos() {
-		return administradorRepository.findAll();
+		List<Administrador> administradores = administradorRepository.findAll();
+		if (administradores == null || administradores.isEmpty()) {
+			throw new NotFoundRuntimeException(ConstantesDeErro.ADMINISTRADOR_NAO_ENCONTRADO);
+		}
+		return administradores;
 	}
 
 	@Override
 	public Administrador buscarPorId(Long id) {
-		return administradorRepository.findOne(id);
+		Administrador administrador = administradorRepository.findOne(id);
+		return verifyNotFound(administrador);
 	}
 
 	@Override
 	public void deletar(Long id) {
-
 		if (!administradorRepository.exists(id)) {
-			throw new RuntimeException("Administrador inexistente ou inválido!");
+			throw new ConflictRuntimeException(ConstantesDeErro.ADMINISTRADOR_NAO_ENCONTRADO);
 		}
-
 		administradorRepository.delete(id);
 	}
 
 	@Override
 	public Administrador buscarPorEmail(String email) {
-		return administradorRepository.findByEmail(email);
+		Administrador administrador = administradorRepository.findByEmail(email);
+		return verifyNotFound(administrador);
 	}
 
 	public Administrador login(Administrador administrador) {
 		Administrador administradorBD = 
 				administradorRepository.findByEmailAndSenha(
 						administrador.getEmail(), administrador.getSenha());
-
 		if (administradorBD == null) {
-			throw new RuntimeException("Email ou senha inválidos!");
+			throw new LoginRuntimeException(ConstantesDeErro.LOGIN_INVALIDO);
 		}
-
 		administradorBD.setSenha(null);
-
 		return administradorBD;
+	}
+
+	private Administrador verifyNotFound(Administrador administrador) {
+		if (administrador == null) {
+			throw new NotFoundRuntimeException(ConstantesDeErro.ADMINISTRADOR_NAO_ENCONTRADO);
+		}
+		return administrador;
 	}
 
 }

@@ -8,7 +8,7 @@ public class PrefeituraSingleton {
 
 	public static PrefeituraSingleton instance;
 
-	public static PrefeituraSingleton getInstance() {
+	public synchronized static PrefeituraSingleton getInstance() {
 		if (instance == null) {
 			instance = new PrefeituraSingleton();
 		}
@@ -25,8 +25,8 @@ public class PrefeituraSingleton {
 		this.situacao = situacao;
 	}
 
-	public SituacaoGeralDasQueixas getSituacaoDasQueixas(double porcentagemQueixasAbertas) {
-		return this.situacao.getSituacaoDasQueixas(porcentagemQueixasAbertas);
+	public Integer getSituacaoDasQueixas(double porcentagemQueixasAbertas) {
+		return this.situacao.getSituacaoDasQueixas(porcentagemQueixasAbertas).getSituacao();
 	}
 
 }

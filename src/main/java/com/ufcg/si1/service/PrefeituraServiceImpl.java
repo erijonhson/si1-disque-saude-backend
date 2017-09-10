@@ -1,16 +1,21 @@
 package com.ufcg.si1.service;
 
+import javax.annotation.Resource;
+
 import org.springframework.stereotype.Service;
 
 import com.ufcg.si1.model.prefeitura.PrefeituraSingleton;
-import com.ufcg.si1.model.prefeitura.SituacaoGeralDasQueixas;
 
 @Service(value = "prefeituraService")
 public class PrefeituraServiceImpl implements PrefeituraService {
 
-	@Override
-	public SituacaoGeralDasQueixas situacaoGeralDasQueixas(long quantidadeDeQueixas, long quantidadeDeQueixasAbertas) {
+	@Resource(name = "queixaService")
+	QueixaService queixaService;
 
+	@Override
+	public Integer situacaoGeralDasQueixas() {
+		long quantidadeDeQueixas = queixaService.quantidadeDeQueixas();
+		long quantidadeDeQueixasAbertas = queixaService.quantidadeDeQueixasAbertas();
 		PrefeituraSingleton prefeitura = PrefeituraSingleton.getInstance();
 
 		double porcentagemQueixasAbertas = 0;

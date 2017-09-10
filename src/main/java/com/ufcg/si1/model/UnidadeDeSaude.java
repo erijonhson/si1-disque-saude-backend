@@ -96,4 +96,8 @@ public abstract class UnidadeDeSaude implements Serializable {
 
 	public abstract double mediaDeMedicoPorPacienteEmUmDia();
 
+	public void addEspecialidade(Especialidade especialidade) {
+		this.especialidades.add(especialidade);
+	}
+
 }

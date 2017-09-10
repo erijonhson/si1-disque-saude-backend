@@ -1,4 +1,4 @@
-package exceptions;
+package com.ufcg.si1.exception;
 
 public class Erro {
 
