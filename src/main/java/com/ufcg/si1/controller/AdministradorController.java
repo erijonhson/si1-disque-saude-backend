@@ -1,7 +1,5 @@
 package com.ufcg.si1.controller;
 
-import java.util.Date;
-
 import javax.annotation.Resource;
 
 import org.springframework.http.MediaType;
@@ -14,9 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ufcg.si1.interceptor.TokenInterceptor;
 import com.ufcg.si1.model.Administrador;
 import com.ufcg.si1.service.AdministradorService;
-
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 
 @RestController
 @RequestMapping("/api")
@@ -32,17 +27,9 @@ public class AdministradorController {
 			consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public Login login(@RequestBody Administrador administrador) {
-
 		Administrador administradorAutenticado = administradorService.login(administrador);
-
-		String token = Jwts.builder()
-				.setSubject(administradorAutenticado.getEmail())
-				.signWith(SignatureAlgorithm.HS512, TokenInterceptor.mykey)
-				.setExpiration(new Date(System.currentTimeMillis() + TokenInterceptor.dayInMillis))
-				.compact();
-
+		String token = TokenInterceptor.buildToken(administrador.getEmail());
 		return new Login(token, administradorAutenticado);
-
 	}
 
 	@RequestMapping(
@@ -65,7 +52,6 @@ public class AdministradorController {
 			this.token = token;
 			this.administrador = administrador;
 		}
-
 	}
 
 }

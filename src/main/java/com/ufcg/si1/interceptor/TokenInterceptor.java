@@ -1,5 +1,7 @@
 package com.ufcg.si1.interceptor;
 
+import java.util.Date;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -11,6 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.ufcg.si1.exception.LoginRuntimeException;
 
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 
 @Service(value = "tokenService")
 public class TokenInterceptor implements HandlerInterceptor {
@@ -47,5 +50,13 @@ public class TokenInterceptor implements HandlerInterceptor {
 	@Override
 	public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)
 			throws Exception {}
+
+	public static String buildToken(String email) {
+		return Jwts.builder()
+				.setSubject(email)
+				.signWith(SignatureAlgorithm.HS512, TokenInterceptor.mykey)
+				.setExpiration(new Date(System.currentTimeMillis() + TokenInterceptor.dayInMillis))
+				.compact();
+	}
 
 }
