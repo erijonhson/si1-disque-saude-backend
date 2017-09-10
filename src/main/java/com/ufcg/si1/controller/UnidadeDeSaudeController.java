@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ufcg.si1.exception.Erro;
+import com.ufcg.si1.interceptor.LoginRequired;
 import com.ufcg.si1.model.Endereco;
 import com.ufcg.si1.model.Especialidade;
 import com.ufcg.si1.model.UnidadeDeSaude;
@@ -56,6 +57,7 @@ public class UnidadeDeSaudeController {
 		return new ResponseEntity<Collection<UnidadeDeSaude>>(unidades, HttpStatus.OK);
 	}
 
+	@LoginRequired
 	@RequestMapping(
 			value = "/administrador/unidade/", 
 			method = RequestMethod.POST,
@@ -136,6 +138,7 @@ public class UnidadeDeSaudeController {
 
 	}
 
+	@LoginRequired
 	@RequestMapping(
 			value = "/administrador/especialidade/{id}",
 			method = RequestMethod.POST,
@@ -145,6 +148,7 @@ public class UnidadeDeSaudeController {
 		return unidadeDeSaudeService.incluirEspecialidadeEmUnidadeDeSaude(id, especialidade);
 	}
 
+	@LoginRequired
 	@RequestMapping(
 			value = "/administrador/geral/medicos/{idUnidadeDeSaude}", 
 			method = RequestMethod.GET,
@@ -165,8 +169,10 @@ public class UnidadeDeSaudeController {
 
 		Endereco endereco = unidadeDeSaude.getLocal();
 
-		Endereco enderoBD = enderecoService.buscarPorRuaECidade(endereco);
-		if (enderoBD == null) {
+		Endereco enderoBD = null;
+		try {
+			enderoBD = enderecoService.buscarPorRuaECidade(endereco);
+		} catch (Exception e) {
 			enderoBD = enderecoService.cadastrar(endereco);
 		}
 
@@ -179,11 +185,11 @@ public class UnidadeDeSaudeController {
 		Set<Especialidade> result = new HashSet();
 
 		for (Especialidade especialidade : especialidades) {
-			Especialidade espBD = especialidadeService.buscarPorDescricao(especialidade.getDescricao());
-			if (espBD == null) {
-				especialidade = especialidadeService.cadastrar(especialidade);
-			} else {
+			try {
+				Especialidade espBD = especialidadeService.buscarPorDescricao(especialidade.getDescricao());
 				especialidade = espBD;
+			} catch (Exception e) {
+				especialidade = especialidadeService.cadastrar(especialidade);
 			}
 			result.add(especialidade);
 		}

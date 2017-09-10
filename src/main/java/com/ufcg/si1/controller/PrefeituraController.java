@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ufcg.si1.interceptor.LoginRequired;
 import com.ufcg.si1.service.PrefeituraService;
 
 @RestController
@@ -17,6 +18,7 @@ public class PrefeituraController {
 	@Resource(name = "prefeituraService")
 	PrefeituraService prefeituraService;
 
+	@LoginRequired
 	@RequestMapping(
 			value = "/administrador/geral/situacao", 
 			method = RequestMethod.GET)

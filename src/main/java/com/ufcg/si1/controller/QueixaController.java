@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ufcg.si1.exception.Erro;
+import com.ufcg.si1.interceptor.LoginRequired;
 import com.ufcg.si1.model.Cidadao;
 import com.ufcg.si1.model.Comentario;
 import com.ufcg.si1.model.Endereco;
@@ -76,6 +77,7 @@ public class QueixaController {
 
 	}
 
+	@LoginRequired
 	@RequestMapping(
 			value = "/administrador/queixa/addall", 
 			method = RequestMethod.POST,
@@ -112,6 +114,7 @@ public class QueixaController {
 		return new ResponseEntity<Queixa>(queixa, HttpStatus.OK);
 	}
 
+	@LoginRequired
 	@RequestMapping(
 			value = "/administrador/queixa/", 
 			method = RequestMethod.PUT,
@@ -133,6 +136,7 @@ public class QueixaController {
 
 	}
 
+	@LoginRequired
 	@RequestMapping(
 			value = "/administrador/queixa/{id}",
 			method = RequestMethod.DELETE,
@@ -162,7 +166,7 @@ public class QueixaController {
 		return new ResponseEntity<Queixa>(HttpStatus.OK);
 	}
 
-// TODO: colocar admin aqui
+	@LoginRequired
 	@RequestMapping(
 			value = "/administrador/queixa/fechamento", 
 			method = RequestMethod.POST,
@@ -228,11 +232,7 @@ public class QueixaController {
 	}
 
 	private void preparaStateQueixa(Queixa queixa) {
-		
 		QueixaState state = new QueixaAberta(queixa);
-		
-		// QueixaState newState = queixaService.saveState(state);
-		
 		queixa.setQueixaState(state);
 	}
 
@@ -240,8 +240,10 @@ public class QueixaController {
 
 		Cidadao solicitante = queixa.getSolicitante();
 
-		Cidadao solicitanteBD = cidadaoService.buscarPorEmail(solicitante.getEmail());
-		if (solicitanteBD == null) {
+		Cidadao solicitanteBD = null;
+		try {
+			solicitanteBD = cidadaoService.buscarPorEmail(solicitante.getEmail());
+		} catch (Exception e) {
 			solicitanteBD = cidadaoService.cadastrar(solicitante);
 		}
 
@@ -252,8 +254,10 @@ public class QueixaController {
 		
 		Endereco endereco = queixa.getEndereco();
 
-		Endereco enderoBD = enderecoService.buscarPorRuaECidade(endereco);
-		if (enderoBD == null) {
+		Endereco enderoBD = null;
+		try {
+			enderoBD = enderecoService.buscarPorRuaECidade(endereco);
+		} catch (Exception e) {
 			enderoBD = enderecoService.cadastrar(endereco);
 		}
 

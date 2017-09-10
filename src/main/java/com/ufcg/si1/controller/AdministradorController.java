@@ -1,6 +1,5 @@
 package com.ufcg.si1.controller;
 
-import java.util.Collection;
 import java.util.Date;
 
 import javax.annotation.Resource;
@@ -12,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ufcg.si1.TokenFilter;
+import com.ufcg.si1.interceptor.TokenInterceptor;
 import com.ufcg.si1.model.Administrador;
 import com.ufcg.si1.service.AdministradorService;
 
@@ -38,8 +37,8 @@ public class AdministradorController {
 
 		String token = Jwts.builder()
 				.setSubject(administradorAutenticado.getEmail())
-				.signWith(SignatureAlgorithm.HS512, TokenFilter.mykey)
-				.setExpiration(new Date(System.currentTimeMillis() + TokenFilter.oneMillisDay))
+				.signWith(SignatureAlgorithm.HS512, TokenInterceptor.mykey)
+				.setExpiration(new Date(System.currentTimeMillis() + TokenInterceptor.dayInMillis))
 				.compact();
 
 		return new Login(token, administradorAutenticado);
@@ -57,7 +56,9 @@ public class AdministradorController {
 
 	private class Login {
 
+		@SuppressWarnings("unused")
 		public String token;
+		@SuppressWarnings("unused")
 		public Administrador administrador;
 
 		public Login(String token, Administrador administrador) {
@@ -65,15 +66,6 @@ public class AdministradorController {
 			this.administrador = administrador;
 		}
 
-	}
-
-	// TODO: para efeito de testes. A versão final não deve ter o serviço abaixo.
-	@RequestMapping(
-			value = "/administrador/", 
-			method = RequestMethod.GET,
-			produces = MediaType.APPLICATION_JSON_VALUE)
-	public Collection<Administrador> listAllAdministradores() {
-		return administradorService.buscarTodos();
 	}
 
 }
