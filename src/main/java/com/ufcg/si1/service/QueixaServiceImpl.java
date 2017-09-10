@@ -45,7 +45,11 @@ public class QueixaServiceImpl implements QueixaService {
 
 	@Override
 	public Queixa atualizar(Queixa queixa) {
-		return this.cadastrar(queixa);
+		try {
+			return queixaRepository.save(queixa);
+		} catch (Exception e) {
+			throw new ConflictRuntimeException(ConstantesDeErro.QUEIXA_CONFLITO);
+		}
 	}
 
 	@Override
