@@ -4,9 +4,7 @@ import java.util.Collection;
 
 import javax.annotation.Resource;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,17 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ufcg.si1.exception.Erro;
 import com.ufcg.si1.interceptor.LoginRequired;
-import com.ufcg.si1.model.Cidadao;
 import com.ufcg.si1.model.Comentario;
-import com.ufcg.si1.model.Endereco;
 import com.ufcg.si1.model.Queixa;
-import com.ufcg.si1.queixa.state.QueixaAberta;
-import com.ufcg.si1.queixa.state.QueixaState;
-import com.ufcg.si1.service.CidadaoService;
-import com.ufcg.si1.service.ComentarioService;
-import com.ufcg.si1.service.EnderecoService;
 import com.ufcg.si1.service.QueixaService;
 
 @RestController
@@ -35,24 +25,12 @@ public class QueixaController {
 	@Resource(name = "queixaService")
 	QueixaService queixaService;
 
-	@Resource(name = "cidadaoService")
-	CidadaoService cidadaoService;
-	
-	@Resource(name = "enderecoService")
-	EnderecoService enderecoService;
-	
-	@Resource(name = "comentarioService")
-	ComentarioService comentarioService;
-
 	@RequestMapping(
 			value = "/queixa/", 
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Collection<Queixa>> listAllQueixas() {
-
-		Collection<Queixa> queixas = queixaService.buscarTodos();
-
-		return new ResponseEntity<Collection<Queixa>>(queixas, HttpStatus.OK);
+	public Collection<Queixa> listAllQueixas() {
+		return queixaService.buscarTodos();
 	}
 
 	@RequestMapping(
@@ -60,58 +38,16 @@ public class QueixaController {
 			method = RequestMethod.POST,
 			consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Queixa> abrirQueixa(@RequestBody Queixa queixa) {
-
-		try {
-
-			preparaQueixa(queixa);
-
-			queixa = queixaService.cadastrar(queixa);
-
-			return new ResponseEntity<Queixa>(queixa, HttpStatus.CREATED);
-
-		} catch (RuntimeException re) {
-			return new ResponseEntity(
-					HttpStatus.CONFLICT);
-		}
-
-	}
-
-	@LoginRequired
-	@RequestMapping(
-			value = "/administrador/queixa/addall", 
-			method = RequestMethod.POST,
-			consumes = MediaType.APPLICATION_JSON_VALUE,
-			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Collection<Queixa>> abrirPaioDeQueixa(@RequestBody Collection<Queixa> queixas) {
-
-		try {
-			queixas.forEach(q -> {
-				preparaQueixa(q);
-				q = queixaService.cadastrar(q);
-			});
-			return new ResponseEntity<Collection<Queixa>>(queixas, HttpStatus.CREATED);
-		} catch (RuntimeException re) {
-			return new ResponseEntity(HttpStatus.CONFLICT);
-		}
-
+	public Queixa abrirQueixa(@RequestBody Queixa queixa) {
+		return queixaService.cadastrar(queixa);
 	}
 
 	@RequestMapping(
 			value = "/queixa/{id}", 
 			method = RequestMethod.GET, 
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Queixa> consultarQueixa(@PathVariable("id") long id) {
-
-		Queixa queixa = queixaService.buscarPorId(id);
-
-		if (queixa == null) {
-			return new ResponseEntity(
-					new Erro("Queixa não encontrada"), 
-					HttpStatus.NOT_FOUND);
-		}
-
-		return new ResponseEntity<Queixa>(queixa, HttpStatus.OK);
+	public Queixa consultarQueixa(@PathVariable("id") long id) {
+		return queixaService.buscarPorId(id);
 	}
 
 	@LoginRequired
@@ -120,20 +56,8 @@ public class QueixaController {
 			method = RequestMethod.PUT,
 			consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Queixa> updateQueixa(@RequestBody Queixa queixa) {
-
-		try {
-
-			queixa = queixaService.atualizar(queixa);
-
-			return new ResponseEntity<Queixa>(queixa, HttpStatus.OK);
-
-		} catch(RuntimeException re) {
-			return new ResponseEntity(
-					new Erro(re.getMessage()),
-					HttpStatus.NOT_FOUND);
-		}
-
+	public Queixa updateQueixa(@RequestBody Queixa queixa) {
+		return queixaService.atualizar(queixa);
 	}
 
 	@LoginRequired
@@ -141,29 +65,8 @@ public class QueixaController {
 			value = "/administrador/queixa/{id}",
 			method = RequestMethod.DELETE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity deleteQueixa(@PathVariable("id") long id) {
-
-		try {
-
-			queixaService.deletar(id);
-
-		} catch(RuntimeException re) {
-			return new ResponseEntity(
-					new Erro(re.getMessage()),
-					HttpStatus.NOT_FOUND);
-		}
-		
-		//TODO: bad smell de nome de variavel, que estava user
-		Queixa queixaEncontrada = queixaService.buscarPorId(id);
-		if (queixaEncontrada == null) {
-			return new ResponseEntity(
-					new Erro("Não é possível deletar. Queixa não encontrada."),
-					HttpStatus.NOT_FOUND);
-		}
-		
-
-		//TODO badsmel not content
-		return new ResponseEntity<Queixa>(HttpStatus.OK);
+	public void deleteQueixa(@PathVariable("id") long id) {
+		queixaService.deletar(id);
 	}
 
 	@LoginRequired
@@ -172,22 +75,8 @@ public class QueixaController {
 			method = RequestMethod.POST,
 			consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Queixa> mudaStateQueixa(@RequestBody Queixa queixa) {
-
-		Queixa queixaFechada = null;
-
-		try {
-
-			queixaFechada = queixaService.mudaStateQueixa(queixa);
-
-			return new ResponseEntity<Queixa>(queixaFechada, HttpStatus.OK);
-
-		} catch (RuntimeException re) {
-			return new ResponseEntity(
-					new Erro("Não é possível fechar Queixa. Erro interno no sistema."),
-					HttpStatus.NOT_MODIFIED);
-		}
-
+	public Queixa mudaStateQueixa(@RequestBody Queixa queixa) {
+		return queixaService.mudaStateQueixa(queixa);
 	}
 
 	@RequestMapping(
@@ -195,73 +84,18 @@ public class QueixaController {
 			method = RequestMethod.POST,
 			consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Comentario> adicionaComentario(@PathVariable("idQueixa") Long idQueixa, @RequestBody Comentario comentario) {
-
-		Queixa queixaBD = queixaService.buscarPorId(idQueixa);
-
-		if(queixaBD == null) {
-			return new ResponseEntity(
-					new Erro("Não é possível adicionar comentário em Queixa inexistente!"),
-					HttpStatus.NOT_ACCEPTABLE);
-		}
-
-		comentario.setQueixa(queixaBD);
-		comentario = comentarioService.cadastrar(comentario);
-		return new ResponseEntity<Comentario>(comentario, HttpStatus.CREATED);
-
+	public Comentario adicionaComentario(
+			@PathVariable("idQueixa") Long idQueixa, 
+			@RequestBody Comentario comentario) {
+		return queixaService.adicionarComentario(idQueixa, comentario);
 	}
 
 	@RequestMapping(
 			value = "/queixa/comentario/{id}",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Collection<Comentario>> buscaComentariosDaQueixa(@PathVariable("id") Long idQueixa) {
-
-		Collection<Comentario> listaComentariosQueixa = comentarioService.buscaTodosComentariosDeQueixa(idQueixa);
-
-		return new ResponseEntity<Collection<Comentario>>(listaComentariosQueixa, HttpStatus.OK);
-
-	}
-
-	// ----------- privated methods ---------------
-
-	private void preparaQueixa(Queixa queixa) {
-		preparaSolicitanteDaQueixa(queixa);
-		preparaEnderecoDaQueixa(queixa);
-		preparaStateQueixa(queixa);
-	}
-
-	private void preparaStateQueixa(Queixa queixa) {
-		QueixaState state = new QueixaAberta(queixa);
-		queixa.setQueixaState(state);
-	}
-
-	private void preparaSolicitanteDaQueixa(Queixa queixa) {
-
-		Cidadao solicitante = queixa.getSolicitante();
-
-		Cidadao solicitanteBD = null;
-		try {
-			solicitanteBD = cidadaoService.buscarPorEmail(solicitante.getEmail());
-		} catch (Exception e) {
-			solicitanteBD = cidadaoService.cadastrar(solicitante);
-		}
-
-		queixa.setSolicitante(solicitanteBD);
-	}
-	
-	private void preparaEnderecoDaQueixa(Queixa queixa) {
-		
-		Endereco endereco = queixa.getEndereco();
-
-		Endereco enderoBD = null;
-		try {
-			enderoBD = enderecoService.buscarPorRuaECidade(endereco);
-		} catch (Exception e) {
-			enderoBD = enderecoService.cadastrar(endereco);
-		}
-
-		queixa.setEndereco(enderoBD);
+	public Collection<Comentario> buscaComentariosDaQueixa(@PathVariable("id") Long idQueixa) {
+		return queixaService.buscarComentariosDeQueixa(idQueixa);
 	}
 
 }

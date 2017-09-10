@@ -6,7 +6,7 @@ import com.ufcg.si1.model.Comentario;
 
 public interface ComentarioService extends GenericService<Comentario> {
 
-	public List<Comentario> buscaTodosComentariosDeQueixa(Long idQueixa);
+	public List<Comentario> buscaComentariosDeQueixa(Long idQueixa);
 
 	
 }

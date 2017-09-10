@@ -17,7 +17,6 @@ import com.ufcg.si1.exception.NotFoundRuntimeException;
 /**
  * De acordo com:
  * https://spring.io/blog/2013/11/01/exception-handling-in-spring-mvc
- * https://github.com/craftercms/social/blob/master/server/src/main/java/org/craftercms/social/controllers/rest/v3/GlobalDefaultExceptionHandler.java
  * 
  * @author Eri
  */

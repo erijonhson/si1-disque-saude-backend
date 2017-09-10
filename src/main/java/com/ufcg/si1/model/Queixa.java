@@ -40,7 +40,7 @@ public class Queixa implements Serializable {
 	@ManyToOne
 	@JoinColumn(name = "state")
 	private QueixaState state;
-	
+
 	public Queixa() {
 		this(0, "desconhecido", new Cidadao());
 	}
@@ -86,12 +86,12 @@ public class Queixa implements Serializable {
 	public void setQueixaState(QueixaState state) {
 		this.state = state;
 	}
-	
+
 	//Padrao State
 	public QueixaState mudaStateQueixa() {
 		return state.mudaEstadoQueixa(this);
 	}
-		
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

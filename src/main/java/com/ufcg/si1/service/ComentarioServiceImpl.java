@@ -56,7 +56,7 @@ public class ComentarioServiceImpl implements ComentarioService {
 	}
 
 	@Override
-	public List<Comentario> buscaTodosComentariosDeQueixa(Long id) {
+	public List<Comentario> buscaComentariosDeQueixa(Long id) {
 		List<Comentario> comentarios = comentarioRepository.findByQueixaId(id);
 		return verifyNotFound(comentarios);
 	}

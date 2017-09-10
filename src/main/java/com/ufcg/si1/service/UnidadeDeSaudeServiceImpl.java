@@ -1,6 +1,8 @@
 package com.ufcg.si1.service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Resource;
 
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.ufcg.si1.exception.ConflictRuntimeException;
 import com.ufcg.si1.exception.ConstantesDeErro;
 import com.ufcg.si1.exception.NotFoundRuntimeException;
+import com.ufcg.si1.model.Endereco;
 import com.ufcg.si1.model.Especialidade;
 import com.ufcg.si1.model.UnidadeDeSaude;
 import com.ufcg.si1.repository.UnidadeDeSaudeRepository;
@@ -19,12 +22,16 @@ public class UnidadeDeSaudeServiceImpl implements UnidadeDeSaudeService {
 	@Resource(name = "unidadeDeSaudeRepository")
 	UnidadeDeSaudeRepository unidadeDeSaudeRepository;
 
+	@Resource(name = "enderecoService")
+	EnderecoService enderecoService;
+
 	@Resource(name = "especialidadeService")
 	EspecialidadeService especialidadeService;
 
 	@Override
 	public UnidadeDeSaude cadastrar(UnidadeDeSaude unidadeDeSaude) {
 		try {
+			this.preparaUnidadeDeSaude(unidadeDeSaude);
 			return unidadeDeSaudeRepository.save(unidadeDeSaude);
 		} catch (Exception e) {
 			throw new ConflictRuntimeException(ConstantesDeErro.UNIDADE_DE_SAUDE_CONFLITO);
@@ -96,6 +103,36 @@ public class UnidadeDeSaudeServiceImpl implements UnidadeDeSaudeService {
 			throw new NotFoundRuntimeException(ConstantesDeErro.UNIDADE_DE_SAUDE_NAO_ENCONTRADA);
 		}
 		return unidadesDeSaude;
+	}
+
+	private void preparaUnidadeDeSaude(UnidadeDeSaude unidadeDeSaude) {
+		preparaEnderecoUnidadeDeSaude(unidadeDeSaude);
+		preparaEspecialidadesUnidadeDeSaude(unidadeDeSaude);
+	}
+
+	private void preparaEnderecoUnidadeDeSaude(UnidadeDeSaude unidadeDeSaude) {
+		Endereco endereco = unidadeDeSaude.getLocal();
+		Endereco enderoBD = null;
+		try {
+			enderoBD = enderecoService.buscarPorRuaECidade(endereco);
+		} catch (Exception e) {
+			enderoBD = enderecoService.cadastrar(endereco);
+		}
+		unidadeDeSaude.setLocal(enderoBD);
+	}
+
+	private void preparaEspecialidadesUnidadeDeSaude(UnidadeDeSaude unidadeDeSaude){
+		Set<Especialidade> especialidades = unidadeDeSaude.getEspecialidades();
+		Set<Especialidade> result = new HashSet<Especialidade>();
+		for (Especialidade especialidade : especialidades) {
+			try {
+				especialidade = especialidadeService.buscarPorDescricao(especialidade.getDescricao());
+			} catch (Exception e) {
+				especialidade = especialidadeService.cadastrar(especialidade);
+			}
+			result.add(especialidade);
+		}
+		unidadeDeSaude.setEspecialidades(result);
 	}
 
 }
