@@ -33,16 +33,13 @@ public class UnidadeDeSaudeServiceImpl implements UnidadeDeSaudeService {
 
 	@Override
 	public UnidadeDeSaude atualizar(UnidadeDeSaude unidadeDeSaude) {
-		try {
-			return unidadeDeSaudeRepository.save(unidadeDeSaude);
-		} catch (Exception e) {
-			throw new ConflictRuntimeException(ConstantesDeErro.UNIDADE_DE_SAUDE_CONFLITO);
-		}
+		return this.cadastrar(unidadeDeSaude);
 	}
 
 	@Override
 	public List<UnidadeDeSaude> buscarTodos() {
-		return unidadeDeSaudeRepository.findAll();
+		List<UnidadeDeSaude> unidadesDeSaude = unidadeDeSaudeRepository.findAll();
+		return verifyNotFound(unidadesDeSaude);
 	}
 
 	@Override
@@ -57,31 +54,48 @@ public class UnidadeDeSaudeServiceImpl implements UnidadeDeSaudeService {
 	@Override
 	public void deletar(Long id) {
 		if (!unidadeDeSaudeRepository.exists(id)) {
-			throw new NotFoundRuntimeException(ConstantesDeErro.UNIDADE_DE_SAUDE_NAO_ENCONTRADA);
+			throw new ConflictRuntimeException(ConstantesDeErro.UNIDADE_DE_SAUDE_NAO_ENCONTRADA);
 		}
 		unidadeDeSaudeRepository.delete(id);
 	}
 
 	@Override
 	public List<UnidadeDeSaude> buscaPorBairro(String bairro) {
-		return unidadeDeSaudeRepository.findByLocalBairro(bairro);
+		List<UnidadeDeSaude> unidadesDeSaude = unidadeDeSaudeRepository.findByLocalBairro(bairro);
+		return verifyNotFound(unidadesDeSaude);
 	}
 
 	@Override
 	public List<UnidadeDeSaude> buscaPorEspecialidade(Long idEspecialidade) {
-		return unidadeDeSaudeRepository.findByEspecialidadesId(idEspecialidade);
+		List<UnidadeDeSaude> unidadesDeSaude = unidadeDeSaudeRepository.findByEspecialidadesId(idEspecialidade);
+		return verifyNotFound(unidadesDeSaude);
 	}
 
+	@SuppressWarnings("finally")
 	@Override
 	public Especialidade incluirEspecialidadeEmUnidadeDeSaude(Long idUnidadeDeSaude, Especialidade especialidade) {
 		UnidadeDeSaude unidadeDeSaudeBD = this.buscarPorId(idUnidadeDeSaude);
-		Especialidade especialidadeBD = especialidadeService.buscarPorDescricao(especialidade.getDescricao());
-		if (especialidadeBD != null) {
+		try {
+			Especialidade especialidadeBD = especialidadeService.buscarPorDescricao(especialidade.getDescricao());
 			especialidade = especialidadeBD;
+		} finally {
+			unidadeDeSaudeBD.addEspecialidade(especialidade);
+			unidadeDeSaudeBD = this.atualizar(unidadeDeSaudeBD);
+			return especialidade;
 		}
-		unidadeDeSaudeBD.addEspecialidade(especialidade);
-		unidadeDeSaudeBD = this.atualizar(unidadeDeSaudeBD);
-		return especialidade;
+	}
+
+	@Override
+	public double mediaDeMedicoPorPacienteEmUmDia(long idUnidadeDeSaude) {
+		UnidadeDeSaude unidadeDeSaude = this.buscarPorId(idUnidadeDeSaude);
+		return unidadeDeSaude.mediaDeMedicoPorPacienteEmUmDia();
+	}
+
+	private List<UnidadeDeSaude> verifyNotFound(List<UnidadeDeSaude> unidadesDeSaude) {
+		if (unidadesDeSaude == null || unidadesDeSaude.isEmpty()) {
+			throw new NotFoundRuntimeException(ConstantesDeErro.UNIDADE_DE_SAUDE_NAO_ENCONTRADA);
+		}
+		return unidadesDeSaude;
 	}
 
 }

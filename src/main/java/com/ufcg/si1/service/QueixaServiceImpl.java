@@ -6,6 +6,9 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import com.ufcg.si1.exception.ConflictRuntimeException;
+import com.ufcg.si1.exception.ConstantesDeErro;
+import com.ufcg.si1.exception.NotFoundRuntimeException;
 import com.ufcg.si1.model.Queixa;
 import com.ufcg.si1.queixa.state.QueixaAberta;
 import com.ufcg.si1.queixa.state.QueixaAndamento;
@@ -24,69 +27,68 @@ public class QueixaServiceImpl implements QueixaService {
 	
 	@Override
 	public Queixa cadastrar(Queixa queixa) {
-		return queixaRepository.save(queixa);
+		try {
+			return queixaRepository.save(queixa);
+		} catch (Exception e) {
+			throw new ConflictRuntimeException(ConstantesDeErro.QUEIXA_CONFLITO);
+		}
 	}
 
 	@Override
 	public Queixa atualizar(Queixa queixa) {
-
-		if (!queixaRepository.exists(queixa.getId())) {
-			throw new RuntimeException("Queixa inexistente ou inválida!");
-		}
-
-		return queixaRepository.save(queixa);
+		return this.cadastrar(queixa);
 	}
 
 	@Override
 	public List<Queixa> buscarTodos() {
-		return queixaRepository.findAll();
+		List<Queixa> queixas = queixaRepository.findAll();
+		if (queixas == null || queixas.isEmpty()) {
+			throw new NotFoundRuntimeException(ConstantesDeErro.QUEIXA_NAO_ENCONTRADA);
+		}
+		return queixas;
 	}
 
 	@Override
 	public Queixa buscarPorId(Long id) {
-		return queixaRepository.findOne(id);
+		Queixa queixa = queixaRepository.findOne(id);
+		if (queixa == null) {
+			throw new NotFoundRuntimeException(ConstantesDeErro.QUEIXA_NAO_ENCONTRADA);
+		}
+		return queixa;
 	}
 
 	@Override
 	public void deletar(Long id) {
-
 		if (!queixaRepository.exists(id)) {
-			throw new RuntimeException("Queixa inexistente ou inválida!");
+			throw new ConflictRuntimeException(ConstantesDeErro.QUEIXA_NAO_ENCONTRADA);
 		}
-
 		queixaRepository.delete(id);
 	}
 
 	public long quantidadeDeQueixas() {
-
 		return queixaRepository.count();
-
 	}
 
-	
 	public long quantidadeDeQueixasAbertas() {
-
 		long totalAbertas = queixaRepository.countByState(new QueixaAberta());
 		long totalEmAndamento = queixaRepository.countByState(new QueixaAndamento());
 		return totalAbertas + totalEmAndamento;
-
 	}
-	
 
 	public QueixaState saveState(QueixaState state) {
-		return queixaStateRepository.save(state);
+		try {
+			return queixaStateRepository.save(state);
+		} catch (Exception e) {
+			throw new ConflictRuntimeException(ConstantesDeErro.QUEIXA_CONFLITO);
+		}
 	}
-	
-	
+
 	@Override
 	public Queixa mudaStateQueixa(Queixa queixa) {
-		Queixa aFechar = buscarPorId(queixa.getId());
-		QueixaState state = aFechar.mudaStateQueixa();
-		// saveState(state);
-		// aFechar.setQueixaState(state);
-		aFechar = atualizar(aFechar);
-		
-		return aFechar;
+		Queixa queixaBD = this.buscarPorId(queixa.getId());
+		queixaBD.mudaStateQueixa();
+		queixaBD = this.atualizar(queixaBD);
+		return queixaBD;
 	}
 
 }

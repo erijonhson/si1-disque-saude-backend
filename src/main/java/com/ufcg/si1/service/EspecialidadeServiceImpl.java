@@ -7,6 +7,7 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import com.ufcg.si1.exception.ConflictRuntimeException;
 import com.ufcg.si1.exception.ConstantesDeErro;
 import com.ufcg.si1.exception.NotFoundRuntimeException;
 import com.ufcg.si1.model.Especialidade;
@@ -20,49 +21,61 @@ public class EspecialidadeServiceImpl implements EspecialidadeService {
 
 	@Override
 	public Especialidade cadastrar(Especialidade especialidade) {
-		return especialidadeRepository.save(especialidade);
+		try {
+			return especialidadeRepository.save(especialidade);
+		} catch (Exception e) {
+			throw new ConflictRuntimeException(ConstantesDeErro.ESPECIALIDADE_CONFLITO);
+		}
 	}
 
 	@Override
 	public Especialidade atualizar(Especialidade especialidade) {
-		return especialidadeRepository.save(especialidade);
+		return this.cadastrar(especialidade);
 	}
 
 	@Override
 	public List<Especialidade> buscarTodos() {
-		return especialidadeRepository.findAll();
+		List<Especialidade> especialidades = especialidadeRepository.findAll();
+		if (especialidades == null || especialidades.isEmpty()) {
+			throw new NotFoundRuntimeException(ConstantesDeErro.ESPECIALIDADE_NAO_ENCONTRADA);
+		}
+		return especialidades;
 	}
 
 	@Override
 	public Especialidade buscarPorId(Long id) {
 		Especialidade especialidade = especialidadeRepository.findOne(id);
-		if (especialidade == null) {
-			throw new NotFoundRuntimeException(ConstantesDeErro.ESPECIALIDADE_NAO_ENCONTRADA);
-		}
-		return especialidade;
+		return verifyNotFound(especialidade);
 	}
 
 	@Override
 	public void deletar(Long id) {
-
 		if (!especialidadeRepository.exists(id)) {
-			throw new RuntimeException("Especialidade inexistente ou inválida!");
+			throw new ConflictRuntimeException(ConstantesDeErro.ESPECIALIDADE_NAO_ENCONTRADA);
 		}
-
 		especialidadeRepository.delete(id);
 	}
 
 	@Override
 	public Collection<Especialidade> buscarEspecialidadesPorUnidadeDeSaude(Long idUnidadeDeSaude) {
 		Collection<Especialidade> especialidades = especialidadeRepository.findByUnidadesDeSaudeId(idUnidadeDeSaude);
-		if (especialidades == null || especialidades.isEmpty())
+		if (especialidades == null || especialidades.isEmpty()) {
 			throw new NotFoundRuntimeException(ConstantesDeErro.ESPECIALIDADE_NAO_ENCONTRADA);
+		}
 		return especialidades;
 	}
 
 	@Override
 	public Especialidade buscarPorDescricao(String descricao) {
-		return especialidadeRepository.findByDescricao(descricao);
+		Especialidade especialidade = especialidadeRepository.findByDescricao(descricao);
+		return verifyNotFound(especialidade);
+	}
+
+	private Especialidade verifyNotFound(Especialidade especialidade) {
+		if (especialidade == null) {
+			throw new NotFoundRuntimeException(ConstantesDeErro.ESPECIALIDADE_NAO_ENCONTRADA);
+		}
+		return especialidade;
 	}
 
 }

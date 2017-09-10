@@ -145,6 +145,15 @@ public class UnidadeDeSaudeController {
 		return unidadeDeSaudeService.incluirEspecialidadeEmUnidadeDeSaude(id, especialidade);
 	}
 
+	@RequestMapping(
+			value = "/administrador/geral/medicos/{idUnidadeDeSaude}", 
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public double calcularMediaMedicoPacienteDia(
+		@PathVariable("idUnidadeDeSaude") long idUnidadeDeSaude) {
+		return unidadeDeSaudeService.mediaDeMedicoPorPacienteEmUmDia(idUnidadeDeSaude);
+	}
+
 	// ----------- privated methods ---------------
 
 	private void preparaUnidadeDeSaude(UnidadeDeSaude unidadeDeSaude) {

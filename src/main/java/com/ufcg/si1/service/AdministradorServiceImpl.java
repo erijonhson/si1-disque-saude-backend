@@ -24,7 +24,7 @@ public class AdministradorServiceImpl implements AdministradorService {
 		try {
 			return administradorRepository.save(administrador);
 		} catch (Exception e) {
-			throw new ConflictRuntimeException("Administrador já existe!");
+			throw new ConflictRuntimeException(ConstantesDeErro.ADMINISTRADOR_CONFLITO);
 		}
 	}
 
@@ -33,19 +33,19 @@ public class AdministradorServiceImpl implements AdministradorService {
 		try {
 			Administrador administradorBD = 
 					administradorRepository.findByEmail(administrador.getEmail());
-			if (administradorBD != null)
-				return administradorRepository.save(administradorBD);
-			else
-				return administradorRepository.save(administrador);
+			if (administradorBD != null) {
+				administrador = administradorBD;
+			}
+			return administradorRepository.save(administrador);
 		} catch (Exception e) {
-			throw new ConflictRuntimeException("Erro na atualização!");
+			throw new ConflictRuntimeException(ConstantesDeErro.ADMINISTRADOR_CONFLITO);
 		}
 	}
 
 	@Override
 	public List<Administrador> buscarTodos() {
 		List<Administrador> administradores = administradorRepository.findAll();
-		if (administradores == null) {
+		if (administradores == null || administradores.isEmpty()) {
 			throw new NotFoundRuntimeException(ConstantesDeErro.ADMINISTRADOR_NAO_ENCONTRADO);
 		}
 		return administradores;
@@ -53,37 +53,40 @@ public class AdministradorServiceImpl implements AdministradorService {
 
 	@Override
 	public Administrador buscarPorId(Long id) {
-		return administradorRepository.findOne(id);
+		Administrador administrador = administradorRepository.findOne(id);
+		return verifyNotFound(administrador);
 	}
 
 	@Override
 	public void deletar(Long id) {
-
 		if (!administradorRepository.exists(id)) {
-			throw new ConflictRuntimeException("Administrador inexistente ou inválido!");
+			throw new ConflictRuntimeException(ConstantesDeErro.ADMINISTRADOR_NAO_ENCONTRADO);
 		}
-
 		administradorRepository.delete(id);
 	}
 
 	@Override
 	public Administrador buscarPorEmail(String email) {
-		return administradorRepository.findByEmail(email);
+		Administrador administrador = administradorRepository.findByEmail(email);
+		return verifyNotFound(administrador);
 	}
 
 	public Administrador login(Administrador administrador) {
-
 		Administrador administradorBD = 
 				administradorRepository.findByEmailAndSenha(
 						administrador.getEmail(), administrador.getSenha());
-
 		if (administradorBD == null) {
-			throw new LoginRuntimeException("Email ou senha inválidos!");
+			throw new LoginRuntimeException(ConstantesDeErro.LOGIN_INVALIDO);
 		}
-
 		administradorBD.setSenha(null);
-
 		return administradorBD;
+	}
+
+	private Administrador verifyNotFound(Administrador administrador) {
+		if (administrador == null) {
+			throw new NotFoundRuntimeException(ConstantesDeErro.ADMINISTRADOR_NAO_ENCONTRADO);
+		}
+		return administrador;
 	}
 
 }

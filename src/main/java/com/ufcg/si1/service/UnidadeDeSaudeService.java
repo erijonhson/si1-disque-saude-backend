@@ -13,4 +13,6 @@ public interface UnidadeDeSaudeService extends GenericService<UnidadeDeSaude> {
 
 	public Especialidade incluirEspecialidadeEmUnidadeDeSaude(Long idUnidadeDeSaude, Especialidade especialidade);
 
+	public double mediaDeMedicoPorPacienteEmUmDia(long idUnidadeDeSaude);
+
 }

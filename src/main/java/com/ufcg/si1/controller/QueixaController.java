@@ -26,7 +26,6 @@ import com.ufcg.si1.service.ComentarioService;
 import com.ufcg.si1.service.EnderecoService;
 import com.ufcg.si1.service.QueixaService;
 
-
 @RestController
 @RequestMapping("/api")
 @CrossOrigin
